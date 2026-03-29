@@ -20,57 +20,14 @@ Solen narrows the responsibilities of the base layer and treats execution domain
 
 ## Quick Links
 
-<div class="grid cards" markdown>
-
--   :material-rocket-launch:{ .lg .middle } **Getting Started**
-
-    ---
-
-    Set up your environment and run your first node in minutes.
-
-    [:octicons-arrow-right-24: Quick Start](getting-started/quick-start.md)
-
--   :material-book-open-variant:{ .lg .middle } **Build Your First dApp**
-
-    ---
-
-    Deploy a token contract, mint, and transfer — in 15 minutes.
-
-    [:octicons-arrow-right-24: Tutorial](getting-started/first-dapp.md)
-
--   :material-cube-outline:{ .lg .middle } **Architecture**
-
-    ---
-
-    Understand how consensus, execution, rollups, and intents fit together.
-
-    [:octicons-arrow-right-24: Architecture](architecture/overview.md)
-
--   :material-api:{ .lg .middle } **API Reference**
-
-    ---
-
-    JSON-RPC methods, Explorer REST API, and CLI commands.
-
-    [:octicons-arrow-right-24: API Docs](api/json-rpc.md)
-
--   :material-code-tags:{ .lg .middle } **Smart Contracts**
-
-    ---
-
-    Write, deploy, and call WASM contracts on Solen.
-
-    [:octicons-arrow-right-24: Contracts](smart-contracts/overview.md)
-
--   :material-currency-usd:{ .lg .middle } **Tokenomics**
-
-    ---
-
-    Supply, staking, fees, and governance.
-
-    [:octicons-arrow-right-24: Tokenomics](tokenomics/overview.md)
-
-</div>
+| | |
+|---|---|
+| **[Getting Started](getting-started/quick-start.md)** | Set up your environment and run your first node in minutes. |
+| **[Build Your First dApp](getting-started/first-dapp.md)** | Deploy a token contract, mint, and transfer — in 15 minutes. |
+| **[Architecture](architecture/overview.md)** | Understand how consensus, execution, rollups, and intents fit together. |
+| **[API Reference](api/json-rpc.md)** | JSON-RPC methods, Explorer REST API, and CLI commands. |
+| **[Smart Contracts](smart-contracts/overview.md)** | Write, deploy, and call WASM contracts on Solen. |
+| **[Tokenomics](tokenomics/overview.md)** | Supply, staking, fees, and governance. |
 
 ---
 
