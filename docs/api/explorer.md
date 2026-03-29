@@ -22,9 +22,9 @@ Get the indexer status.
 
 ```json
 {
-  "indexed_height": 42,
+  "latest_height": 42,
   "total_blocks": 42,
-  "total_transactions": 15,
+  "total_txs": 15,
   "total_events": 23
 }
 ```
@@ -39,7 +39,7 @@ Get recent blocks.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `limit` | `u32` | 10 | Number of blocks to return |
+| `limit` | `u32` | 20 | Number of blocks to return |
 
 **Response:**
 
@@ -63,7 +63,87 @@ Get recent blocks.
 
 Get a specific block by height.
 
-**Response:** Same format as a single block from the blocks list, plus full transaction details.
+**Response:** Same format as a single block from the blocks list.
+
+---
+
+### `GET /api/blocks/{height}/txs`
+
+Get all transactions in a specific block.
+
+**Path Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `height` | `u64` | Block height |
+
+**Response:**
+
+```json
+[
+  {
+    "block_height": 42,
+    "index": 0,
+    "sender": "account-id",
+    "actions": [...],
+    "gas_used": 500,
+    "success": true
+  }
+]
+```
+
+---
+
+### `GET /api/tx/{height}/{index}`
+
+Get a specific transaction by block height and index within the block.
+
+**Path Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `height` | `u64` | Block height |
+| `index` | `usize` | Transaction index within the block |
+
+**Response:**
+
+```json
+{
+  "block_height": 42,
+  "index": 0,
+  "sender": "account-id",
+  "actions": [...],
+  "gas_used": 500,
+  "success": true
+}
+```
+
+---
+
+### `GET /api/txs`
+
+Get recent transactions across all blocks.
+
+**Query Parameters:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `limit` | `u32` | 20 | Number of transactions to return |
+
+**Response:**
+
+```json
+[
+  {
+    "block_height": 42,
+    "index": 0,
+    "sender": "account-id",
+    "actions": [...],
+    "gas_used": 500,
+    "success": true
+  }
+]
+```
 
 ---
 
@@ -81,15 +161,15 @@ Get transaction history for an account.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `limit` | `u32` | 10 | Number of transactions to return |
+| `limit` | `u32` | 20 | Number of transactions to return |
 
 **Response:**
 
 ```json
 [
   {
-    "hash": "tx123...",
     "block_height": 42,
+    "index": 0,
     "sender": "account-id",
     "actions": [...],
     "gas_used": 500,
@@ -102,13 +182,13 @@ Get transaction history for an account.
 
 ### `GET /api/events`
 
-Get recent events (emitted by contracts).
+Get recent events emitted by contracts.
 
 **Query Parameters:**
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `limit` | `u32` | 10 | Number of events to return |
+| `limit` | `u32` | 20 | Number of events to return |
 
 **Response:**
 
@@ -122,4 +202,27 @@ Get recent events (emitted by contracts).
     "data": "hex-encoded-data"
   }
 ]
+```
+
+---
+
+### `GET /api/validators`
+
+Get the current validator set.
+
+**Response:**
+
+```json
+{
+  "validators": [
+    {
+      "id": "validator-account-id",
+      "stake": "10000",
+      "status": "active"
+    }
+  ],
+  "total_active_stake": "40000",
+  "active_count": 4,
+  "total_count": 4
+}
 ```

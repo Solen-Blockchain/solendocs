@@ -42,7 +42,7 @@ Solen narrows the responsibilities of the base layer and treats execution domain
 | Property tests | 4 (hundreds of cases each) |
 | Fuzz targets | 3 |
 | RPC methods | 7 |
-| Explorer endpoints | 5 |
+| Explorer endpoints | 9 |
 | Transfer TPS | ~14,000 |
 | Contract call TPS | ~10,000 |
 
