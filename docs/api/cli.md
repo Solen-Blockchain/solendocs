@@ -72,8 +72,8 @@ solen key list
 ```
 NAME         ACCOUNT ID           PUBLIC KEY
 ──────────────────────────────────────────────────────────────────────
-alice        616c696365000000...  139c31e8543b1962...
-faucet       6661756365740000...  197f6b23e16c8532...
+alice        139c31e8543b1962...  139c31e8543b1962...
+faucet       197f6b23e16c8532...  197f6b23e16c8532...
 ```
 
 ---
@@ -103,7 +103,7 @@ Call a contract method.
 solen call faucet <CONTRACT_ID> increment
 
 # With arguments (hex-encoded)
-solen call faucet <CONTRACT_ID> mint --args "6661756365740000...40420f0000..."
+solen call faucet <CONTRACT_ID> mint --args "197f6b23e16c8532...40420f0000..."
 ```
 
 The CLI simulates the call first, then submits if simulation succeeds.

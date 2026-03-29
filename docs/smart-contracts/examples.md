@@ -67,8 +67,8 @@ Arguments are passed as raw bytes. Account IDs are 32 bytes, amounts are 16-byte
 # Build the amount argument
 AMOUNT=$(python3 -c "print((1000000).to_bytes(16, 'little').hex())")
 
-# Build a 32-byte account ID
-ACCOUNT="6661756365740000000000000000000000000000000000000000000000000000"
+# Account address = public key (from `solen key list`)
+ACCOUNT="197f6b23e16c8532c6abc838facd5ea789be0c76b2920334039bfa8b3d368d61"
 ```
 
 ### Usage
@@ -85,15 +85,15 @@ solen deploy faucet target/wasm32-unknown-unknown/release/solen_example_token.wa
 solen call faucet <TOKEN_ID> init
 
 # Mint 1,000,000 tokens to faucet
-TO="6661756365740000000000000000000000000000000000000000000000000000"
+TO="197f6b23e16c8532c6abc838facd5ea789be0c76b2920334039bfa8b3d368d61"
 AMOUNT=$(python3 -c "print((1000000).to_bytes(16, 'little').hex())")
 solen call faucet <TOKEN_ID> mint --args "${TO}${AMOUNT}"
 
 # Check balance
 solen call faucet <TOKEN_ID> balance_of --args "${TO}"
 
-# Transfer 50,000 to alice
-ALICE="616c696365000000000000000000000000000000000000000000000000000000"
+# Transfer 50,000 to alice (address = her public key)
+ALICE="139c31e8543b19629ea93c90b291d684aec0ca432cc0efda170570572c62e519"
 AMOUNT=$(python3 -c "print((50000).to_bytes(16, 'little').hex())")
 solen call faucet <TOKEN_ID> transfer --args "${ALICE}${AMOUNT}"
 ```

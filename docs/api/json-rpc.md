@@ -55,7 +55,7 @@ Get an account's native token balance.
 ```bash
 curl -s -X POST http://127.0.0.1:29944 \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"solen_getBalance","params":["6661756365740000000000000000000000000000000000000000000000000000"],"id":1}'
+  -d '{"jsonrpc":"2.0","method":"solen_getBalance","params":["197f6b23e16c8532c6abc838facd5ea789be0c76b2920334039bfa8b3d368d61"],"id":1}'
 ```
 
 ---

@@ -65,8 +65,8 @@ Check your keys:
 ```
 NAME         ACCOUNT ID           PUBLIC KEY
 ──────────────────────────────────────────────────────────────────────
-alice        616c696365000000...  139c31e8543b1962...
-faucet       6661756365740000...  197f6b23e16c8532...
+alice        139c31e8543b1962...  139c31e8543b1962...
+faucet       197f6b23e16c8532...  197f6b23e16c8532...
 ```
 
 ## Step 4: Check the Chain
@@ -132,7 +132,7 @@ Mint 1,000,000 tokens to the faucet account:
 
 ```bash
 # Faucet account ID (32 bytes hex)
-TO="6661756365740000000000000000000000000000000000000000000000000000"
+TO="197f6b23e16c8532c6abc838facd5ea789be0c76b2920334039bfa8b3d368d61"
 
 # 1,000,000 as u128 little-endian (16 bytes hex)
 AMOUNT=$(python3 -c "print((1000000).to_bytes(16, 'little').hex())")
@@ -143,7 +143,7 @@ AMOUNT=$(python3 -c "print((1000000).to_bytes(16, 'little').hex())")
 ## Step 9: Check the Token Balance
 
 ```bash
-ACCOUNT="6661756365740000000000000000000000000000000000000000000000000000"
+ACCOUNT="197f6b23e16c8532c6abc838facd5ea789be0c76b2920334039bfa8b3d368d61"
 ./target/release/solen call faucet <TOKEN_ID> balance_of --args "${ACCOUNT}"
 ```
 
@@ -154,7 +154,8 @@ The return data contains the balance as a 16-byte little-endian u128.
 Transfer 50,000 tokens from faucet to alice:
 
 ```bash
-ALICE="616c696365000000000000000000000000000000000000000000000000000000"
+# Alice's address is her public key (from `solen key list`)
+ALICE="139c31e8543b19629ea93c90b291d684aec0ca432cc0efda170570572c62e519"
 AMOUNT=$(python3 -c "print((50000).to_bytes(16, 'little').hex())")
 
 ./target/release/solen call faucet <TOKEN_ID> transfer --args "${ALICE}${AMOUNT}"
@@ -178,21 +179,25 @@ npm install
 Create a script `demo.ts`:
 
 ```typescript
-import { SolenClient, nameToHex } from "./src/index";
+import { SolenClient } from "./src/index";
 
-const client = new SolenClient({ rpcUrl: "http://127.0.0.1:9944" });
+const client = new SolenClient({ rpcUrl: "http://127.0.0.1:29944" });
+
+// Account addresses are public keys. Get these from `solen key list`.
+const FAUCET = "197f6b23e16c8532c6abc838facd5ea789be0c76b2920334039bfa8b3d368d61";
+const ALICE = "139c31e8543b19629ea93c90b291d684aec0ca432cc0efda170570572c62e519";
 
 async function main() {
   const status = await client.chainStatus();
   console.log(`Chain height: ${status.height}`);
 
-  const balance = await client.getBalance(nameToHex("faucet"));
+  const balance = await client.getBalance(FAUCET);
   console.log(`Faucet balance: ${balance}`);
 
   const block = await client.getLatestBlock();
   console.log(`Block #${block.height}: ${block.tx_count} txs, ${block.gas_used} gas`);
 
-  const alice = await client.getAccount(nameToHex("alice"));
+  const alice = await client.getAccount(ALICE);
   console.log(`Alice nonce: ${alice.nonce}, balance: ${alice.balance}`);
 }
 
