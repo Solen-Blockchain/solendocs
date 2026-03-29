@@ -1242,6 +1242,78 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#solen_getvalidators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_getValidators
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen_getstakinginfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_getStakingInfo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-contract-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Contract Calls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Contract Calls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#staking-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Staking Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#governance-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Governance Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bridge-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bridge Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2036,6 +2108,78 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#solen_getvalidators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_getValidators
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen_getstakinginfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_getStakingInfo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-contract-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Contract Calls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Contract Calls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#staking-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Staking Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#governance-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Governance Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bridge-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bridge Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2326,6 +2470,156 @@
 </tbody>
 </table>
 <p>Use this to estimate gas costs before submitting.</p>
+<hr />
+<h3 id="solen_getvalidators"><code>solen_getValidators</code><a class="headerlink" href="#solen_getvalidators" title="Permanent link">&para;</a></h3>
+<p>List all validators and their stake.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> Array of validator objects:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>address</code></td>
+<td><code>string</code></td>
+<td>Validator address (public key hex)</td>
+</tr>
+<tr>
+<td><code>self_stake</code></td>
+<td><code>string</code></td>
+<td>Validator's own stake</td>
+</tr>
+<tr>
+<td><code>total_delegated</code></td>
+<td><code>string</code></td>
+<td>Total delegated to this validator</td>
+</tr>
+<tr>
+<td><code>total_stake</code></td>
+<td><code>string</code></td>
+<td>Self stake + delegated</td>
+</tr>
+<tr>
+<td><code>is_active</code></td>
+<td><code>bool</code></td>
+<td>Whether the validator is active</td>
+</tr>
+<tr>
+<td><code>is_genesis</code></td>
+<td><code>bool</code></td>
+<td>Whether this is a genesis validator</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getValidators&quot;,&quot;params&quot;:[],&quot;id&quot;:1}&#39;</span>
+</code></pre></div>
+<hr />
+<h3 id="solen_getstakinginfo"><code>solen_getStakingInfo</code><a class="headerlink" href="#solen_getstakinginfo" title="Permanent link">&para;</a></h3>
+<p>Get staking information for an account (delegations, undelegations).</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>account_id</code></td>
+<td><code>string</code></td>
+<td>Hex-encoded account address</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>total_delegated</code></td>
+<td><code>string</code></td>
+<td>Total tokens delegated by this account</td>
+</tr>
+<tr>
+<td><code>delegations</code></td>
+<td><code>array</code></td>
+<td>List of <code>{validator, amount}</code> objects</td>
+</tr>
+<tr>
+<td><code>pending_undelegations</code></td>
+<td><code>u64</code></td>
+<td>Number of pending undelegation requests</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="system-contract-calls">System Contract Calls<a class="headerlink" href="#system-contract-calls" title="Permanent link">&para;</a></h2>
+<p>System contracts are invoked via <code>solen_submitOperation</code> with <code>Action::Call</code> targeting a well-known address. The executor routes these to native Rust implementations.</p>
+<table>
+<thead>
+<tr>
+<th>Address</th>
+<th>Contract</th>
+<th>Available Methods</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0xFFFF...FF01</code></td>
+<td>Staking</td>
+<td><code>delegate</code>, <code>undelegate</code>, <code>withdraw</code></td>
+</tr>
+<tr>
+<td><code>0xFFFF...FF02</code></td>
+<td>Governance</td>
+<td><code>propose_set_base_fee</code>, <code>vote</code></td>
+</tr>
+<tr>
+<td><code>0xFFFF...FF03</code></td>
+<td>Bridge</td>
+<td><code>register_vault</code>, <code>deposit</code></td>
+</tr>
+<tr>
+<td><code>0xFFFF...FF04</code></td>
+<td>Treasury</td>
+<td><code>status</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="staking-methods">Staking Methods<a class="headerlink" href="#staking-methods" title="Permanent link">&para;</a></h3>
+<p><strong><code>delegate</code></strong> — Delegate tokens to a validator.
+Args: <code>validator_address[32 bytes] + amount[16 bytes LE u128]</code></p>
+<p><strong><code>undelegate</code></strong> — Begin undelegation (7-epoch cooldown).
+Args: <code>validator_address[32 bytes] + amount[16 bytes LE] + epoch[8 bytes LE]</code></p>
+<p><strong><code>withdraw</code></strong> — Withdraw completed undelegations.
+Args: <code>current_epoch[8 bytes LE]</code></p>
+<h3 id="governance-methods">Governance Methods<a class="headerlink" href="#governance-methods" title="Permanent link">&para;</a></h3>
+<p><strong><code>propose_set_base_fee</code></strong> — Create a proposal to change the base fee.
+Args: <code>new_fee[16 bytes LE] + description[UTF-8 string]</code></p>
+<p><strong><code>vote</code></strong> — Vote on a proposal.
+Args: <code>proposal_id[8 bytes LE] + support[1 byte: 0=no, 1=yes] + stake_weight[16 bytes LE]</code></p>
+<h3 id="bridge-methods">Bridge Methods<a class="headerlink" href="#bridge-methods" title="Permanent link">&para;</a></h3>
+<p><strong><code>register_vault</code></strong> — Register a bridge vault for a rollup.
+Args: <code>rollup_id[8 bytes LE]</code></p>
+<p><strong><code>deposit</code></strong> — Deposit tokens into a rollup bridge vault.
+Args: <code>rollup_id[8 bytes LE] + amount[16 bytes LE]</code></p>
+<hr />
 <h2 id="error-codes">Error Codes<a class="headerlink" href="#error-codes" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

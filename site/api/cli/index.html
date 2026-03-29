@@ -1244,6 +1244,39 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#solen-account-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen account &lt;account&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen-block-height" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen block [height]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen-transfer-from-to-amount" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen transfer &lt;from&gt; &lt;to&gt; &lt;amount&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#solen-key-key-management" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1294,10 +1327,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#solen-deploy-from-wasm-file" class="md-nav__link">
+  <a href="#solen-validators" class="md-nav__link">
     <span class="md-ellipsis">
       
-        solen deploy &lt;from&gt; &lt;wasm-file&gt;
+        solen validators
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen-stake-from-validator-amount" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen stake &lt;from&gt; &lt;validator&gt; &lt;amount&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen-unstake-from-validator-amount" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen unstake &lt;from&gt; &lt;validator&gt; &lt;amount&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system-contract-addresses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Contract Addresses
       
     </span>
   </a>
@@ -1999,6 +2065,39 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#solen-account-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen account &lt;account&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen-block-height" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen block [height]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen-transfer-from-to-amount" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen transfer &lt;from&gt; &lt;to&gt; &lt;amount&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#solen-key-key-management" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2049,10 +2148,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#solen-deploy-from-wasm-file" class="md-nav__link">
+  <a href="#solen-validators" class="md-nav__link">
     <span class="md-ellipsis">
       
-        solen deploy &lt;from&gt; &lt;wasm-file&gt;
+        solen validators
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen-stake-from-validator-amount" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen stake &lt;from&gt; &lt;validator&gt; &lt;amount&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen-unstake-from-validator-amount" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen unstake &lt;from&gt; &lt;validator&gt; &lt;amount&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system-contract-addresses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Contract Addresses
       
     </span>
   </a>
@@ -2128,34 +2260,128 @@
 </code></pre></div>
 <hr />
 <h3 id="solen-balance-account"><code>solen balance &lt;account&gt;</code><a class="headerlink" href="#solen-balance-account" title="Permanent link">&para;</a></h3>
-<p>Query an account's native token balance.</p>
+<p>Query an account's native token balance. Account can be a key name or hex address.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>solen<span class="w"> </span>balance<span class="w"> </span>faucet
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Output: 1000000000</span>
 </code></pre></div>
 <hr />
+<h3 id="solen-account-account"><code>solen account &lt;account&gt;</code><a class="headerlink" href="#solen-account-account" title="Permanent link">&para;</a></h3>
+<p>Get full account details including nonce and code hash.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>solen<span class="w"> </span>account<span class="w"> </span>faucet
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Account
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>────────────────────────────────────────
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  ID:        197f6b23e16c8532...
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Balance:   1000000000
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  Nonce:     0
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  Code hash: (none)
+</code></pre></div>
+<hr />
+<h3 id="solen-block-height"><code>solen block [height]</code><a class="headerlink" href="#solen-block-height" title="Permanent link">&para;</a></h3>
+<p>Get block information. Shows the latest block if no height is given.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>solen<span class="w"> </span>block<span class="w">          </span><span class="c1"># latest block</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>solen<span class="w"> </span>block<span class="w"> </span><span class="m">100</span><span class="w">      </span><span class="c1"># block at height 100</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Block #100
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>────────────────────────────────────────
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Epoch:      1
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  Proposer:   8a88e3dd7409f195...
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  State root: 78c88b3eb08313c6...
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  Txs:        2
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  Gas used:   200
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  Time:       4s ago
+</code></pre></div>
+<hr />
+<h3 id="solen-transfer-from-to-amount"><code>solen transfer &lt;from&gt; &lt;to&gt; &lt;amount&gt;</code><a class="headerlink" href="#solen-transfer-from-to-amount" title="Permanent link">&para;</a></h3>
+<p>Transfer tokens between accounts. Simulates first, then submits.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>solen<span class="w"> </span>transfer<span class="w"> </span>mykey<span class="w"> </span>139c31e8543b1962...<span class="w"> </span><span class="m">5000</span>
+</code></pre></div>
+<p>The sender must be a key name in your keystore. The recipient can be a key name or hex address.</p>
+<hr />
 <h3 id="solen-key-key-management"><code>solen key</code> — Key Management<a class="headerlink" href="#solen-key-key-management" title="Permanent link">&para;</a></h3>
 <h4 id="solen-key-generate-name"><code>solen key generate &lt;name&gt;</code><a class="headerlink" href="#solen-key-generate-name" title="Permanent link">&para;</a></h4>
 <p>Generate a new Ed25519 keypair.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>solen<span class="w"> </span>key<span class="w"> </span>generate<span class="w"> </span>alice
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>solen<span class="w"> </span>key<span class="w"> </span>generate<span class="w"> </span>alice
 </code></pre></div>
 <h4 id="solen-key-import-name-hex-seed"><code>solen key import &lt;name&gt; &lt;hex-seed&gt;</code><a class="headerlink" href="#solen-key-import-name-hex-seed" title="Permanent link">&para;</a></h4>
 <p>Import a key from a 32-byte hex seed.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>solen<span class="w"> </span>key<span class="w"> </span>import<span class="w"> </span>faucet<span class="w"> </span>2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>solen<span class="w"> </span>key<span class="w"> </span>import<span class="w"> </span>faucet<span class="w"> </span>2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a
 </code></pre></div>
 <h4 id="solen-key-list"><code>solen key list</code><a class="headerlink" href="#solen-key-list" title="Permanent link">&para;</a></h4>
 <p>List all stored keys.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>solen<span class="w"> </span>key<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>solen<span class="w"> </span>key<span class="w"> </span>list
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>NAME         ACCOUNT ID           PUBLIC KEY
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>──────────────────────────────────────────────────────────────────────
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>alice        139c31e8543b1962...  139c31e8543b1962...
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>faucet       197f6b23e16c8532...  197f6b23e16c8532...
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>NAME         ACCOUNT ID           PUBLIC KEY
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>──────────────────────────────────────────────────────────────────────
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>alice        139c31e8543b1962...  139c31e8543b1962...
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>faucet       197f6b23e16c8532...  197f6b23e16c8532...
 </code></pre></div>
 <hr />
-<h3 id="solen-deploy-from-wasm-file"><code>solen deploy &lt;from&gt; &lt;wasm-file&gt;</code><a class="headerlink" href="#solen-deploy-from-wasm-file" title="Permanent link">&para;</a></h3>
-<p>Deploy a WASM contract.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>solen<span class="w"> </span>deploy<span class="w"> </span>faucet<span class="w"> </span>target/wasm32-unknown-unknown/release/my_contract.wasm
+<h3 id="solen-validators"><code>solen validators</code><a class="headerlink" href="#solen-validators" title="Permanent link">&para;</a></h3>
+<p>List all validators and their stake.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>solen<span class="w"> </span>validators
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>STATUS ADDRESS            SELF STAKE      DELEGATED          TOTAL
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>──────────────────────────────────────────────────────────────────────
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>GENSIS 8a88e3dd7409f195...        1000000              0        1000000
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>GENSIS 8139770ecb104aef...        1000000              0        1000000
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>GENSIS ed4928c628d1c2c6...        1000000              0        1000000
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>GENSIS ca93ac1705187071...        1000000              0        1000000
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>4 validators (4 active)
+</code></pre></div>
+<hr />
+<h3 id="solen-stake-from-validator-amount"><code>solen stake &lt;from&gt; &lt;validator&gt; &lt;amount&gt;</code><a class="headerlink" href="#solen-stake-from-validator-amount" title="Permanent link">&para;</a></h3>
+<p>Delegate tokens to a validator.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>solen<span class="w"> </span>stake<span class="w"> </span>mykey<span class="w"> </span>8a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c<span class="w"> </span><span class="m">10000</span>
+</code></pre></div>
+<h3 id="solen-unstake-from-validator-amount"><code>solen unstake &lt;from&gt; &lt;validator&gt; &lt;amount&gt;</code><a class="headerlink" href="#solen-unstake-from-validator-amount" title="Permanent link">&para;</a></h3>
+<p>Begin undelegation from a validator. Funds are available after the unbonding period (7 epochs).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>solen<span class="w"> </span>unstake<span class="w"> </span>mykey<span class="w"> </span>8a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c<span class="w"> </span><span class="m">5000</span>
+</code></pre></div>
+<hr />
+<h3 id="system-contract-addresses">System Contract Addresses<a class="headerlink" href="#system-contract-addresses" title="Permanent link">&para;</a></h3>
+<p>System contracts have well-known addresses:</p>
+<table>
+<thead>
+<tr>
+<th>Contract</th>
+<th>Address</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Staking</td>
+<td><code>0xFFFF...FF01</code></td>
+</tr>
+<tr>
+<td>Governance</td>
+<td><code>0xFFFF...FF02</code></td>
+</tr>
+<tr>
+<td>Bridge</td>
+<td><code>0xFFFF...FF03</code></td>
+</tr>
+<tr>
+<td>Treasury</td>
+<td><code>0xFFFF...FF04</code></td>
+</tr>
+</tbody>
+</table>
+<p>Call them using <code>solen call</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Delegate to a validator via system call</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>solen<span class="w"> </span>call<span class="w"> </span>mykey<span class="w"> </span>ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff01<span class="w"> </span>delegate<span class="w"> </span>--args<span class="w"> </span><span class="s2">&quot;&lt;validator&gt;&lt;amount&gt;&quot;</span>
+</code></pre></div>
+<p>4 validators (4 active)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>---
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>### `solen deploy &lt;from&gt; &lt;wasm-file&gt;`
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>Deploy a WASM contract.
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>```bash
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>solen deploy faucet target/wasm32-unknown-unknown/release/my_contract.wasm
+</code></pre></div></p>
 <p>The CLI will:</p>
 <ol>
 <li>Simulate the deployment to estimate gas</li>
@@ -2165,11 +2391,11 @@
 <hr />
 <h3 id="solen-call-from-contract-id-method-args-hex"><code>solen call &lt;from&gt; &lt;contract-id&gt; &lt;method&gt; [--args &lt;hex&gt;]</code><a class="headerlink" href="#solen-call-from-contract-id-method-args-hex" title="Permanent link">&para;</a></h3>
 <p>Call a contract method.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># No arguments</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>solen<span class="w"> </span>call<span class="w"> </span>faucet<span class="w"> </span>&lt;CONTRACT_ID&gt;<span class="w"> </span>increment
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># With arguments (hex-encoded)</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>solen<span class="w"> </span>call<span class="w"> </span>faucet<span class="w"> </span>&lt;CONTRACT_ID&gt;<span class="w"> </span>mint<span class="w"> </span>--args<span class="w"> </span><span class="s2">&quot;197f6b23e16c8532...40420f0000...&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># No arguments</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>solen<span class="w"> </span>call<span class="w"> </span>faucet<span class="w"> </span>&lt;CONTRACT_ID&gt;<span class="w"> </span>increment
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># With arguments (hex-encoded)</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>solen<span class="w"> </span>call<span class="w"> </span>faucet<span class="w"> </span>&lt;CONTRACT_ID&gt;<span class="w"> </span>mint<span class="w"> </span>--args<span class="w"> </span><span class="s2">&quot;197f6b23e16c8532...40420f0000...&quot;</span>
 </code></pre></div>
 <p>The CLI simulates the call first, then submits if simulation succeeds.</p>
 <hr />
@@ -2192,11 +2418,11 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Use a different RPC endpoint</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>solen<span class="w"> </span>--rpc<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span>status
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Use testnet defaults</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>solen<span class="w"> </span>--network<span class="w"> </span>testnet<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Use a different RPC endpoint</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>solen<span class="w"> </span>--rpc<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span>status
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Use testnet defaults</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>solen<span class="w"> </span>--network<span class="w"> </span>testnet<span class="w"> </span>status
 </code></pre></div>
 
 

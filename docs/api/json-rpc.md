@@ -168,6 +168,95 @@ Dry-run an operation without committing state changes.
 
 Use this to estimate gas costs before submitting.
 
+---
+
+### `solen_getValidators`
+
+List all validators and their stake.
+
+**Parameters:** None
+
+**Returns:** Array of validator objects:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `address` | `string` | Validator address (public key hex) |
+| `self_stake` | `string` | Validator's own stake |
+| `total_delegated` | `string` | Total delegated to this validator |
+| `total_stake` | `string` | Self stake + delegated |
+| `is_active` | `bool` | Whether the validator is active |
+| `is_genesis` | `bool` | Whether this is a genesis validator |
+
+**Example:**
+
+```bash
+curl -s -X POST http://127.0.0.1:29944 \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"solen_getValidators","params":[],"id":1}'
+```
+
+---
+
+### `solen_getStakingInfo`
+
+Get staking information for an account (delegations, undelegations).
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `account_id` | `string` | Hex-encoded account address |
+
+**Returns:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `total_delegated` | `string` | Total tokens delegated by this account |
+| `delegations` | `array` | List of `{validator, amount}` objects |
+| `pending_undelegations` | `u64` | Number of pending undelegation requests |
+
+---
+
+## System Contract Calls
+
+System contracts are invoked via `solen_submitOperation` with `Action::Call` targeting a well-known address. The executor routes these to native Rust implementations.
+
+| Address | Contract | Available Methods |
+|---------|----------|-------------------|
+| `0xFFFF...FF01` | Staking | `delegate`, `undelegate`, `withdraw` |
+| `0xFFFF...FF02` | Governance | `propose_set_base_fee`, `vote` |
+| `0xFFFF...FF03` | Bridge | `register_vault`, `deposit` |
+| `0xFFFF...FF04` | Treasury | `status` |
+
+### Staking Methods
+
+**`delegate`** — Delegate tokens to a validator.
+Args: `validator_address[32 bytes] + amount[16 bytes LE u128]`
+
+**`undelegate`** — Begin undelegation (7-epoch cooldown).
+Args: `validator_address[32 bytes] + amount[16 bytes LE] + epoch[8 bytes LE]`
+
+**`withdraw`** — Withdraw completed undelegations.
+Args: `current_epoch[8 bytes LE]`
+
+### Governance Methods
+
+**`propose_set_base_fee`** — Create a proposal to change the base fee.
+Args: `new_fee[16 bytes LE] + description[UTF-8 string]`
+
+**`vote`** — Vote on a proposal.
+Args: `proposal_id[8 bytes LE] + support[1 byte: 0=no, 1=yes] + stake_weight[16 bytes LE]`
+
+### Bridge Methods
+
+**`register_vault`** — Register a bridge vault for a rollup.
+Args: `rollup_id[8 bytes LE]`
+
+**`deposit`** — Deposit tokens into a rollup bridge vault.
+Args: `rollup_id[8 bytes LE] + amount[16 bytes LE]`
+
+---
+
 ## Error Codes
 
 | Code | Description |
