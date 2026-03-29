@@ -1,0 +1,119 @@
+site_name: Solen Documentation
+site_description: Documentation for Solen — a modular settlement network with native rollups, smart accounts, and intent-aware execution.
+site_url: https://docs.solenchain.com
+repo_url: https://github.com/solenchain/solen
+repo_name: solenchain/solen
+
+theme:
+  name: material
+  logo: assets/solenlogo.png
+  favicon: assets/solenlogo.png
+  palette:
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+    - toc.follow
+  icon:
+    repo: fontawesome/brands/github
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.mark
+  - pymdownx.critic
+  - pymdownx.keys
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - def_list
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Introduction: getting-started/introduction.md
+    - Quick Start: getting-started/quick-start.md
+    - Build Your First dApp: getting-started/first-dapp.md
+  - Architecture:
+    - Overview: architecture/overview.md
+    - Consensus: architecture/consensus.md
+    - Execution Engine: architecture/execution.md
+    - Smart Accounts: architecture/smart-accounts.md
+    - Rollups: architecture/rollups.md
+    - Intents: architecture/intents.md
+  - Smart Contracts:
+    - Overview: smart-contracts/overview.md
+    - Contract SDK: smart-contracts/contract-sdk.md
+    - Host Functions: smart-contracts/host-functions.md
+    - Example Contracts: smart-contracts/examples.md
+  - API Reference:
+    - JSON-RPC API: api/json-rpc.md
+    - Explorer REST API: api/explorer.md
+    - CLI Reference: api/cli.md
+  - SDKs:
+    - TypeScript SDK: tools/typescript-sdk.md
+    - Rust SDK: tools/rust-sdk.md
+  - Tokenomics:
+    - Token Overview: tokenomics/overview.md
+    - Staking: tokenomics/staking.md
+    - Governance: tokenomics/governance.md
+    - Fee Model: tokenomics/fee-model.md
+  - Network:
+    - Running a Node: tools/running-a-node.md
+    - Testnet Deployment: tools/testnet-deployment.md
+    - Block Explorer: tools/block-explorer.md
+  - Specifications:
+    - Terminology: specs/terminology.md
+    - State Model: specs/state-model.md
+    - RPC Specification: specs/rpc-spec.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/solenchain/solen
+    - icon: fontawesome/brands/x-twitter
+      link: https://x.com/solenchain
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/solenchain
+
+copyright: Copyright &copy; 2025-2026 Solen Foundation. Licensed under MIT OR Apache-2.0.
