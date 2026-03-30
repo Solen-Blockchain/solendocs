@@ -26,9 +26,23 @@ The default authentication method. Each account can have one or more Ed25519 pub
 
 Browser-native authentication using device biometrics (fingerprint, face ID) or security keys. The TypeScript SDK provides `PasskeyAuth` for WebAuthn integration.
 
-### Threshold Signatures
+### Threshold Signatures (Multi-sig)
 
-Require M-of-N signatures to authorize an operation. Useful for multi-sig wallets, team treasuries, and DAOs.
+Require M-of-N signatures to authorize an operation. Useful for multi-sig wallets, team treasuries, and DAOs. This is implemented natively at the protocol level — no contract deployment needed.
+
+**Setup via CLI:**
+
+```bash
+solen multisig mykey --threshold 2 --signers "pubkey1,pubkey2,pubkey3"
+```
+
+**Setup via RPC:** Submit a `SetAuth` action:
+
+```json
+{ "type": "SetAuth", "auth_methods": [{ "Threshold": { "signers": [...], "threshold": 2 } }] }
+```
+
+**Signing format:** The operation's `signature` field contains concatenated `pubkey[32] + sig[64]` pairs (96 bytes each). At least `threshold` valid signatures from the signers list must be present.
 
 ### Guardians
 

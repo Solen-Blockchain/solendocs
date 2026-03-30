@@ -170,6 +170,19 @@ solen unstake mykey 8a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f
 
 ---
 
+### `solen multisig <from> --threshold <N> --signers <key1,key2,...>`
+
+Convert an account to multi-sig (threshold signing). The account must currently be owned by `<from>`.
+
+```bash
+# Create a 2-of-3 multi-sig
+solen multisig mykey --threshold 2 --signers "aabb...01,ccdd...02,eeff...03"
+```
+
+After conversion, all future operations on this account require at least `N` valid signatures from the signers list. The signature field must contain concatenated `pubkey[32] + sig[64]` pairs (96 bytes each).
+
+---
+
 ### `solen claim-vesting <from>`
 
 Claim vested tokens from your vesting schedule (team or investor allocations).

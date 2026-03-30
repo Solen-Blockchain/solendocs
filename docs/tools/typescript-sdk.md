@@ -103,7 +103,9 @@ const alice = new SmartAccount("8a88e3dd7409...", client);
 const op = await alice.buildTransfer("626f6200...", 500);
 
 // Sign (with your Ed25519 key)
-// op.signature = sign(op, privateKey);
+// The signing message includes chain_id to prevent cross-chain replay:
+// msg = chain_id[8 LE] + sender[32] + nonce[8 LE] + max_fee[16 LE] + blake3(actions)[32]
+// op.signature = ed25519_sign(privateKey, msg);
 
 // Submit
 const result = await alice.submit(op);

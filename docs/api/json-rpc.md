@@ -27,6 +27,9 @@ Get the current chain status.
 | `height` | `u64` | Current block height |
 | `state_root` | `string` | Hex-encoded state root hash |
 | `pending_ops` | `u64` | Number of operations in the mempool |
+| `total_allocation` | `string` | Total tokens allocated at genesis (base units) |
+| `total_staked` | `string` | Total tokens currently staked (base units) |
+| `total_circulation` | `string` | Tokens in circulation, excluding system accounts and staked tokens (base units) |
 
 **Example:**
 
@@ -128,7 +131,7 @@ Submit a signed user operation to the mempool.
     }
   ],
   "max_fee": 200,
-  "signature": "hex-encoded-ed25519-signature"
+  "signature": "hex-encoded-ed25519-signature (or multi-sig)"
 }
 ```
 
@@ -148,6 +151,35 @@ Submit a signed user operation to the mempool.
     ```json
     { "type": "Deploy", "code": "hex-encoded-wasm" }
     ```
+
+=== "SetAuth"
+    ```json
+    { "type": "SetAuth", "auth_methods": [{ "Threshold": { "signers": ["hex-pubkey-1", "hex-pubkey-2"], "threshold": 2 } }] }
+    ```
+
+**Signing message format:**
+
+The signature is computed over a deterministic message that includes the chain ID to prevent cross-chain replay:
+
+```
+chain_id     [8 bytes, little-endian u64]
+sender       [32 bytes]
+nonce        [8 bytes, little-endian u64]
+max_fee      [16 bytes, little-endian u128]
+actions_hash [32 bytes, BLAKE3 hash of JSON-serialized actions]
+```
+
+Total: 96 bytes. Sign with Ed25519 to produce a 64-byte signature.
+
+**Chain IDs:**
+
+| Network | Chain ID |
+|---------|----------|
+| Mainnet | 1 |
+| Testnet | 9000 |
+| Devnet | 1337 |
+
+**Multi-sig signatures:** For `Threshold` auth, concatenate `pubkey[32] + sig[64]` pairs (96 bytes each). At least `threshold` valid signatures from the signers list must be present.
 
 ---
 
