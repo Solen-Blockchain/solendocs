@@ -218,16 +218,50 @@ Get staking information for an account (delegations, undelegations).
 
 ---
 
+### `solen_getVestingInfo`
+
+Get vesting schedule information for an account.
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `account_id` | `string` | Hex-encoded account address |
+
+**Returns:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `has_schedule` | `bool` | Whether this account has a vesting schedule |
+| `total_amount` | `string` | Total tokens allocated to this account |
+| `vested` | `string` | Tokens vested so far (based on elapsed epochs) |
+| `claimed` | `string` | Tokens already claimed |
+| `claimable` | `string` | Tokens available to claim now (`vested - claimed`) |
+| `vesting_type` | `string` | `"team"` or `"investor"` |
+
+If the account has no vesting schedule, `has_schedule` is `false` and all amounts are `"0"`.
+
+**Example:**
+
+```bash
+curl -s -X POST http://127.0.0.1:29944 \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"solen_getVestingInfo","params":["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"],"id":1}'
+```
+
+---
+
 ## System Contract Calls
 
 System contracts are invoked via `solen_submitOperation` with `Action::Call` targeting a well-known address. The executor routes these to native Rust implementations.
 
 | Address | Contract | Available Methods |
 |---------|----------|-------------------|
-| `0xFFFF...FF01` | Staking | `delegate`, `undelegate`, `withdraw` |
+| `0xFFFF...FF01` | Staking | `delegate`, `undelegate`, `withdraw`, `set_commission` |
 | `0xFFFF...FF02` | Governance | `propose_set_base_fee`, `vote` |
 | `0xFFFF...FF03` | Bridge | `register_vault`, `deposit` |
 | `0xFFFF...FF04` | Treasury | `status` |
+| `0xFFFF...FF06` | Vesting | `claim`, `status` |
 
 ### Staking Methods
 
@@ -256,6 +290,27 @@ Default commission: **10%** (1000 bps). Validators can change this via `set_comm
 
 **Event data format** (both `epoch_reward` and `delegator_reward`):
 `recipient_address[32 bytes] + amount[16 bytes LE u128]`
+
+### Vesting Methods
+
+**`claim`** — Claim vested tokens that have passed the cliff and vesting schedule.
+Args: none (sender is identified from the operation).
+
+The claimed tokens are credited directly to the sender's account balance.
+
+**`status`** — Query vesting status (read-only, use `solen_getVestingInfo` RPC instead).
+Args: none.
+
+**Vesting Schedules:**
+
+| Type | Cliff | Total Duration |
+|------|-------|----------------|
+| Team & Founders | 1 year (approx. 365 epochs) | 4 years (approx. 1460 epochs) |
+| Early Investors | 6 months (approx. 182 epochs) | 2.5 years (approx. 912 epochs) |
+
+Tokens vest linearly after the cliff period. Unclaimed tokens accumulate and can be claimed at any time after vesting.
+
+---
 
 ### Governance Methods
 

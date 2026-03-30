@@ -170,6 +170,18 @@ solen unstake mykey 8a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f
 
 ---
 
+### `solen claim-vesting <from>`
+
+Claim vested tokens from your vesting schedule (team or investor allocations).
+
+```bash
+solen claim-vesting mykey
+```
+
+If tokens are available to claim, they will be credited to your account balance. The command calls the vesting system contract (`0xFFFF...FF06`) with the `claim` method.
+
+---
+
 ### System Contract Addresses
 
 System contracts have well-known addresses:
@@ -180,6 +192,7 @@ System contracts have well-known addresses:
 | Governance | `0xFFFF...FF02` |
 | Bridge | `0xFFFF...FF03` |
 | Treasury | `0xFFFF...FF04` |
+| Vesting | `0xFFFF...FF06` |
 
 Call them using `solen call`:
 

@@ -8,7 +8,7 @@ Validators run nodes, propose blocks, and participate in consensus.
 
 | Parameter | Value |
 |-----------|-------|
-| Minimum self-stake | 10,000 SOLEN |
+| Minimum self-stake | 500,000 SOLEN |
 | Slashing (double sign) | 10% of stake + jailing |
 | Slashing (downtime) | 1% after 50 missed blocks |
 | Unbonding period | 7 epochs |
