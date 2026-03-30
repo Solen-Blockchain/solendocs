@@ -186,6 +186,7 @@ List all validators and their stake.
 | `total_stake` | `string` | Self stake + delegated |
 | `is_active` | `bool` | Whether the validator is active |
 | `is_genesis` | `bool` | Whether this is a genesis validator |
+| `commission_bps` | `u64` | Commission rate in basis points (1000 = 10%) |
 
 **Example:**
 
@@ -238,6 +239,23 @@ Args: `validator_address[32 bytes] + amount[16 bytes LE] + epoch[8 bytes LE]`
 
 **`withdraw`** — Withdraw completed undelegations.
 Args: `current_epoch[8 bytes LE]`
+
+**`set_commission`** — Set validator commission rate (validator only).
+Args: `commission_bps[8 bytes LE]` (e.g., 1000 = 10%, max 10000 = 100%)
+
+### Reward Distribution
+
+Rewards are distributed every epoch (~100 blocks / ~3.3 minutes):
+
+| Recipient | Amount | Event |
+|-----------|--------|-------|
+| Validator | Self-stake share + commission on delegator rewards | `epoch_reward` |
+| Delegators | Proportional share minus commission | `delegator_reward` |
+
+Default commission: **10%** (1000 bps). Validators can change this via `set_commission`.
+
+**Event data format** (both `epoch_reward` and `delegator_reward`):
+`recipient_address[32 bytes] + amount[16 bytes LE u128]`
 
 ### Governance Methods
 

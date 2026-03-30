@@ -1293,6 +1293,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#reward-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reward Distribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#governance-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2159,6 +2170,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#reward-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reward Distribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#governance-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2514,6 +2536,11 @@
 <td><code>bool</code></td>
 <td>Whether this is a genesis validator</td>
 </tr>
+<tr>
+<td><code>commission_bps</code></td>
+<td><code>u64</code></td>
+<td>Commission rate in basis points (1000 = 10%)</td>
+</tr>
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
@@ -2609,6 +2636,34 @@ Args: <code>validator_address[32 bytes] + amount[16 bytes LE u128]</code></p>
 Args: <code>validator_address[32 bytes] + amount[16 bytes LE] + epoch[8 bytes LE]</code></p>
 <p><strong><code>withdraw</code></strong> — Withdraw completed undelegations.
 Args: <code>current_epoch[8 bytes LE]</code></p>
+<p><strong><code>set_commission</code></strong> — Set validator commission rate (validator only).
+Args: <code>commission_bps[8 bytes LE]</code> (e.g., 1000 = 10%, max 10000 = 100%)</p>
+<h3 id="reward-distribution">Reward Distribution<a class="headerlink" href="#reward-distribution" title="Permanent link">&para;</a></h3>
+<p>Rewards are distributed every epoch (~100 blocks / ~3.3 minutes):</p>
+<table>
+<thead>
+<tr>
+<th>Recipient</th>
+<th>Amount</th>
+<th>Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Validator</td>
+<td>Self-stake share + commission on delegator rewards</td>
+<td><code>epoch_reward</code></td>
+</tr>
+<tr>
+<td>Delegators</td>
+<td>Proportional share minus commission</td>
+<td><code>delegator_reward</code></td>
+</tr>
+</tbody>
+</table>
+<p>Default commission: <strong>10%</strong> (1000 bps). Validators can change this via <code>set_commission</code>.</p>
+<p><strong>Event data format</strong> (both <code>epoch_reward</code> and <code>delegator_reward</code>):
+<code>recipient_address[32 bytes] + amount[16 bytes LE u128]</code></p>
 <h3 id="governance-methods">Governance Methods<a class="headerlink" href="#governance-methods" title="Permanent link">&para;</a></h3>
 <p><strong><code>propose_set_base_fee</code></strong> — Create a proposal to change the base fee.
 Args: <code>new_fee[16 bytes LE] + description[UTF-8 string]</code></p>
