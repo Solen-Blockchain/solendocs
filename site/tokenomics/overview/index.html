@@ -1438,6 +1438,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#vesting-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vesting Contract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#economic-design" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1909,6 +1920,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#vesting-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vesting Contract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#economic-design" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2075,6 +2097,15 @@
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>Year 10
 <a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>└── Staking pool fully distributed → governance decides on inflation
 </code></pre></div>
+<h2 id="vesting-contract">Vesting Contract<a class="headerlink" href="#vesting-contract" title="Permanent link">&para;</a></h2>
+<p>Team and investor token allocations are managed by the <strong>Vesting system contract</strong> (<code>0xFFFF...FF06</code>). Tokens are held in pool accounts (Team Pool: <code>0xFFFF...FF23</code>, Investor Pool: <code>0xFFFF...FF24</code>) and released according to the vesting schedule.</p>
+<p><strong>How to claim:</strong></p>
+<ul>
+<li><strong>CLI:</strong> <code>solen claim-vesting &lt;keyname&gt;</code></li>
+<li><strong>Wallet:</strong> The "Token Vesting" card appears automatically when your account has a vesting schedule. A "Claim Vested Tokens" button is shown when tokens are available.</li>
+<li><strong>RPC:</strong> Use <code>solen_getVestingInfo</code> to check vesting status, then submit a <code>Call</code> action to the vesting contract with method <code>claim</code>.</li>
+</ul>
+<p>Vesting is not automatic — recipients must actively claim their vested tokens. Unclaimed tokens accumulate and can be claimed at any time.</p>
 <h2 id="economic-design">Economic Design<a class="headerlink" href="#economic-design" title="Permanent link">&para;</a></h2>
 <p>The Solen token has a <strong>fixed initial supply</strong> with no inflation at launch. The <a href="../fee-model/">fee burn</a> creates deflationary pressure as network usage grows. Staking rewards come from a pre-allocated pool distributed over 10 years, after which governance decides whether to enable modest inflation.</p>
 <p>The design prioritizes <strong>long-term sustainability</strong> over short-term incentive complexity.</p>

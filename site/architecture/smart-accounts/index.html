@@ -870,10 +870,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#threshold-signatures" class="md-nav__link">
+  <a href="#threshold-signatures-multi-sig" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Threshold Signatures
+        Threshold Signatures (Multi-sig)
       
     </span>
   </a>
@@ -1971,10 +1971,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#threshold-signatures" class="md-nav__link">
+  <a href="#threshold-signatures-multi-sig" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Threshold Signatures
+        Threshold Signatures (Multi-sig)
       
     </span>
   </a>
@@ -2067,8 +2067,15 @@
 <p>The default authentication method. Each account can have one or more Ed25519 public keys authorized to sign operations.</p>
 <h3 id="passkeys-webauthn">Passkeys (WebAuthn)<a class="headerlink" href="#passkeys-webauthn" title="Permanent link">&para;</a></h3>
 <p>Browser-native authentication using device biometrics (fingerprint, face ID) or security keys. The TypeScript SDK provides <code>PasskeyAuth</code> for WebAuthn integration.</p>
-<h3 id="threshold-signatures">Threshold Signatures<a class="headerlink" href="#threshold-signatures" title="Permanent link">&para;</a></h3>
-<p>Require M-of-N signatures to authorize an operation. Useful for multi-sig wallets, team treasuries, and DAOs.</p>
+<h3 id="threshold-signatures-multi-sig">Threshold Signatures (Multi-sig)<a class="headerlink" href="#threshold-signatures-multi-sig" title="Permanent link">&para;</a></h3>
+<p>Require M-of-N signatures to authorize an operation. Useful for multi-sig wallets, team treasuries, and DAOs. This is implemented natively at the protocol level — no contract deployment needed.</p>
+<p><strong>Setup via CLI:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>solen<span class="w"> </span>multisig<span class="w"> </span>mykey<span class="w"> </span>--threshold<span class="w"> </span><span class="m">2</span><span class="w"> </span>--signers<span class="w"> </span><span class="s2">&quot;pubkey1,pubkey2,pubkey3&quot;</span>
+</code></pre></div>
+<p><strong>Setup via RPC:</strong> Submit a <code>SetAuth</code> action:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SetAuth&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;auth_methods&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">&quot;Threshold&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;signers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">],</span><span class="w"> </span><span class="nt">&quot;threshold&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}]</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p><strong>Signing format:</strong> The operation's <code>signature</code> field contains concatenated <code>pubkey[32] + sig[64]</code> pairs (96 bytes each). At least <code>threshold</code> valid signatures from the signers list must be present.</p>
 <h3 id="guardians">Guardians<a class="headerlink" href="#guardians" title="Permanent link">&para;</a></h3>
 <p>Trusted accounts that can help recover access if primary keys are lost. Social recovery enables account recovery without seed phrases.</p>
 <h3 id="session-credentials">Session Credentials<a class="headerlink" href="#session-credentials" title="Permanent link">&para;</a></h3>
