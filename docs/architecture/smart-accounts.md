@@ -30,19 +30,66 @@ Browser-native authentication using device biometrics (fingerprint, face ID) or 
 
 Require M-of-N signatures to authorize an operation. Useful for multi-sig wallets, team treasuries, and DAOs. This is implemented natively at the protocol level — no contract deployment needed.
 
-**Setup via CLI:**
+#### Setting up a Multi-sig Account
+
+**Step 1:** Generate keys for each signer:
 
 ```bash
-solen multisig mykey --threshold 2 --signers "pubkey1,pubkey2,pubkey3"
+solen key generate signer-alice
+solen key generate signer-bob
+solen key generate signer-carol
 ```
 
-**Setup via RPC:** Submit a `SetAuth` action:
+Note the public keys from `solen key list` — these are the signer addresses.
+
+**Step 2:** Convert an existing account to multi-sig:
+
+```bash
+solen --chain-id 9000 multisig mykey \
+  --threshold 2 \
+  --signers "alice_pubkey,bob_pubkey,carol_pubkey"
+```
+
+This creates a **2-of-3** multi-sig: any 2 of the 3 signers must sign to authorize operations. The account must already exist and have balance for the gas fee.
+
+**Step 3:** Sign operations with multiple keys. Each signer computes the signing message and produces their Ed25519 signature. The signatures are concatenated as `pubkey[32] + sig[64]` pairs (96 bytes each) in the operation's `signature` field. At least `threshold` valid pairs must be present.
+
+#### Multi-sig via RPC
+
+Submit a `SetAuth` action:
 
 ```json
-{ "type": "SetAuth", "auth_methods": [{ "Threshold": { "signers": [...], "threshold": 2 } }] }
+{
+  "type": "SetAuth",
+  "auth_methods": [{
+    "Threshold": {
+      "signers": [
+        "alice_pubkey_hex_64chars",
+        "bob_pubkey_hex_64chars",
+        "carol_pubkey_hex_64chars"
+      ],
+      "threshold": 2
+    }
+  }]
+}
 ```
 
-**Signing format:** The operation's `signature` field contains concatenated `pubkey[32] + sig[64]` pairs (96 bytes each). At least `threshold` valid signatures from the signers list must be present.
+#### Reverting to Single-sig
+
+To convert back to a standard Ed25519 account, submit a `SetAuth` action signed by the current multi-sig with a single `Ed25519` auth method:
+
+```json
+{
+  "type": "SetAuth",
+  "auth_methods": [{ "Ed25519": { "public_key": "your_pubkey_hex" } }]
+}
+```
+
+#### Considerations
+
+- The account must be funded before converting — gas fees still apply to the `SetAuth` operation
+- A threshold of 0 is rejected. Threshold cannot exceed the number of signers
+- Multi-sig accounts work with all operation types: transfers, contract calls, staking, and governance votes
 
 ### Guardians
 
