@@ -23,13 +23,34 @@ The voting period is set per-network in the genesis config (`governance_voting_p
 
 ## What Governance Can Change
 
-- Base fee per gas
+**Implemented:**
+
+- Base fee per gas (`propose-set-base-fee`)
+- Block time (`propose-block-time`)
+- Emergency pause/resume
+
+**Planned:**
+
 - Burn rate
-- Block time
 - Epoch rewards
 - Staking parameters (minimum stake, unbonding period)
 - Rollup registration
-- Emergency pause/resume
+
+### Governance CLI Commands
+
+```bash
+# Propose changing the block time
+solen propose-block-time <keyname> <ms> "<description>"
+
+# Vote on a proposal (--yes or omit for no)
+solen vote <keyname> <proposal_id> --yes --weight <solen_amount>
+
+# Finalize after voting period ends
+solen finalize-proposal <keyname> <proposal_id>
+
+# Execute after timelock expires
+solen execute-proposal <keyname> <proposal_id>
+```
 
 ## What Governance Cannot Change
 

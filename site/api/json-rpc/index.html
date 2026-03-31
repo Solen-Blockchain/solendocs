@@ -1265,6 +1265,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#solen_getgovernanceproposals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_getGovernanceProposals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#solen_callview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2175,6 +2186,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#solen_getgovernanceproposals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_getGovernanceProposals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#solen_callview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2714,6 +2736,77 @@
 </tbody>
 </table>
 <hr />
+<h3 id="solen_getgovernanceproposals"><code>solen_getGovernanceProposals</code><a class="headerlink" href="#solen_getgovernanceproposals" title="Permanent link">&para;</a></h3>
+<p>Get all governance proposals and their current status.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong> Array of proposal objects:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>u64</code></td>
+<td>Proposal ID</td>
+</tr>
+<tr>
+<td><code>proposer</code></td>
+<td><code>string</code></td>
+<td>Hex-encoded proposer account</td>
+</tr>
+<tr>
+<td><code>action</code></td>
+<td><code>string</code></td>
+<td>Proposal action (e.g., <code>SetBlockTime { new_block_time_ms: 4000 }</code>)</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>string</code></td>
+<td>Human-readable description</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td><code>string</code></td>
+<td><code>Active</code>, <code>Passed</code>, <code>Rejected</code>, or <code>Executed</code></td>
+</tr>
+<tr>
+<td><code>voting_end_epoch</code></td>
+<td><code>u64</code></td>
+<td>Epoch when voting ends</td>
+</tr>
+<tr>
+<td><code>execute_after_epoch</code></td>
+<td><code>u64</code></td>
+<td>Epoch when execution is allowed (after timelock)</td>
+</tr>
+<tr>
+<td><code>total_for</code></td>
+<td><code>string</code></td>
+<td>Total stake voting for (base units)</td>
+</tr>
+<tr>
+<td><code>total_against</code></td>
+<td><code>string</code></td>
+<td>Total stake voting against (base units)</td>
+</tr>
+<tr>
+<td><code>vote_count</code></td>
+<td><code>u64</code></td>
+<td>Number of individual votes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getGovernanceProposals&quot;,&quot;params&quot;:[],&quot;id&quot;:1}&#39;</span>
+</code></pre></div>
+<hr />
 <h3 id="solen_callview"><code>solen_callView</code><a class="headerlink" href="#solen_callview" title="Permanent link">&para;</a></h3>
 <p>Read-only contract call — no signature or transaction required. Executes a contract method in a sandboxed VM and returns the result without modifying state.</p>
 <p><strong>Parameters:</strong></p>
@@ -2776,9 +2869,9 @@
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_callView&quot;,&quot;params&quot;:[&quot;&lt;contract-id&gt;&quot;,&quot;total_supply&quot;],&quot;id&quot;:1}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_callView&quot;,&quot;params&quot;:[&quot;&lt;contract-id&gt;&quot;,&quot;total_supply&quot;],&quot;id&quot;:1}&#39;</span>
 </code></pre></div>
 <hr />
 <h3 id="solen_getvestinginfo"><code>solen_getVestingInfo</code><a class="headerlink" href="#solen_getvestinginfo" title="Permanent link">&para;</a></h3>
@@ -2844,9 +2937,9 @@
 </table>
 <p>If the account has no vesting schedule, <code>has_schedule</code> is <code>false</code> and all amounts are <code>"0"</code>.</p>
 <p><strong>Example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getVestingInfo&quot;,&quot;params&quot;:[&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;],&quot;id&quot;:1}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getVestingInfo&quot;,&quot;params&quot;:[&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;],&quot;id&quot;:1}&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="system-contract-calls">System Contract Calls<a class="headerlink" href="#system-contract-calls" title="Permanent link">&para;</a></h2>

@@ -250,6 +250,37 @@ Get staking information for an account (delegations, undelegations).
 
 ---
 
+### `solen_getGovernanceProposals`
+
+Get all governance proposals and their current status.
+
+**Parameters:** None
+
+**Returns:** Array of proposal objects:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `u64` | Proposal ID |
+| `proposer` | `string` | Hex-encoded proposer account |
+| `action` | `string` | Proposal action (e.g., `SetBlockTime { new_block_time_ms: 4000 }`) |
+| `description` | `string` | Human-readable description |
+| `status` | `string` | `Active`, `Passed`, `Rejected`, or `Executed` |
+| `voting_end_epoch` | `u64` | Epoch when voting ends |
+| `execute_after_epoch` | `u64` | Epoch when execution is allowed (after timelock) |
+| `total_for` | `string` | Total stake voting for (base units) |
+| `total_against` | `string` | Total stake voting against (base units) |
+| `vote_count` | `u64` | Number of individual votes |
+
+**Example:**
+
+```bash
+curl -s -X POST http://127.0.0.1:29944 \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"solen_getGovernanceProposals","params":[],"id":1}'
+```
+
+---
+
 ### `solen_callView`
 
 Read-only contract call — no signature or transaction required. Executes a contract method in a sandboxed VM and returns the result without modifying state.

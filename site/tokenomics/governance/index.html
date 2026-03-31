@@ -1491,6 +1491,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="What Governance Can Change">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#governance-cli-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Governance CLI Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1917,6 +1934,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="What Governance Can Change">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#governance-cli-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Governance CLI Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2011,15 +2045,32 @@
 <li><strong>Execution</strong> — Proposal is applied automatically</li>
 </ol>
 <h2 id="what-governance-can-change">What Governance Can Change<a class="headerlink" href="#what-governance-can-change" title="Permanent link">&para;</a></h2>
+<p><strong>Implemented:</strong></p>
 <ul>
-<li>Base fee per gas</li>
+<li>Base fee per gas (<code>propose-set-base-fee</code>)</li>
+<li>Block time (<code>propose-block-time</code>)</li>
+<li>Emergency pause/resume</li>
+</ul>
+<p><strong>Planned:</strong></p>
+<ul>
 <li>Burn rate</li>
-<li>Block time</li>
 <li>Epoch rewards</li>
 <li>Staking parameters (minimum stake, unbonding period)</li>
 <li>Rollup registration</li>
-<li>Emergency pause/resume</li>
 </ul>
+<h3 id="governance-cli-commands">Governance CLI Commands<a class="headerlink" href="#governance-cli-commands" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Propose changing the block time</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>solen<span class="w"> </span>propose-block-time<span class="w"> </span>&lt;keyname&gt;<span class="w"> </span>&lt;ms&gt;<span class="w"> </span><span class="s2">&quot;&lt;description&gt;&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Vote on a proposal (--yes or omit for no)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>solen<span class="w"> </span>vote<span class="w"> </span>&lt;keyname&gt;<span class="w"> </span>&lt;proposal_id&gt;<span class="w"> </span>--yes<span class="w"> </span>--weight<span class="w"> </span>&lt;solen_amount&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Finalize after voting period ends</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>solen<span class="w"> </span>finalize-proposal<span class="w"> </span>&lt;keyname&gt;<span class="w"> </span>&lt;proposal_id&gt;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Execute after timelock expires</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>solen<span class="w"> </span>execute-proposal<span class="w"> </span>&lt;keyname&gt;<span class="w"> </span>&lt;proposal_id&gt;
+</code></pre></div>
 <h2 id="what-governance-cannot-change">What Governance Cannot Change<a class="headerlink" href="#what-governance-cannot-change" title="Permanent link">&para;</a></h2>
 <p>These require a hard fork:</p>
 <ul>
