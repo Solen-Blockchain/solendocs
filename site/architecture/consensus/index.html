@@ -858,6 +858,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#dynamic-validator-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Validator Set
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#checkpoints" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2021,6 +2032,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#dynamic-validator-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Validator Set
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#checkpoints" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2123,6 +2145,9 @@
 <li><strong>1% stake penalty</strong></li>
 <li>The validator remains in the active set but may be rotated out</li>
 </ul>
+<p>All slashed funds are sent to the <strong>Foundation Treasury</strong> (<code>0xFFFF...FF04</code>).</p>
+<h2 id="dynamic-validator-set">Dynamic Validator Set<a class="headerlink" href="#dynamic-validator-set" title="Permanent link">&para;</a></h2>
+<p>The consensus engine syncs with the staking contract at each epoch boundary (every 100 blocks). New validators who register via the <code>register</code> staking method are automatically added to the active proposer rotation at the next epoch. Validators earn rewards starting one epoch after registration.</p>
 <h2 id="checkpoints">Checkpoints<a class="headerlink" href="#checkpoints" title="Permanent link">&para;</a></h2>
 <p>The consensus engine periodically creates checkpoints — snapshots of the validator set and finalized state. These are used for:</p>
 <ul>

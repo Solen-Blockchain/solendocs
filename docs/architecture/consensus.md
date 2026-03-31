@@ -52,6 +52,12 @@ Missing 50 consecutive blocks results in:
 - **1% stake penalty**
 - The validator remains in the active set but may be rotated out
 
+All slashed funds are sent to the **Foundation Treasury** (`0xFFFF...FF04`).
+
+## Dynamic Validator Set
+
+The consensus engine syncs with the staking contract at each epoch boundary (every 100 blocks). New validators who register via the `register` staking method are automatically added to the active proposer rotation at the next epoch. Validators earn rewards starting one epoch after registration.
+
 ## Checkpoints
 
 The consensus engine periodically creates checkpoints — snapshots of the validator set and finalized state. These are used for:

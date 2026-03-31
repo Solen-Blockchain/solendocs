@@ -1445,6 +1445,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#becoming-a-validator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Becoming a Validator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#validator-rewards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1972,6 +1983,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#becoming-a-validator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Becoming a Validator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#validator-rewards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2143,11 +2165,29 @@
 <td>1% after 50 missed blocks</td>
 </tr>
 <tr>
+<td>Slashing destination</td>
+<td>Foundation Treasury</td>
+</tr>
+<tr>
 <td>Unbonding period</td>
 <td>7 epochs</td>
 </tr>
+<tr>
+<td>Default commission</td>
+<td>10% (1000 bps)</td>
+</tr>
+<tr>
+<td>Genesis validator lock</td>
+<td>~1 year (157,680 epochs)</td>
+</tr>
 </tbody>
 </table>
+<h3 id="becoming-a-validator">Becoming a Validator<a class="headerlink" href="#becoming-a-validator" title="Permanent link">&para;</a></h3>
+<p>Register as a validator via the staking system contract:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>solen<span class="w"> </span>--chain-id<span class="w"> </span><span class="m">9000</span><span class="w"> </span>register-validator<span class="w"> </span>&lt;keyname&gt;<span class="w"> </span><span class="m">500000</span>
+</code></pre></div>
+<p>This stakes 500,000 SOLEN as self-stake and registers your account as a validator. The validator joins the active consensus set at the next epoch boundary (every 100 blocks) and begins earning rewards one epoch after that.</p>
+<p>See <a href="../../tools/running-a-node/#becoming-a-validator">Running a Node — Becoming a Validator</a> for the full setup guide.</p>
 <h3 id="validator-rewards">Validator Rewards<a class="headerlink" href="#validator-rewards" title="Permanent link">&para;</a></h3>
 <p>Validators earn from two sources:</p>
 <ol>
@@ -2156,7 +2196,7 @@
 </ol>
 <h3 id="reward-calculation">Reward Calculation<a class="headerlink" href="#reward-calculation" title="Permanent link">&para;</a></h3>
 <p>Each epoch, a fixed reward pool is distributed across all active validators:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>validator_reward = epoch_reward_pool × (validator_total_stake / network_total_stake)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>validator_reward = epoch_reward_pool × (validator_total_stake / network_total_stake)
 </code></pre></div>
 <h2 id="delegators">Delegators<a class="headerlink" href="#delegators" title="Permanent link">&para;</a></h2>
 <p>Any token holder can delegate to a validator without running infrastructure.</p>
@@ -2188,7 +2228,7 @@
 </table>
 <h3 id="delegator-rewards">Delegator Rewards<a class="headerlink" href="#delegator-rewards" title="Permanent link">&para;</a></h3>
 <p>Within a validator, rewards are split proportionally:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>delegator_reward = validator_reward × (delegator_stake / validator_total_stake)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>delegator_reward = validator_reward × (delegator_stake / validator_total_stake)
 </code></pre></div>
 <h3 id="choosing-a-validator">Choosing a Validator<a class="headerlink" href="#choosing-a-validator" title="Permanent link">&para;</a></h3>
 <p>Delegators should consider:</p>

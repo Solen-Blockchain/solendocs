@@ -110,13 +110,50 @@ solen call faucet <TOKEN_ID> transfer --args "${ALICE}${AMOUNT}"
 
 ### ABI Discovery
 
-SRC-20 tokens implement an `abi()` method that returns a JSON array of available methods. The explorer uses this to auto-populate the "Read Contract" UI. Query it via `solen_callView`:
+Contracts implement an `abi()` method that returns a JSON description of available methods and events. The explorer uses this to auto-populate the "Read Contract" and "Write Contract" UI, and to decode events.
+
+**ABI format:**
+
+```json
+{
+  "methods": [
+    {"name": "transfer", "args": "to[32]+amount[16]", "mutates": true},
+    {"name": "balance_of", "args": "account[32]", "mutates": false}
+  ],
+  "events": [
+    {"topic": "transfer", "data": "to[32]+amount[16]"},
+    {"topic": "mint", "data": "to[32]+amount[16]"}
+  ]
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `methods[].name` | Method name (passed as first part of input before null byte) |
+| `methods[].args` | Argument format: `name[size]` separated by `+` |
+| `methods[].mutates` | `true` for write methods, `false` for read-only |
+| `events[].topic` | Event topic string |
+| `events[].data` | Data format: `name[size]` separated by `+` |
+
+Query it via `solen_callView`:
 
 ```bash
 curl -s -X POST http://127.0.0.1:29944 \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"solen_callView","params":["<TOKEN_ID>","abi"],"id":1}'
 ```
+
+### Source Code Publishing
+
+Contract deployers can publish source code for verification on the explorer:
+
+```bash
+curl -X POST https://testnet-api.solenchain.com/api/contracts/<CODE_HASH>/source \
+  -H "Content-Type: application/json" \
+  -d '{"code_hash":"<CODE_HASH>","source_code":"<RUST_SOURCE>","language":"rust","compiler_version":"1.78.0"}'
+```
+
+Published source code is displayed on the contract's page in the explorer.
 
 ---
 

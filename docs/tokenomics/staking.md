@@ -11,7 +11,22 @@ Validators run nodes, propose blocks, and participate in consensus.
 | Minimum self-stake | 500,000 SOLEN |
 | Slashing (double sign) | 10% of stake + jailing |
 | Slashing (downtime) | 1% after 50 missed blocks |
+| Slashing destination | Foundation Treasury |
 | Unbonding period | 7 epochs |
+| Default commission | 10% (1000 bps) |
+| Genesis validator lock | ~1 year (157,680 epochs) |
+
+### Becoming a Validator
+
+Register as a validator via the staking system contract:
+
+```bash
+solen --chain-id 9000 register-validator <keyname> 500000
+```
+
+This stakes 500,000 SOLEN as self-stake and registers your account as a validator. The validator joins the active consensus set at the next epoch boundary (every 100 blocks) and begins earning rewards one epoch after that.
+
+See [Running a Node — Becoming a Validator](../tools/running-a-node.md#becoming-a-validator) for the full setup guide.
 
 ### Validator Rewards
 

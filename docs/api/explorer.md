@@ -254,6 +254,62 @@ List all deployed contracts.
 
 ---
 
+### `GET /api/validators/stats`
+
+Get block production statistics for each validator.
+
+**Response:**
+
+```json
+[
+  {
+    "validator": "8a88e3dd7409...",
+    "blocks_proposed": 1234,
+    "last_proposed_height": 5678,
+    "uptime_pct": 20.5
+  }
+]
+```
+
+`uptime_pct` is the percentage of total blocks proposed by this validator.
+
+---
+
+### `POST /api/contracts/:code_hash/source`
+
+Publish source code for a contract.
+
+**Request body:**
+
+```json
+{
+  "code_hash": "869c407df2e5...",
+  "source_code": "//! Contract source...",
+  "language": "rust",
+  "compiler_version": "1.78.0"
+}
+```
+
+### `GET /api/contracts/:code_hash/source`
+
+Retrieve published source code for a contract.
+
+**Response:**
+
+```json
+{
+  "code_hash": "869c407df2e5...",
+  "source_code": "//! Contract source...",
+  "language": "rust",
+  "compiler_version": "1.78.0",
+  "published_at": 1711900000
+}
+```
+
+Returns `null` if no source has been published.
+
+---
+
 ## Pagination
 
 All list endpoints (`/api/blocks`, `/api/txs`, `/api/events`, `/api/accounts/:id/txs`) support pagination:
