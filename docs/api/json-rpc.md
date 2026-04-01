@@ -345,6 +345,95 @@ curl -s -X POST http://127.0.0.1:29944 \
 
 ---
 
+### `solen_submitIntent`
+
+Submit a signed intent for solver resolution.
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `sender` | `string` | Hex-encoded sender account ID |
+| `constraints` | `array` | Array of constraint objects (see below) |
+| `max_fee` | `string` | Maximum fee the sender is willing to pay |
+| `expiry_height` | `u64` | Block height at which the intent expires |
+| `signature` | `string` | Hex-encoded signature |
+| `tip` | `string` | Incentive for the solver (base units) |
+
+**Constraint types:**
+
+| Type | Fields |
+|------|--------|
+| `MinBalance` | `account`, `min_amount` |
+| `MaxSpend` | `account`, `max_amount` |
+| `RequireTransfer` | `from`, `to`, `min_amount` |
+| `RequireCall` | `target`, `method` |
+| `Custom` | `verifier`, `data` (hex) |
+
+**Returns:** `{ accepted: bool, intent_id: u64?, error: string? }`
+
+---
+
+### `solen_checkSponsorship`
+
+Check if a paymaster will sponsor an operation's fees.
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `op` | `UserOperation` | The operation to check (byte array format) |
+
+**Returns:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `sponsored` | `bool` | Whether a paymaster will sponsor |
+| `paymaster` | `string?` | Hex-encoded paymaster contract address |
+| `max_gas` | `string?` | Maximum gas the paymaster will cover |
+| `reason` | `string?` | Reason if not sponsored |
+
+---
+
+### `solen_getRollupStatus`
+
+Get rollup registration info and latest state commitment.
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `rollup_id` | `u64` | Rollup domain identifier |
+
+**Returns:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `rollup_id` | `u64` | Rollup ID |
+| `registered` | `bool` | Whether the rollup is registered |
+| `last_verified_state_root` | `string?` | Last verified state root (hex) |
+| `last_batch_index` | `u64?` | Last verified batch index |
+
+---
+
+### `solen_submitBatch`
+
+Submit a rollup batch commitment for proof verification on L1.
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `rollup_id` | `u64` | Rollup domain identifier |
+| `batch_index` | `u64` | Sequential batch number |
+| `state_root` | `string` | Post-execution state root (hex) |
+| `data_hash` | `string` | Hash of batch data (hex) |
+| `proof` | `string` | Proof bytes (hex) |
+
+**Returns:** `{ accepted: bool, verified: bool, error: string? }`
+
+---
+
 ## System Contract Calls
 
 System contracts are invoked via `solen_submitOperation` with `Action::Call` targeting a well-known address. The executor routes these to native Rust implementations.
@@ -352,10 +441,11 @@ System contracts are invoked via `solen_submitOperation` with `Action::Call` tar
 | Address | Contract | Available Methods |
 |---------|----------|-------------------|
 | `0xFFFF...FF01` | Staking | `register`, `delegate`, `undelegate`, `withdraw`, `set_commission` |
-| `0xFFFF...FF02` | Governance | `propose_set_base_fee`, `vote` |
-| `0xFFFF...FF03` | Bridge | `register_vault`, `deposit` |
+| `0xFFFF...FF02` | Governance | `propose_set_base_fee`, `propose_set_block_time`, `vote`, `finalize`, `execute` |
+| `0xFFFF...FF03` | Bridge | `register_vault`, `deposit`, `register_rollup` |
 | `0xFFFF...FF04` | Treasury | `status` |
 | `0xFFFF...FF06` | Vesting | `claim`, `status` |
+| `0xFFFF...FF07` | Paymaster Registry | `register`, `unregister`, `list` |
 
 ### Staking Methods
 
@@ -424,6 +514,73 @@ Args: `rollup_id[8 bytes LE]`
 
 **`deposit`** — Deposit tokens into a rollup bridge vault.
 Args: `rollup_id[8 bytes LE] + amount[16 bytes LE]`
+
+**`register_rollup`** — Register a rollup domain on L1. Requires a 10,000 SOLEN deposit.
+Args: `rollup_id[8] + name_len[4] + name[...] + proof_type_len[4] + proof_type[...] + sequencer[32] + genesis_state_root[32]`
+
+Creates a bridge vault, registers the rollup for proof verification, and emits a `rollup_registered` event.
+
+### Paymaster Registry Methods
+
+**`register`** — Register the calling contract as a fee sponsor (paymaster). The sender must be a deployed contract that implements a `willSponsor` view method. No args.
+
+**`unregister`** — Remove the calling contract from the paymaster registry. No args.
+
+**`list`** — Query the number of registered paymasters. No args.
+
+**Paymaster contract interface:**
+
+Paymaster contracts must implement a `willSponsor` method that:
+
+- Receives the serialized `UserOperation` as input
+- Returns `[1]` (1 byte) to accept, or `[1, max_gas[16 bytes LE]]` to accept with a gas limit
+- Returns `[0]` or empty to reject
+
+---
+
+## CLI Commands
+
+The `solen-cli` tool provides command-line access to all system operations:
+
+```bash
+# Chain info
+solen-cli status
+solen-cli balance <account>
+solen-cli validators
+
+# Transfers
+solen-cli transfer <from> <to> <amount>
+
+# Staking
+solen-cli register-validator <from> <amount>
+solen-cli stake <from> <validator> <amount>
+solen-cli unstake <from> <validator> <amount>
+
+# Governance
+solen-cli propose-block-time <from> <ms> <description>
+solen-cli vote <from> <proposal-id> --yes <weight>
+solen-cli finalize-proposal <from> <proposal-id>
+solen-cli execute-proposal <from> <proposal-id>
+
+# Contracts
+solen-cli deploy <from> <wasm-file>
+solen-cli call <from> <target> <method> [--args <hex>]
+
+# Rollups
+solen-cli register-rollup <from> <rollup-id> <name> [--proof-type mock] [--genesis-state-root <hex>]
+
+# Paymasters
+solen-cli register-paymaster <from>
+solen-cli unregister-paymaster <from>
+
+# Key management
+solen-cli key generate <name>
+solen-cli key import <name> <seed-hex>
+solen-cli key list
+```
+
+All amount values are in SOLEN (human-readable). Decimals supported (e.g., `100.5`).
+Use `--rpc <url>` to specify the RPC endpoint and `--chain-id <id>` for the network.
 
 ---
 

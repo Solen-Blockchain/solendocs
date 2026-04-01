@@ -47,10 +47,11 @@ Submits a signed user operation to the mempool.
 
 ### `solen_submitIntent(signed_intent)`
 
-Submits a signed intent for solver resolution.
+Submits a signed intent for solver resolution. Intents are stored in an in-memory pool and matched with solver solutions.
 
-- **Parameters:** `signed_intent` — complete signed Intent
-- **Returns:** Intent hash
+- **Parameters:** `signed_intent` — Intent with sender, constraints, max_fee, expiry_height, signature, and tip
+- **Returns:** `{ accepted, intent_id, error }`
+- **Status:** Implemented
 
 ## Simulation
 
@@ -63,26 +64,29 @@ Dry-runs a user operation without state changes.
 
 ### `solen_checkSponsorship(op)`
 
-Checks if a paymaster will sponsor the given operation's fees.
+Checks if a registered paymaster contract will sponsor the given operation's fees. Queries each paymaster's `willSponsor` view method.
 
-- **Parameters:** `op` — UserOperation
-- **Returns:** Sponsorship status and paymaster details
+- **Parameters:** `op` — UserOperation (byte array format)
+- **Returns:** `{ sponsored, paymaster, max_gas, reason }`
+- **Status:** Implemented
 
 ## Rollup Operations
 
 ### `solen_getRollupStatus(rollup_id)`
 
-Returns rollup registration info and latest state commitment.
+Returns rollup registration info and latest verified state root.
 
-- **Parameters:** `rollup_id` — hex-encoded rollup identifier
-- **Returns:** Rollup object with latest commitment
+- **Parameters:** `rollup_id` — numeric rollup identifier
+- **Returns:** `{ rollup_id, registered, last_verified_state_root, last_batch_index }`
+- **Status:** Implemented
 
 ### `solen_submitBatch(batch)`
 
-Submits a rollup batch commitment to L1.
+Submits a rollup batch commitment for proof verification on L1. Auto-registers the rollup in the in-memory proof registry if it was registered on-chain.
 
-- **Parameters:** `batch` — batch commitment with state root and proof
-- **Returns:** Batch hash
+- **Parameters:** `batch` — `{ rollup_id, batch_index, state_root, data_hash, proof }` (hex-encoded hashes)
+- **Returns:** `{ accepted, verified, error }`
+- **Status:** Implemented
 
 ## Error Codes
 
