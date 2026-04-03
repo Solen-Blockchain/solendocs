@@ -442,6 +442,34 @@ Check if a paymaster will sponsor an operation's fees.
 
 ---
 
+### `solen_getSnapshot`
+
+Get a compressed state snapshot for fast sync. Cached for 500 blocks.
+
+**Parameters:** None
+
+**Returns:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `height` | `u64` | Block height of the snapshot |
+| `epoch` | `u64` | Epoch at snapshot time |
+| `state_root` | `string` | Hex-encoded state root hash |
+| `entries` | `u64` | Number of state entries |
+| `compressed_bytes` | `usize` | Compressed data size in bytes |
+| `uncompressed_bytes` | `usize` | Uncompressed data size in bytes |
+| `data` | `string` | Base64-encoded snapshot binary |
+
+**Example:**
+
+```bash
+curl -s -X POST http://127.0.0.1:29944 \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"solen_getSnapshot","params":[],"id":1}'
+```
+
+---
+
 ### `solen_getRollupStatus`
 
 Get rollup registration info and latest state commitment.

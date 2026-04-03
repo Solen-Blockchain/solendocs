@@ -29,8 +29,10 @@ Options:
     --validator-seed <HEX>     32-byte hex seed for validator key
     --no-p2p                   Disable P2P networking
     --in-memory                Use in-memory storage (no persistence)
-    --archive                  Archive mode: keep all blocks (no pruning)
+    --prune                    Enable block pruning (default: archive mode)
     --explorer-port <PORT>     Explorer API port (0 to disable)
+    --genesis <PATH>           Path to genesis.json config file
+    --snapshot <URL|PATH>      Bootstrap from a state snapshot
 ```
 
 ### Network Defaults
@@ -69,6 +71,81 @@ This gives you:
     --explorer-port 29956 \
     --bootstrap /ip4/127.0.0.1/tcp/50333
 ```
+
+## Snapshot Sync
+
+New nodes can skip replaying the entire chain history by downloading a compressed state snapshot from an existing node. This is significantly faster than syncing block-by-block.
+
+### Automatic (Recommended)
+
+When a node starts with an empty data directory and has bootstrap peers configured, it **automatically** requests a snapshot from the seed nodes:
+
+```bash
+solen-node --network testnet \
+    --bootstrap /dns4/testnet-seed1.solenchain.io/tcp/40333
+```
+
+The node will:
+
+1. Detect that the store is empty
+2. Call `solen_getSnapshot` on the seed node's RPC endpoint
+3. Download and decompress the snapshot
+4. Verify the state root matches
+5. Resume normal sync from the snapshot height
+
+### Manual
+
+You can also provide a snapshot explicitly:
+
+```bash
+# From a file
+solen-node --snapshot /path/to/snapshot.bin
+
+# From an RPC endpoint
+solen-node --snapshot https://testnet-rpc.solenchain.io
+```
+
+### Creating Snapshots
+
+Any archive node can serve snapshots via the `solen_getSnapshot` RPC method:
+
+```bash
+curl -s -X POST https://testnet-rpc.solenchain.io \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"solen_getSnapshot","params":[],"id":1}' \
+  | python3 -c "import sys,json; r=json.load(sys.stdin)['result']; print(f'Height: {r[\"height\"]}, Entries: {r[\"entries\"]}, Size: {r[\"compressed_bytes\"]} bytes')"
+```
+
+The response includes:
+
+| Field | Description |
+|-------|-------------|
+| `height` | Block height of the snapshot |
+| `epoch` | Epoch at snapshot time |
+| `state_root` | State root hash (verified on restore) |
+| `entries` | Number of state entries |
+| `compressed_bytes` | Compressed snapshot size |
+| `data` | Base64-encoded snapshot (header + deflate-compressed KV pairs) |
+
+### How It Works
+
+- **Snapshot format:** 56-byte header (`SNAP` magic + version + height + epoch + state root) followed by deflate-compressed key-value pairs
+- **State root verification:** After restoring, the node computes the state root over all loaded entries and verifies it matches the header. Corrupted or tampered snapshots are rejected.
+- **Caching:** Archive nodes cache snapshots for 500 blocks (~16 minutes) and pre-warm the cache on startup. Serving a snapshot to new nodes is instant.
+- **Non-blocking:** Snapshot creation uses RocksDB's native checkpoint API (hard-linked SST files) so the chain never pauses during snapshot generation.
+- **Storage mode:** By default, nodes run in archive mode (keep all blocks). Use `--prune` to enable block pruning for nodes that only need recent history.
+
+### Snapshot vs Full Sync
+
+| | Snapshot Sync | Full Sync |
+|---|---|---|
+| **Speed** | Seconds to minutes | Hours to days (at scale) |
+| **Data** | Current state only | Full block history |
+| **Verification** | State root match | Every block re-executed |
+| **When to use** | New validators, API nodes | Archive nodes, auditing |
+
+!!! note
+    Snapshot sync restores the current account state but does not include historical blocks. The node will have the correct balances and contract state, but transaction history before the snapshot height won't be available locally. The explorer indexer will only show transactions from the snapshot height forward.
 
 ## Becoming a Validator
 

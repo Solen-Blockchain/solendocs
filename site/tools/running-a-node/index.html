@@ -1650,6 +1650,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#snapshot-sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot Sync
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Snapshot Sync">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automatic-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snapshot-vs-full-sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot vs Full Sync
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#becoming-a-validator" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2159,6 +2231,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#snapshot-sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot Sync
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Snapshot Sync">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automatic-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snapshot-vs-full-sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot vs Full Sync
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#becoming-a-validator" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2395,8 +2539,10 @@
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    --validator-seed &lt;HEX&gt;     32-byte hex seed for validator key
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    --no-p2p                   Disable P2P networking
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    --in-memory                Use in-memory storage (no persistence)
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    --archive                  Archive mode: keep all blocks (no pruning)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    --prune                    Enable block pruning (default: archive mode)
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    --explorer-port &lt;PORT&gt;     Explorer API port (0 to disable)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    --genesis &lt;PATH&gt;           Path to genesis.json config file
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    --snapshot &lt;URL|PATH&gt;      Bootstrap from a state snapshot
 </code></pre></div>
 <h3 id="network-defaults">Network Defaults<a class="headerlink" href="#network-defaults" title="Permanent link">&para;</a></h3>
 <table>
@@ -2459,38 +2605,147 @@
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>--explorer-port<span class="w"> </span><span class="m">29956</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span>--bootstrap<span class="w"> </span>/ip4/127.0.0.1/tcp/50333
 </code></pre></div>
+<h2 id="snapshot-sync">Snapshot Sync<a class="headerlink" href="#snapshot-sync" title="Permanent link">&para;</a></h2>
+<p>New nodes can skip replaying the entire chain history by downloading a compressed state snapshot from an existing node. This is significantly faster than syncing block-by-block.</p>
+<h3 id="automatic-recommended">Automatic (Recommended)<a class="headerlink" href="#automatic-recommended" title="Permanent link">&para;</a></h3>
+<p>When a node starts with an empty data directory and has bootstrap peers configured, it <strong>automatically</strong> requests a snapshot from the seed nodes:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>solen-node<span class="w"> </span>--network<span class="w"> </span>testnet<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span>--bootstrap<span class="w"> </span>/dns4/testnet-seed1.solenchain.io/tcp/40333
+</code></pre></div>
+<p>The node will:</p>
+<ol>
+<li>Detect that the store is empty</li>
+<li>Call <code>solen_getSnapshot</code> on the seed node's RPC endpoint</li>
+<li>Download and decompress the snapshot</li>
+<li>Verify the state root matches</li>
+<li>Resume normal sync from the snapshot height</li>
+</ol>
+<h3 id="manual">Manual<a class="headerlink" href="#manual" title="Permanent link">&para;</a></h3>
+<p>You can also provide a snapshot explicitly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From a file</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>solen-node<span class="w"> </span>--snapshot<span class="w"> </span>/path/to/snapshot.bin
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># From an RPC endpoint</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>solen-node<span class="w"> </span>--snapshot<span class="w"> </span>https://testnet-rpc.solenchain.io
+</code></pre></div>
+<h3 id="creating-snapshots">Creating Snapshots<a class="headerlink" href="#creating-snapshots" title="Permanent link">&para;</a></h3>
+<p>Any archive node can serve snapshots via the <code>solen_getSnapshot</code> RPC method:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://testnet-rpc.solenchain.io<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getSnapshot&quot;,&quot;params&quot;:[],&quot;id&quot;:1}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; r=json.load(sys.stdin)[&#39;result&#39;]; print(f&#39;Height: {r[\&quot;height\&quot;]}, Entries: {r[\&quot;entries\&quot;]}, Size: {r[\&quot;compressed_bytes\&quot;]} bytes&#39;)&quot;</span>
+</code></pre></div>
+<p>The response includes:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>height</code></td>
+<td>Block height of the snapshot</td>
+</tr>
+<tr>
+<td><code>epoch</code></td>
+<td>Epoch at snapshot time</td>
+</tr>
+<tr>
+<td><code>state_root</code></td>
+<td>State root hash (verified on restore)</td>
+</tr>
+<tr>
+<td><code>entries</code></td>
+<td>Number of state entries</td>
+</tr>
+<tr>
+<td><code>compressed_bytes</code></td>
+<td>Compressed snapshot size</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>Base64-encoded snapshot (header + deflate-compressed KV pairs)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Snapshot format:</strong> 56-byte header (<code>SNAP</code> magic + version + height + epoch + state root) followed by deflate-compressed key-value pairs</li>
+<li><strong>State root verification:</strong> After restoring, the node computes the state root over all loaded entries and verifies it matches the header. Corrupted or tampered snapshots are rejected.</li>
+<li><strong>Caching:</strong> Archive nodes cache snapshots for 500 blocks (~16 minutes) and pre-warm the cache on startup. Serving a snapshot to new nodes is instant.</li>
+<li><strong>Non-blocking:</strong> Snapshot creation uses RocksDB's native checkpoint API (hard-linked SST files) so the chain never pauses during snapshot generation.</li>
+<li><strong>Storage mode:</strong> By default, nodes run in archive mode (keep all blocks). Use <code>--prune</code> to enable block pruning for nodes that only need recent history.</li>
+</ul>
+<h3 id="snapshot-vs-full-sync">Snapshot vs Full Sync<a class="headerlink" href="#snapshot-vs-full-sync" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Snapshot Sync</th>
+<th>Full Sync</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Speed</strong></td>
+<td>Seconds to minutes</td>
+<td>Hours to days (at scale)</td>
+</tr>
+<tr>
+<td><strong>Data</strong></td>
+<td>Current state only</td>
+<td>Full block history</td>
+</tr>
+<tr>
+<td><strong>Verification</strong></td>
+<td>State root match</td>
+<td>Every block re-executed</td>
+</tr>
+<tr>
+<td><strong>When to use</strong></td>
+<td>New validators, API nodes</td>
+<td>Archive nodes, auditing</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Snapshot sync restores the current account state but does not include historical blocks. The node will have the correct balances and contract state, but transaction history before the snapshot height won't be available locally. The explorer indexer will only show transactions from the snapshot height forward.</p>
+</div>
 <h2 id="becoming-a-validator">Becoming a Validator<a class="headerlink" href="#becoming-a-validator" title="Permanent link">&para;</a></h2>
 <p>Validators produce blocks and earn staking rewards. You need the minimum stake of <strong>500,000 SOLEN</strong> to register.</p>
 <h3 id="1-generate-a-validator-key">1. Generate a Validator Key<a class="headerlink" href="#1-generate-a-validator-key" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Generate a new keypair</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>solen<span class="w"> </span>key<span class="w"> </span>generate<span class="w"> </span>my-validator
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Or import from a 32-byte hex seed</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>solen<span class="w"> </span>key<span class="w"> </span>import<span class="w"> </span>my-validator<span class="w"> </span>&lt;<span class="m">64</span>-char-hex-seed&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Generate a new keypair</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>solen<span class="w"> </span>key<span class="w"> </span>generate<span class="w"> </span>my-validator
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Or import from a 32-byte hex seed</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>solen<span class="w"> </span>key<span class="w"> </span>import<span class="w"> </span>my-validator<span class="w"> </span>&lt;<span class="m">64</span>-char-hex-seed&gt;
 </code></pre></div>
 <p>Your validator's account ID = public key. Fund this account with at least 500,000 SOLEN.</p>
 <h3 id="2-register-as-validator">2. Register as Validator<a class="headerlink" href="#2-register-as-validator" title="Permanent link">&para;</a></h3>
 <p>Register with the minimum stake (500,000 SOLEN):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>solen<span class="w"> </span>--rpc<span class="w"> </span>https://testnet-rpc.solenchain.io<span class="w"> </span>--chain-id<span class="w"> </span><span class="m">9000</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>register-validator<span class="w"> </span>my-validator<span class="w"> </span><span class="m">500000</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>solen<span class="w"> </span>--rpc<span class="w"> </span>https://testnet-rpc.solenchain.io<span class="w"> </span>--chain-id<span class="w"> </span><span class="m">9000</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>register-validator<span class="w"> </span>my-validator<span class="w"> </span><span class="m">500000</span>
 </code></pre></div>
 <p>All CLI amounts are in <strong>SOLEN</strong> (not base units). Decimals are supported: <code>100.5</code> = 100.5 SOLEN.</p>
 <p>This calls the staking system contract to register your account as a validator with self-stake. Your validator will be eligible for block production starting the next epoch (~100 blocks).</p>
 <h3 id="3-run-the-validator-node">3. Run the Validator Node<a class="headerlink" href="#3-run-the-validator-node" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>solen-node<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span>--network<span class="w"> </span>testnet<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>--genesis<span class="w"> </span>/path/to/genesis.json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>--data-dir<span class="w"> </span>/opt/solen/data/testnet<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>--validator-seed<span class="w"> </span>&lt;your-32-byte-hex-seed&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>--bootstrap<span class="w"> </span>/dns4/testnet-seed1.solenchain.io/tcp/40333<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>--bootstrap<span class="w"> </span>/dns4/testnet-seed2.solenchain.io/tcp/40333<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>--bootstrap<span class="w"> </span>/dns4/testnet-seed3.solenchain.io/tcp/40333<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span>--bootstrap<span class="w"> </span>/dns4/testnet-seed4.solenchain.io/tcp/40333
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>solen-node<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span>--network<span class="w"> </span>testnet<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span>--genesis<span class="w"> </span>/path/to/genesis.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span>--data-dir<span class="w"> </span>/opt/solen/data/testnet<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span>--validator-seed<span class="w"> </span>&lt;your-32-byte-hex-seed&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span>--bootstrap<span class="w"> </span>/dns4/testnet-seed1.solenchain.io/tcp/40333<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span>--bootstrap<span class="w"> </span>/dns4/testnet-seed2.solenchain.io/tcp/40333<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span>--bootstrap<span class="w"> </span>/dns4/testnet-seed3.solenchain.io/tcp/40333<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span>--bootstrap<span class="w"> </span>/dns4/testnet-seed4.solenchain.io/tcp/40333
 </code></pre></div>
 <p>The node will sync with the network, and once your stake is active, it will begin participating in consensus.</p>
 <h3 id="4-verify">4. Verify<a class="headerlink" href="#4-verify" title="Permanent link">&para;</a></h3>
 <p>Check that your validator appears in the validator list:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>solen<span class="w"> </span>--rpc<span class="w"> </span>https://testnet-rpc.solenchain.io<span class="w"> </span>validators
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>solen<span class="w"> </span>--rpc<span class="w"> </span>https://testnet-rpc.solenchain.io<span class="w"> </span>validators
 </code></pre></div>
 <h3 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h3>
 <table>
@@ -2520,14 +2775,14 @@
 </tbody>
 </table>
 <h3 id="validator-operations">Validator Operations<a class="headerlink" href="#validator-operations" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Add more stake</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>solen<span class="w"> </span>stake<span class="w"> </span>my-validator<span class="w"> </span>&lt;validator-address&gt;<span class="w"> </span>&lt;amount&gt;
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Begin unstaking (subject to unbonding period)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>solen<span class="w"> </span>unstake<span class="w"> </span>my-validator<span class="w"> </span>&lt;validator-address&gt;<span class="w"> </span>&lt;amount&gt;
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Check your validator status</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>solen<span class="w"> </span>validators
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Add more stake</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>solen<span class="w"> </span>stake<span class="w"> </span>my-validator<span class="w"> </span>&lt;validator-address&gt;<span class="w"> </span>&lt;amount&gt;
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Begin unstaking (subject to unbonding period)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>solen<span class="w"> </span>unstake<span class="w"> </span>my-validator<span class="w"> </span>&lt;validator-address&gt;<span class="w"> </span>&lt;amount&gt;
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Check your validator status</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>solen<span class="w"> </span>validators
 </code></pre></div>
 <h3 id="important-notes">Important Notes<a class="headerlink" href="#important-notes" title="Permanent link">&para;</a></h3>
 <ul>
@@ -2539,19 +2794,19 @@
 <h2 id="production-deployment">Production Deployment<a class="headerlink" href="#production-deployment" title="Permanent link">&para;</a></h2>
 <p>For production or testnet deployment, see <a href="../testnet-deployment/">Testnet Deployment</a>.</p>
 <h3 id="systemd-service">systemd Service<a class="headerlink" href="#systemd-service" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">[Unit]</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="na">Description</span><span class="o">=</span><span class="s">Solen Node</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">[Service]</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="na">User</span><span class="o">=</span><span class="s">solen</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/local/bin/solen-node --network mainnet</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="na">Restart</span><span class="o">=</span><span class="s">always</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="na">RestartSec</span><span class="o">=</span><span class="s">5</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="k">[Install]</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">[Unit]</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="na">Description</span><span class="o">=</span><span class="s">Solen Node</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="k">[Service]</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="na">User</span><span class="o">=</span><span class="s">solen</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/local/bin/solen-node --network mainnet</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="na">Restart</span><span class="o">=</span><span class="s">always</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="na">RestartSec</span><span class="o">=</span><span class="s">5</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="k">[Install]</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
 </code></pre></div>
 <h3 id="hardware-requirements">Hardware Requirements<a class="headerlink" href="#hardware-requirements" title="Permanent link">&para;</a></h3>
 <table>
@@ -2587,24 +2842,24 @@
 </table>
 <h3 id="data-backup">Data Backup<a class="headerlink" href="#data-backup" title="Permanent link">&para;</a></h3>
 <p>RocksDB data is stored in the <code>--data-dir</code> directory. Back up this directory to preserve chain state.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Stop the node before backing up</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>solen-node
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>cp<span class="w"> </span>-r<span class="w"> </span>data/mainnet<span class="w"> </span>data/mainnet-backup
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>systemctl<span class="w"> </span>start<span class="w"> </span>solen-node
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Stop the node before backing up</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>solen-node
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>cp<span class="w"> </span>-r<span class="w"> </span>data/mainnet<span class="w"> </span>data/mainnet-backup
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>systemctl<span class="w"> </span>start<span class="w"> </span>solen-node
 </code></pre></div>
 <h2 id="monitoring">Monitoring<a class="headerlink" href="#monitoring" title="Permanent link">&para;</a></h2>
 <h3 id="json-rpc-health-check">JSON-RPC Health Check<a class="headerlink" href="#json-rpc-health-check" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://127.0.0.1:9944<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_chainStatus&quot;,&quot;params&quot;:[],&quot;id&quot;:1}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://127.0.0.1:9944<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_chainStatus&quot;,&quot;params&quot;:[],&quot;id&quot;:1}&#39;</span>
 </code></pre></div>
 <h3 id="explorer-api-status">Explorer API Status<a class="headerlink" href="#explorer-api-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://127.0.0.1:9955/api/status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://127.0.0.1:9955/api/status
 </code></pre></div>
 <h3 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h3>
 <p>The node logs to stderr using the <code>tracing</code> crate. Set log level with <code>RUST_LOG</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nv">RUST_LOG</span><span class="o">=</span>info<span class="w"> </span>solen-node
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nv">RUST_LOG</span><span class="o">=</span><span class="nv">solen_consensus</span><span class="o">=</span>debug<span class="w"> </span>solen-node
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nv">RUST_LOG</span><span class="o">=</span>info<span class="w"> </span>solen-node
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nv">RUST_LOG</span><span class="o">=</span><span class="nv">solen_consensus</span><span class="o">=</span>debug<span class="w"> </span>solen-node
 </code></pre></div>
 
 

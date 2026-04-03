@@ -1353,6 +1353,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#solen_getsnapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_getSnapshot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#solen_getrollupstatus" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2384,6 +2395,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#solen_getsnapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_getSnapshot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#solen_getrollupstatus" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3379,6 +3401,62 @@
 </tbody>
 </table>
 <hr />
+<h3 id="solen_getsnapshot"><code>solen_getSnapshot</code><a class="headerlink" href="#solen_getsnapshot" title="Permanent link">&para;</a></h3>
+<p>Get a compressed state snapshot for fast sync. Cached for 500 blocks.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>height</code></td>
+<td><code>u64</code></td>
+<td>Block height of the snapshot</td>
+</tr>
+<tr>
+<td><code>epoch</code></td>
+<td><code>u64</code></td>
+<td>Epoch at snapshot time</td>
+</tr>
+<tr>
+<td><code>state_root</code></td>
+<td><code>string</code></td>
+<td>Hex-encoded state root hash</td>
+</tr>
+<tr>
+<td><code>entries</code></td>
+<td><code>u64</code></td>
+<td>Number of state entries</td>
+</tr>
+<tr>
+<td><code>compressed_bytes</code></td>
+<td><code>usize</code></td>
+<td>Compressed data size in bytes</td>
+</tr>
+<tr>
+<td><code>uncompressed_bytes</code></td>
+<td><code>usize</code></td>
+<td>Uncompressed data size in bytes</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td><code>string</code></td>
+<td>Base64-encoded snapshot binary</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getSnapshot&quot;,&quot;params&quot;:[],&quot;id&quot;:1}&#39;</span>
+</code></pre></div>
+<hr />
 <h3 id="solen_getrollupstatus"><code>solen_getRollupStatus</code><a class="headerlink" href="#solen_getrollupstatus" title="Permanent link">&para;</a></h3>
 <p>Get rollup registration info and latest state commitment.</p>
 <p><strong>Parameters:</strong></p>
@@ -3614,15 +3692,15 @@ Args: <code>rollup_id[8] + name_len[4] + name[...] + proof_type_len[4] + proof_t
 <h3 id="guardian-recovery-methods">Guardian Recovery Methods<a class="headerlink" href="#guardian-recovery-methods" title="Permanent link">&para;</a></h3>
 <p>Social recovery for lost keys. Users add <code>Guardian</code> auth methods to their account, designating trusted accounts that can collectively recover access.</p>
 <p><strong>Setup:</strong> Use <code>SetAuth</code> action to add guardians to your account:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SetAuth&quot;</span><span class="p">,</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="nt">&quot;auth_methods&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;Ed25519&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;public_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-key-hex&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;Guardian&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;guardian_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;guardian-1-hex&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;Guardian&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;guardian_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;guardian-2-hex&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;Guardian&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;guardian_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;guardian-3-hex&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span><span class="p">]</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SetAuth&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="nt">&quot;auth_methods&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;Ed25519&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;public_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-key-hex&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;Guardian&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;guardian_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;guardian-1-hex&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;Guardian&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;guardian_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;guardian-2-hex&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;Guardian&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;guardian_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;guardian-3-hex&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="p">}</span>
 </code></pre></div></p>
 <p><strong><code>initiate_recovery</code></strong> — A guardian initiates recovery for a target account.
 Args: <code>target_account[32] + new_auth_methods_json[...]</code>
@@ -3646,47 +3724,47 @@ Anyone can call this. Replaces the target account's auth methods with the new on
 <hr />
 <h2 id="cli-commands">CLI Commands<a class="headerlink" href="#cli-commands" title="Permanent link">&para;</a></h2>
 <p>The <code>solen-cli</code> tool provides command-line access to all system operations:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Chain info</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>solen-cli<span class="w"> </span>status
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>solen-cli<span class="w"> </span>balance<span class="w"> </span>&lt;account&gt;
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>solen-cli<span class="w"> </span>validators
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># Transfers</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>solen-cli<span class="w"> </span>transfer<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;to&gt;<span class="w"> </span>&lt;amount&gt;
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># Staking</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>solen-cli<span class="w"> </span>register-validator<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;amount&gt;
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>solen-cli<span class="w"> </span>stake<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;validator&gt;<span class="w"> </span>&lt;amount&gt;
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>solen-cli<span class="w"> </span>unstake<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;validator&gt;<span class="w"> </span>&lt;amount&gt;
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>solen-cli<span class="w"> </span>withdraw-stake<span class="w"> </span>&lt;from&gt;
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="c1"># Governance</span>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>solen-cli<span class="w"> </span>propose-block-time<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;ms&gt;<span class="w"> </span>&lt;description&gt;
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>solen-cli<span class="w"> </span>vote<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;proposal-id&gt;<span class="w"> </span>--yes<span class="w"> </span>&lt;weight&gt;
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>solen-cli<span class="w"> </span>finalize-proposal<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;proposal-id&gt;
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>solen-cli<span class="w"> </span>execute-proposal<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;proposal-id&gt;
-<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>
-<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="c1"># Contracts</span>
-<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>solen-cli<span class="w"> </span>deploy<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;wasm-file&gt;
-<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>solen-cli<span class="w"> </span>call<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;target&gt;<span class="w"> </span>&lt;method&gt;<span class="w"> </span><span class="o">[</span>--args<span class="w"> </span>&lt;hex&gt;<span class="o">]</span>
-<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>
-<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a><span class="c1"># Rollups</span>
-<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>solen-cli<span class="w"> </span>register-rollup<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;rollup-id&gt;<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>--proof-type<span class="w"> </span>mock<span class="o">]</span><span class="w"> </span><span class="o">[</span>--genesis-state-root<span class="w"> </span>&lt;hex&gt;<span class="o">]</span>
-<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>
-<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a><span class="c1"># Paymasters</span>
-<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>solen-cli<span class="w"> </span>register-paymaster<span class="w"> </span>&lt;from&gt;
-<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>solen-cli<span class="w"> </span>unregister-paymaster<span class="w"> </span>&lt;from&gt;
-<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>
-<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a><span class="c1"># Guardian recovery</span>
-<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>solen-cli<span class="w"> </span>initiate-recovery<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;target&gt;<span class="w"> </span>&lt;new-public-key&gt;
-<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a>solen-cli<span class="w"> </span>confirm-recovery<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;recovery-id&gt;
-<a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a>solen-cli<span class="w"> </span>cancel-recovery<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;recovery-id&gt;
-<a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a>solen-cli<span class="w"> </span>execute-recovery<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;recovery-id&gt;
-<a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a>
-<a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a><span class="c1"># Key management</span>
-<a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a>solen-cli<span class="w"> </span>key<span class="w"> </span>generate<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a>solen-cli<span class="w"> </span>key<span class="w"> </span>import<span class="w"> </span>&lt;name&gt;<span class="w"> </span>&lt;seed-hex&gt;
-<a id="__codelineno-13-41" name="__codelineno-13-41" href="#__codelineno-13-41"></a>solen-cli<span class="w"> </span>key<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Chain info</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>solen-cli<span class="w"> </span>status
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>solen-cli<span class="w"> </span>balance<span class="w"> </span>&lt;account&gt;
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>solen-cli<span class="w"> </span>validators
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># Transfers</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>solen-cli<span class="w"> </span>transfer<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;to&gt;<span class="w"> </span>&lt;amount&gt;
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># Staking</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>solen-cli<span class="w"> </span>register-validator<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;amount&gt;
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>solen-cli<span class="w"> </span>stake<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;validator&gt;<span class="w"> </span>&lt;amount&gt;
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>solen-cli<span class="w"> </span>unstake<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;validator&gt;<span class="w"> </span>&lt;amount&gt;
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>solen-cli<span class="w"> </span>withdraw-stake<span class="w"> </span>&lt;from&gt;
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c1"># Governance</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>solen-cli<span class="w"> </span>propose-block-time<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;ms&gt;<span class="w"> </span>&lt;description&gt;
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>solen-cli<span class="w"> </span>vote<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;proposal-id&gt;<span class="w"> </span>--yes<span class="w"> </span>&lt;weight&gt;
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>solen-cli<span class="w"> </span>finalize-proposal<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;proposal-id&gt;
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>solen-cli<span class="w"> </span>execute-proposal<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;proposal-id&gt;
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="c1"># Contracts</span>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>solen-cli<span class="w"> </span>deploy<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;wasm-file&gt;
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>solen-cli<span class="w"> </span>call<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;target&gt;<span class="w"> </span>&lt;method&gt;<span class="w"> </span><span class="o">[</span>--args<span class="w"> </span>&lt;hex&gt;<span class="o">]</span>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a><span class="c1"># Rollups</span>
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>solen-cli<span class="w"> </span>register-rollup<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;rollup-id&gt;<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>--proof-type<span class="w"> </span>mock<span class="o">]</span><span class="w"> </span><span class="o">[</span>--genesis-state-root<span class="w"> </span>&lt;hex&gt;<span class="o">]</span>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a><span class="c1"># Paymasters</span>
+<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a>solen-cli<span class="w"> </span>register-paymaster<span class="w"> </span>&lt;from&gt;
+<a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a>solen-cli<span class="w"> </span>unregister-paymaster<span class="w"> </span>&lt;from&gt;
+<a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a>
+<a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a><span class="c1"># Guardian recovery</span>
+<a id="__codelineno-14-33" name="__codelineno-14-33" href="#__codelineno-14-33"></a>solen-cli<span class="w"> </span>initiate-recovery<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;target&gt;<span class="w"> </span>&lt;new-public-key&gt;
+<a id="__codelineno-14-34" name="__codelineno-14-34" href="#__codelineno-14-34"></a>solen-cli<span class="w"> </span>confirm-recovery<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;recovery-id&gt;
+<a id="__codelineno-14-35" name="__codelineno-14-35" href="#__codelineno-14-35"></a>solen-cli<span class="w"> </span>cancel-recovery<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;recovery-id&gt;
+<a id="__codelineno-14-36" name="__codelineno-14-36" href="#__codelineno-14-36"></a>solen-cli<span class="w"> </span>execute-recovery<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;recovery-id&gt;
+<a id="__codelineno-14-37" name="__codelineno-14-37" href="#__codelineno-14-37"></a>
+<a id="__codelineno-14-38" name="__codelineno-14-38" href="#__codelineno-14-38"></a><span class="c1"># Key management</span>
+<a id="__codelineno-14-39" name="__codelineno-14-39" href="#__codelineno-14-39"></a>solen-cli<span class="w"> </span>key<span class="w"> </span>generate<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-14-40" name="__codelineno-14-40" href="#__codelineno-14-40"></a>solen-cli<span class="w"> </span>key<span class="w"> </span>import<span class="w"> </span>&lt;name&gt;<span class="w"> </span>&lt;seed-hex&gt;
+<a id="__codelineno-14-41" name="__codelineno-14-41" href="#__codelineno-14-41"></a>solen-cli<span class="w"> </span>key<span class="w"> </span>list
 </code></pre></div>
 <p>All amount values are in SOLEN (human-readable). Decimals supported (e.g., <code>100.5</code>).
 Use <code>--rpc &lt;url&gt;</code> to specify the RPC endpoint and <code>--chain-id &lt;id&gt;</code> for the network.</p>
