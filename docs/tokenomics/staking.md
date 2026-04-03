@@ -84,6 +84,19 @@ Signing two different blocks at the same height:
 Missing 50 consecutive blocks:
 
 - **1% stake penalty** — Applied to validator and delegators
+- **Jailing** — Validator removed from the active set
+
+### Unjailing
+
+A jailed validator (whether from downtime or double signing) can be reactivated by submitting an `unjail` transaction:
+
+```bash
+solen unjail <keyname>
+```
+
+The validator rejoins the active consensus set at the next epoch boundary. Slashed funds are sent to the **Foundation Treasury** and can be restored via a [governance proposal](governance.md) if the community votes to do so.
+
+> **Note:** Slashing is deterministic and on-chain — penalties are executed as system transactions within blocks, not applied out-of-band.
 
 ## Unbonding
 

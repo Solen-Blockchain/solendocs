@@ -49,10 +49,20 @@ Signing two different blocks at the same height results in:
 
 Missing 50 consecutive blocks results in:
 
-- **1% stake penalty**
-- The validator remains in the active set but may be rotated out
+- **1% stake penalty** applied to the validator and their delegators
+- **Jailing** — the validator is removed from the active set
+
+### Unjailing
+
+A jailed validator can be reactivated by submitting an `unjail` transaction. The validator rejoins the active consensus set at the next epoch boundary and resumes block production in the round-robin rotation.
+
+### Backup Proposers
+
+When the designated proposer is offline, backup proposers take over in deterministic order — the next validator in the round-robin sequence after the designated proposer. The first backup waits **3x block_time** (18s on mainnet) before proposing. Each subsequent backup waits an additional **2x block_time** (12s on mainnet) beyond the previous backup's deadline. This ensures liveness even when multiple consecutive proposers are unavailable.
 
 All slashed funds are sent to the **Foundation Treasury** (`0xFFFF...FF04`).
+
+> **Note:** Slashing is deterministic and on-chain — penalties are executed as system transactions within blocks, not applied out-of-band.
 
 ## Dynamic Validator Set
 
