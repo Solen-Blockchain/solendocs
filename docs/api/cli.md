@@ -192,6 +192,135 @@ solen withdraw-stake mykey
 
 ---
 
+### `solen unjail <from>`
+
+Reactivate a jailed validator. A validator is jailed after being slashed for downtime (50 missed blocks). The validator rejoins the active consensus set at the next epoch boundary.
+
+```bash
+solen unjail my-validator
+```
+
+The sender must be the jailed validator's key.
+
+---
+
+### `solen propose-block-time <from> <new-block-time-ms> <description>`
+
+Submit a governance proposal to change the block time.
+
+```bash
+solen propose-block-time mykey 3000 "Increase block time to 3 seconds for stability"
+```
+
+Proposals require a deposit and go through a voting period before they can be finalized and executed.
+
+---
+
+### `solen vote <from> <proposal-id> --yes [--weight <amount>]`
+
+Vote on a governance proposal. Use `--yes` to vote in favor, omit it to vote against.
+
+```bash
+# Vote yes with default weight (1 SOLEN)
+solen vote mykey 1 --yes
+
+# Vote yes with 1000 SOLEN weight
+solen vote mykey 1 --yes --weight 1000
+
+# Vote no
+solen vote mykey 1
+```
+
+---
+
+### `solen finalize-proposal <from> <proposal-id>`
+
+Finalize a governance proposal after the voting period has ended. Tallies votes and determines if the proposal passed or was rejected.
+
+```bash
+solen finalize-proposal mykey 1
+```
+
+---
+
+### `solen execute-proposal <from> <proposal-id>`
+
+Execute a passed governance proposal after the timelock period. Applies the proposed parameter change on-chain.
+
+```bash
+solen execute-proposal mykey 1
+```
+
+---
+
+### `solen register-paymaster <from>`
+
+Register a deployed contract as a paymaster (fee sponsor). Paymasters can pay transaction fees on behalf of users, enabling gasless transactions.
+
+```bash
+solen register-paymaster my-contract
+```
+
+The sender must be the key of a deployed contract account.
+
+---
+
+### `solen unregister-paymaster <from>`
+
+Remove a contract's paymaster registration.
+
+```bash
+solen unregister-paymaster my-contract
+```
+
+---
+
+### `solen initiate-recovery <from> <target> <new-public-key>`
+
+Initiate guardian recovery for a lost account. The sender must be a guardian of the target account.
+
+```bash
+solen initiate-recovery guardian-key <target-account-hex> <new-public-key-hex>
+```
+
+This creates a pending recovery request. Other guardians must confirm it before it can be executed.
+
+---
+
+### `solen confirm-recovery <from> <recovery-id>`
+
+Confirm a pending guardian recovery. The sender must be a guardian of the target account.
+
+```bash
+solen confirm-recovery guardian-key 1
+```
+
+A recovery requires confirmations from a majority of guardians before it can be executed.
+
+---
+
+### `solen cancel-recovery <from> <recovery-id>`
+
+Cancel a pending recovery. The sender must be the owner of the account being recovered.
+
+```bash
+solen cancel-recovery mykey 1
+```
+
+---
+
+### `solen execute-recovery <from> <recovery-id>`
+
+Execute a recovery after the timelock expires and sufficient guardian confirmations have been received. Anyone can call this once the conditions are met.
+
+```bash
+solen execute-recovery mykey 1
+```
+
+The target account's public key is replaced with the new key specified during initiation.
+
+---
+
 ### `solen register-rollup <from> <rollup-id> <name> [--proof-type <type>]`
 
 Register a rollup domain on L1. Requires a 10,000 SOLEN deposit.
@@ -266,16 +395,15 @@ System contracts have well-known addresses:
 | Governance | `0xFFFF...FF02` |
 | Bridge | `0xFFFF...FF03` |
 | Treasury | `0xFFFF...FF04` |
+| Intent Pool | `0xFFFF...FF05` |
 | Vesting | `0xFFFF...FF06` |
+| Paymaster Registry | `0xFFFF...FF07` |
 
 Call them using `solen call`:
 
 ```bash
 # Delegate to a validator via system call
 solen call mykey ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff01 delegate --args "<validator><amount>"
-```
-
-4 validators (4 active)
 ```
 
 ---
