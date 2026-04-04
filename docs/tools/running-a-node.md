@@ -211,23 +211,89 @@ solen --rpc https://testnet-rpc.solenchain.io validators
 
 ### Validator Operations
 
-```bash
-# Add more stake
-solen stake my-validator <validator-address> <amount>
+#### Status and Monitoring
 
-# Begin unstaking (subject to unbonding period)
+```bash
+# List all validators and their stake/status
+solen validators
+
+# Check your account balance and nonce
+solen account my-validator
+```
+
+#### Staking
+
+```bash
+# Add more self-stake to your validator
+solen stake my-validator <your-validator-address> <amount>
+
+# Delegate to another validator
+solen stake my-validator <other-validator-address> <amount>
+
+# Begin unstaking (enters 7-epoch unbonding period)
 solen unstake my-validator <validator-address> <amount>
 
-# Check your validator status
-solen validators
+# Withdraw matured unstaked tokens after unbonding completes
+solen withdraw-stake my-validator
 ```
+
+All amounts are in **SOLEN** (not base units). Decimals are supported: `100.5` = 100.5 SOLEN.
+
+#### Slashing and Unjailing
+
+If your validator misses **50 consecutive blocks**, it will be automatically slashed:
+
+- **1% of self-stake** is deducted and sent to the Foundation Treasury
+- The validator is **jailed** (removed from the active consensus set)
+- The validator stops earning rewards and producing blocks
+
+To reactivate a jailed validator:
+
+```bash
+solen unjail my-validator
+```
+
+The validator rejoins the active set at the **next epoch boundary** (every 100 blocks). Slashed funds held in the treasury can be restored via a governance proposal if the community deems it appropriate.
+
+!!! warning
+    While jailed, your node is still running but not participating in consensus. Delegators staked with a jailed validator do not earn rewards. Reactivate promptly to minimize downtime for yourself and your delegators.
+
+#### Exiting (Full Unstake)
+
+To permanently exit as a validator:
+
+1. Unstake your entire self-stake:
+    ```bash
+    solen unstake my-validator <your-validator-address> <full-amount>
+    ```
+2. Wait for the 7-epoch unbonding period
+3. Withdraw the matured tokens:
+    ```bash
+    solen withdraw-stake my-validator
+    ```
+
+Once your self-stake drops below the minimum (500,000 SOLEN), the validator is removed from the active set at the next epoch boundary. You can stop the node after withdrawing.
+
+!!! note
+    Genesis validators are locked for ~1 year (157,680 epochs) and cannot unstake during the lock period.
+
+#### Re-entry
+
+A validator that previously exited can re-register with a new stake:
+
+```bash
+solen register-validator my-validator 500000
+```
+
+The same key and node can be reused. The validator rejoins the active set at the next epoch boundary after registration.
 
 ### Important Notes
 
 - **Never share your validator seed.** It controls your validator identity and staked funds.
-- **Never delete the data directory** while the chain is running. Restart is fine, but wiping data requires a full resync.
-- **Keep your node online.** Extended downtime (50+ consecutive missed blocks) may result in slashing.
+- **Never delete the data directory** while the chain is running. Restart is fine, but wiping data requires a full resync (or snapshot sync).
+- **Keep your node online.** Extended downtime (50+ consecutive missed blocks) results in a 1% slash and jailing. Use `solen unjail` to reactivate.
 - Your validator earns epoch rewards proportional to its stake. Default commission is 10% on delegator rewards.
+- Slashing is **deterministic and on-chain** — it executes as a system transaction in a block, so all nodes apply it identically.
 
 ## Production Deployment
 
