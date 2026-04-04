@@ -902,6 +902,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2098,6 +2109,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2205,6 +2227,14 @@
 <li>Fast sync for new nodes</li>
 <li>Cross-domain proof anchoring</li>
 <li>State verification</li>
+</ul>
+<h2 id="security">Security<a class="headerlink" href="#security" title="Permanent link">&para;</a></h2>
+<p>The consensus engine includes several hardened security measures:</p>
+<ul>
+<li><strong>State root verification:</strong> Every finalized block includes a state root that is independently verified. During initial sync, the node validates state roots against the received block data to detect tampered state.</li>
+<li><strong>RPC rate limiting:</strong> Write operations are rate-limited to prevent denial-of-service attacks on the mempool (see <a href="../../api/json-rpc/#rate-limits">JSON-RPC Rate Limits</a>).</li>
+<li><strong>Attestation validation:</strong> Block attestations (votes) are validated against the active validator set — only validators with stake in the current epoch can participate in consensus voting. Duplicate or invalid attestations are rejected.</li>
+<li><strong>Proposer validation:</strong> Block proposals are verified to come from the expected proposer in the round-robin rotation. Blocks from unauthorized proposers are rejected.</li>
 </ul>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>Consensus parameters can be modified through <a href="../../tokenomics/governance/">governance</a> proposals:</p>

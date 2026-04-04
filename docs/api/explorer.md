@@ -156,7 +156,7 @@ Get transaction history for an account.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `id` | `string` | Hex-encoded account ID |
+| `id` | `string` | Base58 (or hex) encoded account ID |
 
 **Query Parameters:**
 

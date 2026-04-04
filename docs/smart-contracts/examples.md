@@ -66,13 +66,13 @@ A full ERC20-equivalent token contract with minting, transfers, and allowances.
 
 ### Argument Encoding
 
-Arguments are passed as raw bytes. Account IDs are 32 bytes, amounts are 16-byte little-endian u128 values.
+Arguments are passed as raw bytes. Account IDs are 32 bytes (displayed as Base58 ~44 characters or 64 hex characters), amounts are 16-byte little-endian u128 values.
 
 ```bash
 # Build the amount argument
 AMOUNT=$(python3 -c "print((1000000).to_bytes(16, 'little').hex())")
 
-# Account address = public key (from `solen key list`)
+# Account address = public key (from `solen key list`). Hex used here for raw byte args.
 ACCOUNT="197f6b23e16c8532c6abc838facd5ea789be0c76b2920334039bfa8b3d368d61"
 ```
 
@@ -102,7 +102,7 @@ solen call faucet <TOKEN_ID> mint --args "${TO}${AMOUNT}"
 # Check balance
 solen call faucet <TOKEN_ID> balance_of --args "${TO}"
 
-# Transfer 50,000 to alice (address = her public key)
+# Transfer 50,000 to alice (address = her public key, hex for raw byte args)
 ALICE="139c31e8543b19629ea93c90b291d684aec0ca432cc0efda170570572c62e519"
 AMOUNT=$(python3 -c "print((50000).to_bytes(16, 'little').hex())")
 solen call faucet <TOKEN_ID> transfer --args "${ALICE}${AMOUNT}"

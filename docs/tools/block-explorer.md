@@ -2,6 +2,7 @@
 
 SolenScan is a web-based block explorer for the Solen blockchain, built with Next.js 15, React 19, and TypeScript.
 
+**Live:** [solenscan.io](https://solenscan.io)
 **Repository:** [solenscan](https://github.com/Solen-Blockchain/solenscan)
 
 ## Features
@@ -13,6 +14,8 @@ SolenScan is a web-based block explorer for the Solen blockchain, built with Nex
 - **Account Pages** — Balances, nonce, transaction history
 - **Network Switcher** — Toggle between devnet, testnet, and mainnet
 - **Search** — Find blocks, transactions, and accounts
+- **Dark Mode** — Toggle between light and dark themes
+- **Slash Events** — Validator slashing events displayed with penalty amounts and reason
 - **Auto-refresh** — Data updates every 3-5 seconds
 
 ## Tech Stack

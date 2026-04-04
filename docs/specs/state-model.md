@@ -10,7 +10,7 @@ The Solen L1 maintains these core state objects:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `id` | `[u8; 32]` | Unique account identifier (Ed25519 public key) |
+| `id` | `[u8; 32]` | Unique account identifier (Ed25519 public key). Displayed as Base58 (~44 characters); hex (64 characters) is also accepted. |
 | `code_hash` | `[u8; 32]` | WASM contract code hash (zero if no contract deployed) |
 | `auth_methods` | `Vec<AuthMethod>` | Authorized signing/recovery methods (see below) |
 | `nonce` | `u64` | Operation counter (replay protection) |

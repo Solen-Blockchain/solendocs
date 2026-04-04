@@ -34,7 +34,7 @@ Solen Network Status
 
 ### `solen balance <account>`
 
-Query an account's native token balance. Account can be a key name or hex address.
+Query an account's native token balance. Account can be a key name, Base58 address, or hex address.
 
 ```bash
 solen balance faucet
@@ -92,7 +92,7 @@ Transfer tokens between accounts. Simulates first, then submits.
 solen transfer mykey 139c31e8543b1962... 5000
 ```
 
-The sender must be a key name in your keystore. The recipient can be a key name or hex address.
+The sender must be a key name in your keystore. The recipient can be a key name, Base58 address, or hex address.
 
 ---
 
@@ -105,6 +105,8 @@ Generate a new Ed25519 keypair.
 ```bash
 solen key generate alice
 ```
+
+> **Security note:** The seed is stored in the keystore file and is never printed to the console. Use `solen key lock` to encrypt the keystore with a password (Argon2id + AES-256-GCM) for additional protection.
 
 #### `solen key import <name> <hex-seed>`
 
@@ -387,7 +389,7 @@ If tokens are available to claim, they will be credited to your account balance.
 
 ### System Contract Addresses
 
-System contracts have well-known addresses:
+System contracts have well-known addresses. These are conventionally written in hex since they are compile-time constants, but Base58 format is also accepted.
 
 | Contract | Address |
 |----------|---------|
@@ -447,6 +449,8 @@ The CLI simulates the call first, then submits if simulation succeeds.
 | `--rpc <URL>` | JSON-RPC endpoint (overrides `--network` default) |
 | `--network <NETWORK>` | Network preset: `devnet` (default), `testnet`, or `mainnet`. Sets RPC endpoint and chain ID. |
 | `--chain-id <ID>` | Chain ID for signing (overrides `--network` default) |
+
+> **Address format:** All commands accept account addresses in either Base58 (Bitcoin alphabet, ~44 characters) or hex (64 characters) format. Key names from the local keystore are also accepted wherever an address is expected.
 
 Network defaults:
 

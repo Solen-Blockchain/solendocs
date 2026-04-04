@@ -6,13 +6,15 @@ In Solen, **every account is a smart account**. There are no externally owned ac
 
 ```rust
 Account {
-    account_id: AccountId,           // 32-byte unique identifier
+    account_id: AccountId,           // 32-byte Ed25519 public key (displayed as Base58)
     code_hash: Option<Hash>,         // WASM contract code (if deployed)
     nonce: u64,                      // Operation counter
     balance: u128,                   // Native token balance
     auth_methods: Vec<AuthMethod>,   // Authentication configuration
 }
 ```
+
+> **Address format:** Account IDs are Base58-encoded Ed25519 public keys (~44 characters). Hex format (64 characters) is also accepted as input.
 
 ## Authentication Methods
 
@@ -89,6 +91,7 @@ To convert back to a standard Ed25519 account, submit a `SetAuth` action signed 
 
 - The account must be funded before converting — gas fees still apply to the `SetAuth` operation
 - A threshold of 0 is rejected. Threshold cannot exceed the number of signers
+- **Duplicate signer prevention:** The signer list is validated for uniqueness — submitting the same public key multiple times in the `signers` array is rejected to prevent a single key from counting toward the threshold more than once
 - Multi-sig accounts work with all operation types: transfers, contract calls, staking, and governance votes
 
 ### Guardians
@@ -190,6 +193,8 @@ Useful for dApp sessions where users grant limited permissions without exposing 
 ```
 
 Session keys use standard Ed25519 signatures. The executor validates restrictions at execution time — expired sessions are rejected, spending over the limit fails, and calls to unauthorized targets/methods are blocked.
+
+> **Security restriction:** Session keys are blocked from performing privileged operations: `SetAuth` (changing account authentication), `Deploy` (deploying contracts), guardian recovery actions (`initiate_recovery`, `confirm_recovery`, `cancel_recovery`, `execute_recovery`), and governance proposal actions (`propose`, `finalize`, `execute`). These operations always require the primary account key.
 
 ## Programmable Policies
 

@@ -2176,13 +2176,16 @@
 <p>In Solen, <strong>every account is a smart account</strong>. There are no externally owned accounts (EOAs). This is a core design decision that prioritizes user safety and flexibility.</p>
 <h2 id="account-structure">Account Structure<a class="headerlink" href="#account-structure" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">Account</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="n">account_id</span><span class="p">:</span><span class="w"> </span><span class="nc">AccountId</span><span class="p">,</span><span class="w">           </span><span class="c1">// 32-byte unique identifier</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="n">account_id</span><span class="p">:</span><span class="w"> </span><span class="nc">AccountId</span><span class="p">,</span><span class="w">           </span><span class="c1">// 32-byte Ed25519 public key (displayed as Base58)</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="n">code_hash</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="n">Hash</span><span class="o">&gt;</span><span class="p">,</span><span class="w">         </span><span class="c1">// WASM contract code (if deployed)</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="n">nonce</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">,</span><span class="w">                      </span><span class="c1">// Operation counter</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="n">balance</span><span class="p">:</span><span class="w"> </span><span class="kt">u128</span><span class="p">,</span><span class="w">                   </span><span class="c1">// Native token balance</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="n">auth_methods</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">AuthMethod</span><span class="o">&gt;</span><span class="p">,</span><span class="w">   </span><span class="c1">// Authentication configuration</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">}</span>
 </code></pre></div>
+<blockquote>
+<p><strong>Address format:</strong> Account IDs are Base58-encoded Ed25519 public keys (~44 characters). Hex format (64 characters) is also accepted as input.</p>
+</blockquote>
 <h2 id="authentication-methods">Authentication Methods<a class="headerlink" href="#authentication-methods" title="Permanent link">&para;</a></h2>
 <p>Smart accounts support multiple authentication mechanisms:</p>
 <h3 id="ed25519-keys">Ed25519 Keys<a class="headerlink" href="#ed25519-keys" title="Permanent link">&para;</a></h3>
@@ -2232,6 +2235,7 @@
 <ul>
 <li>The account must be funded before converting — gas fees still apply to the <code>SetAuth</code> operation</li>
 <li>A threshold of 0 is rejected. Threshold cannot exceed the number of signers</li>
+<li><strong>Duplicate signer prevention:</strong> The signer list is validated for uniqueness — submitting the same public key multiple times in the <code>signers</code> array is rejected to prevent a single key from counting toward the threshold more than once</li>
 <li>Multi-sig accounts work with all operation types: transfers, contract calls, staking, and governance votes</li>
 </ul>
 <h3 id="guardians">Guardians<a class="headerlink" href="#guardians" title="Permanent link">&para;</a></h3>
@@ -2317,6 +2321,9 @@
 <a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="p">}</span>
 </code></pre></div>
 <p>Session keys use standard Ed25519 signatures. The executor validates restrictions at execution time — expired sessions are rejected, spending over the limit fails, and calls to unauthorized targets/methods are blocked.</p>
+<blockquote>
+<p><strong>Security restriction:</strong> Session keys are blocked from performing privileged operations: <code>SetAuth</code> (changing account authentication), <code>Deploy</code> (deploying contracts), guardian recovery actions (<code>initiate_recovery</code>, <code>confirm_recovery</code>, <code>cancel_recovery</code>, <code>execute_recovery</code>), and governance proposal actions (<code>propose</code>, <code>finalize</code>, <code>execute</code>). These operations always require the primary account key.</p>
+</blockquote>
 <h2 id="programmable-policies">Programmable Policies<a class="headerlink" href="#programmable-policies" title="Permanent link">&para;</a></h2>
 <p>Accounts can define custom authorization logic:</p>
 <ul>

@@ -140,7 +140,7 @@ print((bytes([len(name)]) + name + bytes([len(symbol)]) + symbol).hex())
 Mint 1,000,000 tokens to the faucet account:
 
 ```bash
-# Faucet account ID (32 bytes hex)
+# Faucet account ID (hex format — Base58 is also accepted)
 TO="197f6b23e16c8532c6abc838facd5ea789be0c76b2920334039bfa8b3d368d61"
 
 # 1,000,000 as u128 little-endian (16 bytes hex)
@@ -163,7 +163,7 @@ The return data contains the balance as a 16-byte little-endian u128.
 Transfer 50,000 tokens from faucet to alice:
 
 ```bash
-# Alice's address is her public key (from `solen key list`)
+# Alice's address is her public key (from `solen key list`). Both Base58 and hex work.
 ALICE="139c31e8543b19629ea93c90b291d684aec0ca432cc0efda170570572c62e519"
 AMOUNT=$(python3 -c "print((50000).to_bytes(16, 'little').hex())")
 
@@ -192,9 +192,10 @@ import { SolenClient } from "./src/index";
 
 const client = new SolenClient({ rpcUrl: "http://127.0.0.1:29944" });
 
-// Account addresses are public keys. Get these from `solen key list`.
-const FAUCET = "197f6b23e16c8532c6abc838facd5ea789be0c76b2920334039bfa8b3d368d61";
-const ALICE = "139c31e8543b19629ea93c90b291d684aec0ca432cc0efda170570572c62e519";
+// Account addresses are Ed25519 public keys. Both Base58 and hex are accepted.
+// Get these from `solen key list`.
+const FAUCET = "2ZrMqiKGz6TUvJkyBKyNMf3Y7dMrJ5JqWSCCYGn1VWbp";
+const ALICE = "1vWn3XjQDrCkPqnHFSmGhxSjS3Z2CWFXwVzLHrpnZFN";
 
 async function main() {
   const status = await client.chainStatus();

@@ -49,7 +49,7 @@ Get an account's native token balance.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `account_id` | `string` | Hex-encoded 32-byte account ID |
+| `account_id` | `string` | Base58 (or hex) encoded account ID |
 
 **Returns:** Balance as a string (to avoid integer overflow in JSON).
 
@@ -58,7 +58,7 @@ Get an account's native token balance.
 ```bash
 curl -s -X POST http://127.0.0.1:29944 \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"solen_getBalance","params":["197f6b23e16c8532c6abc838facd5ea789be0c76b2920334039bfa8b3d368d61"],"id":1}'
+  -d '{"jsonrpc":"2.0","method":"solen_getBalance","params":["2ZrMqiKGz6TUvJkyBKyNMf3Y7dMrJ5JqWSCCYGn1VWbp"],"id":1}'
 ```
 
 ---
@@ -71,7 +71,7 @@ Get full account information.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `account_id` | `string` | Hex-encoded 32-byte account ID |
+| `account_id` | `string` | Base58 (or hex) encoded account ID |
 
 **Returns:**
 
@@ -121,12 +121,12 @@ Submit a signed user operation to the mempool.
 
 ```json
 {
-  "sender": "hex-encoded-account-id",
+  "sender": "account-id (Base58 or hex)",
   "nonce": 0,
   "actions": [
     {
       "type": "Transfer",
-      "to": "hex-encoded-account-id",
+      "to": "account-id (Base58 or hex)",
       "amount": 1000
     }
   ],
@@ -212,7 +212,7 @@ List all validators and their stake.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `address` | `string` | Validator address (public key hex) |
+| `address` | `string` | Validator address (Base58 or hex) |
 | `self_stake` | `string` | Validator's own stake |
 | `total_delegated` | `string` | Total delegated to this validator |
 | `total_stake` | `string` | Self stake + delegated |
@@ -238,7 +238,7 @@ Get staking information for an account (delegations, undelegations).
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `account_id` | `string` | Hex-encoded account address |
+| `account_id` | `string` | Base58 (or hex) encoded account ID |
 
 **Returns:**
 
@@ -261,7 +261,7 @@ Get all governance proposals and their current status.
 | Field | Type | Description |
 |-------|------|-------------|
 | `id` | `u64` | Proposal ID |
-| `proposer` | `string` | Hex-encoded proposer account |
+| `proposer` | `string` | Proposer account (Base58 or hex) |
 | `action` | `string` | Proposal action (e.g., `SetBlockTime { new_block_time_ms: 4000 }`) |
 | `description` | `string` | Human-readable description |
 | `status` | `string` | `Active`, `Passed`, `Rejected`, or `Executed` |
@@ -289,7 +289,7 @@ Read-only contract call — no signature or transaction required. Executes a con
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `contract_id` | `string` | Hex-encoded contract account ID |
+| `contract_id` | `string` | Base58 (or hex) encoded contract account ID |
 | `method` | `string` | Method name to call |
 | `args` | `string?` | Hex-encoded arguments (optional) |
 
@@ -320,7 +320,7 @@ Get vesting schedule information for an account.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `account_id` | `string` | Hex-encoded account address |
+| `account_id` | `string` | Base58 (or hex) encoded account ID |
 
 **Returns:**
 
@@ -340,7 +340,7 @@ If the account has no vesting schedule, `has_schedule` is `false` and all amount
 ```bash
 curl -s -X POST http://127.0.0.1:29944 \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","method":"solen_getVestingInfo","params":["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"],"id":1}'
+  -d '{"jsonrpc":"2.0","method":"solen_getVestingInfo","params":["2ZrMqiKGz6TUvJkyBKyNMf3Y7dMrJ5JqWSCCYGn1VWbp"],"id":1}'
 ```
 
 ---
@@ -368,7 +368,7 @@ Submit a solver's solution for an intent.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `intent_id` | `u64` | ID of the intent to solve |
-| `solver` | `string` | Hex-encoded solver account ID |
+| `solver` | `string` | Base58 (or hex) encoded solver account ID |
 | `operations` | `array` | Array of `UserOperation` objects |
 | `claimed_tip` | `string` | Tip amount claimed by solver |
 | `score` | `u64` | Solver-reported quality score |
@@ -400,7 +400,7 @@ Submit a signed intent for solver resolution.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `sender` | `string` | Hex-encoded sender account ID |
+| `sender` | `string` | Base58 (or hex) encoded sender account ID |
 | `constraints` | `array` | Array of constraint objects (see below) |
 | `max_fee` | `string` | Maximum fee the sender is willing to pay |
 | `expiry_height` | `u64` | Block height at which the intent expires |
@@ -436,7 +436,7 @@ Check if a paymaster will sponsor an operation's fees.
 | Field | Type | Description |
 |-------|------|-------------|
 | `sponsored` | `bool` | Whether a paymaster will sponsor |
-| `paymaster` | `string?` | Hex-encoded paymaster contract address |
+| `paymaster` | `string?` | Paymaster contract address (Base58 or hex) |
 | `max_gas` | `string?` | Maximum gas the paymaster will cover |
 | `reason` | `string?` | Reason if not sponsored |
 
@@ -522,6 +522,8 @@ System contracts are invoked via `solen_submitOperation` with `Action::Call` tar
 | `0xFFFF...FF06` | Vesting | `claim`, `status` |
 | `0xFFFF...FF07` | Paymaster Registry | `register`, `unregister`, `list` |
 | `0xFFFF...FF08` | Guardian Recovery | `initiate_recovery`, `confirm_recovery`, `cancel_recovery`, `execute_recovery` |
+
+> **Note:** System contract addresses are conventionally written in hex since they are compile-time constants. Both hex and Base58 formats are accepted in API calls.
 
 ### Staking Methods
 
@@ -709,6 +711,20 @@ solen-cli key list
 
 All amount values are in SOLEN (human-readable). Decimals supported (e.g., `100.5`).
 Use `--rpc <url>` to specify the RPC endpoint and `--chain-id <id>` for the network.
+
+---
+
+## Rate Limits
+
+The RPC server enforces per-method rate limits to prevent abuse:
+
+| Method | Limit |
+|--------|-------|
+| `solen_submitOperation` | 50 requests/second |
+| `solen_submitSolution` | 20 requests/second |
+| `solen_getSnapshot` | 2 requests/second |
+
+Read-only query methods (`solen_getBalance`, `solen_getAccount`, etc.) are not rate-limited. Requests exceeding the limit receive a `-32603` (Internal error) response.
 
 ---
 

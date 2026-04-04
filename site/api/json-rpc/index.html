@@ -1496,6 +1496,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#rate-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rate Limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#error-codes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2538,6 +2549,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#rate-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rate Limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#error-codes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2665,7 +2687,7 @@
 <tr>
 <td><code>account_id</code></td>
 <td><code>string</code></td>
-<td>Hex-encoded 32-byte account ID</td>
+<td>Base58 (or hex) encoded account ID</td>
 </tr>
 </tbody>
 </table>
@@ -2673,7 +2695,7 @@
 <p><strong>Example:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getBalance&quot;,&quot;params&quot;:[&quot;197f6b23e16c8532c6abc838facd5ea789be0c76b2920334039bfa8b3d368d61&quot;],&quot;id&quot;:1}&#39;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getBalance&quot;,&quot;params&quot;:[&quot;2ZrMqiKGz6TUvJkyBKyNMf3Y7dMrJ5JqWSCCYGn1VWbp&quot;],&quot;id&quot;:1}&#39;</span>
 </code></pre></div>
 <hr />
 <h3 id="solen_getaccount"><code>solen_getAccount</code><a class="headerlink" href="#solen_getaccount" title="Permanent link">&para;</a></h3>
@@ -2691,7 +2713,7 @@
 <tr>
 <td><code>account_id</code></td>
 <td><code>string</code></td>
-<td>Hex-encoded 32-byte account ID</td>
+<td>Base58 (or hex) encoded account ID</td>
 </tr>
 </tbody>
 </table>
@@ -2770,12 +2792,12 @@
 </table>
 <p><strong>UserOperation format:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;sender&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hex-encoded-account-id&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;sender&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;account-id (Base58 or hex)&quot;</span><span class="p">,</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;nonce&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">&quot;actions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="p">{</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Transfer&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">      </span><span class="nt">&quot;to&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hex-encoded-account-id&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">      </span><span class="nt">&quot;to&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;account-id (Base58 or hex)&quot;</span><span class="p">,</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">      </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="p">],</span>
@@ -2891,7 +2913,7 @@
 <tr>
 <td><code>address</code></td>
 <td><code>string</code></td>
-<td>Validator address (public key hex)</td>
+<td>Validator address (Base58 or hex)</td>
 </tr>
 <tr>
 <td><code>self_stake</code></td>
@@ -2946,7 +2968,7 @@
 <tr>
 <td><code>account_id</code></td>
 <td><code>string</code></td>
-<td>Hex-encoded account address</td>
+<td>Base58 (or hex) encoded account ID</td>
 </tr>
 </tbody>
 </table>
@@ -2999,7 +3021,7 @@
 <tr>
 <td><code>proposer</code></td>
 <td><code>string</code></td>
-<td>Hex-encoded proposer account</td>
+<td>Proposer account (Base58 or hex)</td>
 </tr>
 <tr>
 <td><code>action</code></td>
@@ -3064,7 +3086,7 @@
 <tr>
 <td><code>contract_id</code></td>
 <td><code>string</code></td>
-<td>Hex-encoded contract account ID</td>
+<td>Base58 (or hex) encoded contract account ID</td>
 </tr>
 <tr>
 <td><code>method</code></td>
@@ -3131,7 +3153,7 @@
 <tr>
 <td><code>account_id</code></td>
 <td><code>string</code></td>
-<td>Hex-encoded account address</td>
+<td>Base58 (or hex) encoded account ID</td>
 </tr>
 </tbody>
 </table>
@@ -3181,7 +3203,7 @@
 <p><strong>Example:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getVestingInfo&quot;,&quot;params&quot;:[&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;],&quot;id&quot;:1}&#39;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getVestingInfo&quot;,&quot;params&quot;:[&quot;2ZrMqiKGz6TUvJkyBKyNMf3Y7dMrJ5JqWSCCYGn1VWbp&quot;],&quot;id&quot;:1}&#39;</span>
 </code></pre></div>
 <hr />
 <h3 id="solen_getpendingintents"><code>solen_getPendingIntents</code><a class="headerlink" href="#solen_getpendingintents" title="Permanent link">&para;</a></h3>
@@ -3225,7 +3247,7 @@
 <tr>
 <td><code>solver</code></td>
 <td><code>string</code></td>
-<td>Hex-encoded solver account ID</td>
+<td>Base58 (or hex) encoded solver account ID</td>
 </tr>
 <tr>
 <td><code>operations</code></td>
@@ -3287,7 +3309,7 @@
 <tr>
 <td><code>sender</code></td>
 <td><code>string</code></td>
-<td>Hex-encoded sender account ID</td>
+<td>Base58 (or hex) encoded sender account ID</td>
 </tr>
 <tr>
 <td><code>constraints</code></td>
@@ -3386,7 +3408,7 @@
 <tr>
 <td><code>paymaster</code></td>
 <td><code>string?</code></td>
-<td>Hex-encoded paymaster contract address</td>
+<td>Paymaster contract address (Base58 or hex)</td>
 </tr>
 <tr>
 <td><code>max_gas</code></td>
@@ -3598,6 +3620,9 @@
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>Note:</strong> System contract addresses are conventionally written in hex since they are compile-time constants. Both hex and Base58 formats are accepted in API calls.</p>
+</blockquote>
 <h3 id="staking-methods">Staking Methods<a class="headerlink" href="#staking-methods" title="Permanent link">&para;</a></h3>
 <p><strong><code>register</code></strong> — Register as a new validator with self-stake.
 Args: <code>amount[16 bytes LE u128]</code> (must be &gt;= 500,000 SOLEN). The sender becomes the validator.</p>
@@ -3770,6 +3795,32 @@ Anyone can call this. Replaces the target account's auth methods with the new on
 </code></pre></div>
 <p>All amount values are in SOLEN (human-readable). Decimals supported (e.g., <code>100.5</code>).
 Use <code>--rpc &lt;url&gt;</code> to specify the RPC endpoint and <code>--chain-id &lt;id&gt;</code> for the network.</p>
+<hr />
+<h2 id="rate-limits">Rate Limits<a class="headerlink" href="#rate-limits" title="Permanent link">&para;</a></h2>
+<p>The RPC server enforces per-method rate limits to prevent abuse:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>solen_submitOperation</code></td>
+<td>50 requests/second</td>
+</tr>
+<tr>
+<td><code>solen_submitSolution</code></td>
+<td>20 requests/second</td>
+</tr>
+<tr>
+<td><code>solen_getSnapshot</code></td>
+<td>2 requests/second</td>
+</tr>
+</tbody>
+</table>
+<p>Read-only query methods (<code>solen_getBalance</code>, <code>solen_getAccount</code>, etc.) are not rate-limited. Requests exceeding the limit receive a <code>-32603</code> (Internal error) response.</p>
 <hr />
 <h2 id="error-codes">Error Codes<a class="headerlink" href="#error-codes" title="Permanent link">&para;</a></h2>
 <table>

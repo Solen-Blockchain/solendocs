@@ -76,6 +76,15 @@ The consensus engine periodically creates checkpoints — snapshots of the valid
 - Cross-domain proof anchoring
 - State verification
 
+## Security
+
+The consensus engine includes several hardened security measures:
+
+- **State root verification:** Every finalized block includes a state root that is independently verified. During initial sync, the node validates state roots against the received block data to detect tampered state.
+- **RPC rate limiting:** Write operations are rate-limited to prevent denial-of-service attacks on the mempool (see [JSON-RPC Rate Limits](../api/json-rpc.md#rate-limits)).
+- **Attestation validation:** Block attestations (votes) are validated against the active validator set — only validators with stake in the current epoch can participate in consensus voting. Duplicate or invalid attestations are rejected.
+- **Proposer validation:** Block proposals are verified to come from the expected proposer in the round-robin rotation. Blocks from unauthorized proposers are rejected.
+
 ## Configuration
 
 Consensus parameters can be modified through [governance](../tokenomics/governance.md) proposals:

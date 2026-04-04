@@ -53,6 +53,10 @@ solen finalize-proposal <keyname> <proposal_id>
 solen execute-proposal <keyname> <proposal_id>
 ```
 
+### Vote Weight Verification
+
+Vote weight is verified against actual staked tokens at the time of voting. Voters must have staked tokens, and only stake that was active in the prior epoch is eligible for voting. This prevents flash-stake attacks where tokens are staked momentarily just to influence a vote.
+
 ## What Governance Cannot Change
 
 These require a hard fork:

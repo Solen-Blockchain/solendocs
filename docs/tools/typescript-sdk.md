@@ -131,13 +131,15 @@ const signature = await auth.sign(operationBytes);
 
 ### Account Addresses
 
-Account addresses are Ed25519 public keys (32 bytes / 64 hex characters). Your address IS your public key — no derivation or hashing needed.
+Account addresses are Base58-encoded Ed25519 public keys (~44 characters). Hex format (64 characters) is also accepted. Your address IS your public key — no derivation or hashing needed.
 
 ```typescript
 // When you generate a key, the public key is your address
 const keypair = generateKeypair();
-const myAddress = keypair.publicKey; // this IS your account ID
+const myAddress = keypair.publicKey; // this IS your account ID (Base58)
 ```
+
+> **Note:** Both Base58 (Bitcoin alphabet) and hex formats are accepted as input in all SDK methods.
 
 ## Example: Full Workflow
 
@@ -146,10 +148,11 @@ import { SolenClient, SmartAccount } from "@solen/wallet-sdk";
 
 const client = new SolenClient({ rpcUrl: "http://127.0.0.1:29944" });
 
-// Account addresses are Ed25519 public keys (64 hex chars).
+// Account addresses are Ed25519 public keys.
+// Both Base58 (~44 chars) and hex (64 chars) are accepted.
 // Get these from `solen key list` or your wallet.
-const FAUCET_ADDRESS = "197f6b23e16c8532c6abc838facd5ea789be0c76b2920334039bfa8b3d368d61";
-const ALICE_ADDRESS = "139c31e8543b19629ea93c90b291d684aec0ca432cc0efda170570572c62e519";
+const FAUCET_ADDRESS = "2ZrMqiKGz6TUvJkyBKyNMf3Y7dMrJ5JqWSCCYGn1VWbp";
+const ALICE_ADDRESS = "1vWn3XjQDrCkPqnHFSmGhxSjS3Z2CWFXwVzLHrpnZFN";
 
 async function main() {
   // Check chain status
