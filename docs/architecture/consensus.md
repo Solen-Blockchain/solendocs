@@ -4,7 +4,7 @@ Solen uses a BFT (Byzantine Fault Tolerant) proof-of-stake consensus engine with
 
 ## Overview
 
-- **Algorithm:** BFT with round-robin block proposers
+- **Algorithm:** BFT with stake-weighted randomized proposer selection
 - **Finality:** Deterministic (no probabilistic confirmation)
 - **Quorum:** 2/3+ of stake-weighted validator votes
 - **Block times:** 6s (mainnet), 2s (testnet/devnet)

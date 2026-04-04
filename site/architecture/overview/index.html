@@ -2119,7 +2119,7 @@
 </code></pre></div>
 <h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
 <h3 id="settlement-layer">Settlement Layer<a class="headerlink" href="#settlement-layer" title="Permanent link">&para;</a></h3>
-<p>The <strong>consensus engine</strong> implements BFT proof-of-stake with deterministic finality, round-robin proposers, 2/3+ stake-weighted quorum, epoch-based rewards, and slashing.</p>
+<p>The <strong>consensus engine</strong> implements BFT proof-of-stake with deterministic finality, stake-weighted randomized proposer selection, 2/3+ quorum, epoch-based rewards, finalized checkpoints, and slashing.</p>
 <h3 id="execution-engine">Execution Engine<a class="headerlink" href="#execution-engine" title="Permanent link">&para;</a></h3>
 <p>Processes user operations (transfer, contract call, deploy), manages account state, verifies signatures, deducts fees, and supports transaction simulation.</p>
 <h3 id="wasm-vm">WASM VM<a class="headerlink" href="#wasm-vm" title="Permanent link">&para;</a></h3>

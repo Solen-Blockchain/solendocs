@@ -30,7 +30,7 @@ Solen is designed as a minimal settlement layer. The base chain handles consensu
 
 ### Settlement Layer
 
-The **consensus engine** implements BFT proof-of-stake with deterministic finality, round-robin proposers, 2/3+ stake-weighted quorum, epoch-based rewards, and slashing.
+The **consensus engine** implements BFT proof-of-stake with deterministic finality, stake-weighted randomized proposer selection, 2/3+ quorum, epoch-based rewards, finalized checkpoints, and slashing.
 
 ### Execution Engine
 
