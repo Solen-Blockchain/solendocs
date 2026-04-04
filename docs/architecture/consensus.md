@@ -22,17 +22,53 @@ Validators run nodes, propose blocks, and participate in consensus voting.
 
 ### Block Production
 
-Validators take turns proposing blocks in round-robin order. A proposed block requires 2/3+ stake-weighted votes to be finalized.
+Validators are selected to propose blocks using **stake-weighted randomized selection**. The proposer for each block height is determined by:
+
+1. An **epoch seed** derived from the previous epoch's last block hash (unpredictable until the epoch ends)
+2. A deterministic hash of the seed + height, mapped to the validator set proportional to stake
+3. Validators with more stake are selected proportionally more often
+
+A proposed block requires **2/3+ stake-weighted attestation quorum** to be finalized. If the designated proposer is offline, backup proposers take over in stake-weighted priority order.
+
+### Proposer Signatures
+
+Block headers include an Ed25519 signature from the proposer, proving authorship. This prevents relay attacks where a malicious peer changes the proposer field.
 
 ### Epochs
 
-An **epoch** is a fixed interval of blocks used for:
+An **epoch** is a fixed interval of 100 blocks used for:
 
 - Validator set rotation
 - Reward distribution
-- Checkpoint creation
+- Checkpoint creation and finalization
+- Epoch seed rotation (for proposer selection randomization)
 
 At each epoch boundary, rewards from the staking allocation pool are distributed proportionally to validator stake.
+
+### Finalized Checkpoints
+
+At every epoch boundary, a **finalized checkpoint** is created:
+
+1. The block at the epoch boundary becomes the checkpoint candidate
+2. Each validator signs and broadcasts their attestation of the checkpoint
+3. Once 2/3+ of stake attests, the checkpoint is **finalized** and persisted
+4. All blocks at or before a finalized checkpoint are irreversible
+5. New nodes syncing via snapshot verify the checkpoint's validator attestations
+
+Finalized checkpoints prevent **long-range attacks** — an attacker cannot rewrite history past a finalized checkpoint without controlling 2/3+ of stake.
+
+### Fork Scoring
+
+When competing blocks arrive at the same height from different proposers, the node uses **stake-weighted fork scoring** to choose the best block. The block from the higher-priority proposer (earlier in the stake-weighted order for that height) replaces any lower-priority pending block.
+
+### Peer Reputation
+
+The P2P layer tracks peer behavior and temporarily bans misbehaving peers:
+
+- Decode failures, invalid blocks, and rate limit violations decrease a peer's score
+- Valid blocks and attestations increase score
+- Peers below a threshold score are banned for 5 minutes
+- Scores decay toward zero over time, allowing recovery
 
 ## Slashing
 

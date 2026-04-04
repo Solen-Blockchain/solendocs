@@ -32,7 +32,7 @@ All network parameters are configurable via governance proposals. Current values
 | Base fee | `propose-set-base-fee <key> <fee> "<desc>"` | Minimum fee per gas unit (base units) |
 | Fee burn rate | `propose-set-burn-rate <key> <bps> "<desc>"` | Percentage of fees burned (basis points, 0-10000) |
 | Epoch rewards | `propose-set-epoch-reward <key> <amount> "<desc>"` | Staking rewards per epoch (base units) |
-| Min validator stake | `propose-set-min-validator-stake <key> <amount> "<desc>"` | Minimum self-stake to register as validator (base units) |
+| Min validator stake | `propose-min-stake <key> <solen_amount> "<desc>"` | Minimum self-stake to register as validator |
 | Unbonding period | `propose-set-unbonding-period <key> <epochs> "<desc>"` | Cooldown before unstaked tokens can be withdrawn |
 | Emergency pause | via system call | Halt all transaction processing |
 | Emergency resume | via system call | Resume from emergency pause |

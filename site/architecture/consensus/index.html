@@ -803,10 +803,54 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#proposer-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposer Signatures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#epochs" class="md-nav__link">
     <span class="md-ellipsis">
       
         Epochs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finalized-checkpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finalized Checkpoints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fork-scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fork Scoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#peer-reputation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Peer Reputation
       
     </span>
   </a>
@@ -2010,10 +2054,54 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#proposer-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposer Signatures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#epochs" class="md-nav__link">
     <span class="md-ellipsis">
       
         Epochs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finalized-checkpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finalized Checkpoints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fork-scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fork Scoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#peer-reputation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Peer Reputation
       
     </span>
   </a>
@@ -2188,15 +2276,44 @@
 </tbody>
 </table>
 <h3 id="block-production">Block Production<a class="headerlink" href="#block-production" title="Permanent link">&para;</a></h3>
-<p>Validators take turns proposing blocks in round-robin order. A proposed block requires 2/3+ stake-weighted votes to be finalized.</p>
+<p>Validators are selected to propose blocks using <strong>stake-weighted randomized selection</strong>. The proposer for each block height is determined by:</p>
+<ol>
+<li>An <strong>epoch seed</strong> derived from the previous epoch's last block hash (unpredictable until the epoch ends)</li>
+<li>A deterministic hash of the seed + height, mapped to the validator set proportional to stake</li>
+<li>Validators with more stake are selected proportionally more often</li>
+</ol>
+<p>A proposed block requires <strong>2/3+ stake-weighted attestation quorum</strong> to be finalized. If the designated proposer is offline, backup proposers take over in stake-weighted priority order.</p>
+<h3 id="proposer-signatures">Proposer Signatures<a class="headerlink" href="#proposer-signatures" title="Permanent link">&para;</a></h3>
+<p>Block headers include an Ed25519 signature from the proposer, proving authorship. This prevents relay attacks where a malicious peer changes the proposer field.</p>
 <h3 id="epochs">Epochs<a class="headerlink" href="#epochs" title="Permanent link">&para;</a></h3>
-<p>An <strong>epoch</strong> is a fixed interval of blocks used for:</p>
+<p>An <strong>epoch</strong> is a fixed interval of 100 blocks used for:</p>
 <ul>
 <li>Validator set rotation</li>
 <li>Reward distribution</li>
-<li>Checkpoint creation</li>
+<li>Checkpoint creation and finalization</li>
+<li>Epoch seed rotation (for proposer selection randomization)</li>
 </ul>
 <p>At each epoch boundary, rewards from the staking allocation pool are distributed proportionally to validator stake.</p>
+<h3 id="finalized-checkpoints">Finalized Checkpoints<a class="headerlink" href="#finalized-checkpoints" title="Permanent link">&para;</a></h3>
+<p>At every epoch boundary, a <strong>finalized checkpoint</strong> is created:</p>
+<ol>
+<li>The block at the epoch boundary becomes the checkpoint candidate</li>
+<li>Each validator signs and broadcasts their attestation of the checkpoint</li>
+<li>Once 2/3+ of stake attests, the checkpoint is <strong>finalized</strong> and persisted</li>
+<li>All blocks at or before a finalized checkpoint are irreversible</li>
+<li>New nodes syncing via snapshot verify the checkpoint's validator attestations</li>
+</ol>
+<p>Finalized checkpoints prevent <strong>long-range attacks</strong> — an attacker cannot rewrite history past a finalized checkpoint without controlling 2/3+ of stake.</p>
+<h3 id="fork-scoring">Fork Scoring<a class="headerlink" href="#fork-scoring" title="Permanent link">&para;</a></h3>
+<p>When competing blocks arrive at the same height from different proposers, the node uses <strong>stake-weighted fork scoring</strong> to choose the best block. The block from the higher-priority proposer (earlier in the stake-weighted order for that height) replaces any lower-priority pending block.</p>
+<h3 id="peer-reputation">Peer Reputation<a class="headerlink" href="#peer-reputation" title="Permanent link">&para;</a></h3>
+<p>The P2P layer tracks peer behavior and temporarily bans misbehaving peers:</p>
+<ul>
+<li>Decode failures, invalid blocks, and rate limit violations decrease a peer's score</li>
+<li>Valid blocks and attestations increase score</li>
+<li>Peers below a threshold score are banned for 5 minutes</li>
+<li>Scores decay toward zero over time, allowing recovery</li>
+</ul>
 <h2 id="slashing">Slashing<a class="headerlink" href="#slashing" title="Permanent link">&para;</a></h2>
 <p>Validators can be slashed for two types of misbehavior:</p>
 <h3 id="double-signing">Double Signing<a class="headerlink" href="#double-signing" title="Permanent link">&para;</a></h3>

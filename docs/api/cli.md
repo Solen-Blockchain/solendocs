@@ -218,6 +218,18 @@ Proposals require a deposit and go through a voting period before they can be fi
 
 ---
 
+### `solen propose-min-stake <from> <new-min-stake> <description>`
+
+Submit a governance proposal to change the minimum validator self-stake.
+
+```bash
+solen propose-min-stake mykey 15000 "Lower min stake for testnet onboarding"
+```
+
+The amount is in SOLEN (e.g., 15000 = 15,000 SOLEN). Takes effect after voting period + timelock.
+
+---
+
 ### `solen vote <from> <proposal-id> --yes [--weight <amount>]`
 
 Vote on a governance proposal. Use `--yes` to vote in favor, omit it to vote against.
