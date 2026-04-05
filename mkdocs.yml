@@ -7,7 +7,7 @@ repo_name: Solen-Blockchain/solen
 theme:
   name: material
   logo: assets/solenlogo.png
-  favicon: assets/solenlogo.png
+  favicon: assets/favicon-32.png
   palette:
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
