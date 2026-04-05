@@ -2045,8 +2045,12 @@
 </thead>
 <tbody>
 <tr>
-<td>Transfer</td>
+<td>Transfer (existing account)</td>
 <td>100</td>
+</tr>
+<tr>
+<td>Transfer (new account)</td>
+<td>25,100</td>
 </tr>
 <tr>
 <td>Contract call</td>
@@ -2058,6 +2062,7 @@
 </tr>
 </tbody>
 </table>
+<p>Transferring to an account that doesn't exist yet incurs a <strong>25,000 gas surcharge</strong> for account creation. This prevents state bloat attacks where an attacker creates millions of empty accounts via dust transfers. Subsequent transfers to the same account cost the standard 100 gas.</p>
 <p>Contract execution gas depends on the number of WASM instructions executed, measured by wasmtime's fuel mechanism.</p>
 <h2 id="fee-flow">Fee Flow<a class="headerlink" href="#fee-flow" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>User pays fee

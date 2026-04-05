@@ -14,9 +14,12 @@ Solen uses a simple, transparent fee model with a deflationary burn mechanism.
 
 | Operation | Base Gas |
 |-----------|----------|
-| Transfer | 100 |
+| Transfer (existing account) | 100 |
+| Transfer (new account) | 25,100 |
 | Contract call | 500 + VM execution cost |
 | Deploy | 1,000 |
+
+Transferring to an account that doesn't exist yet incurs a **25,000 gas surcharge** for account creation. This prevents state bloat attacks where an attacker creates millions of empty accounts via dust transfers. Subsequent transfers to the same account cost the standard 100 gas.
 
 Contract execution gas depends on the number of WASM instructions executed, measured by wasmtime's fuel mechanism.
 
