@@ -1393,6 +1393,39 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#solen-claim-vesting-from" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen claim-vesting &lt;from&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen-set-vesting-admin-from-new-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen set-vesting-admin &lt;from&gt; &lt;new-admin&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen-add-vesting-from-recipient-amount-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen add-vesting &lt;from&gt; &lt;recipient&gt; &lt;amount&gt; [options]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#solen-propose-block-time-from-new-block-time-ms-description" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1569,7 +1602,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#solen-claim-vesting-from" class="md-nav__link">
+  <a href="#solen-claim-vesting-from_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         solen claim-vesting &lt;from&gt;
@@ -2445,6 +2478,39 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#solen-claim-vesting-from" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen claim-vesting &lt;from&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen-set-vesting-admin-from-new-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen set-vesting-admin &lt;from&gt; &lt;new-admin&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen-add-vesting-from-recipient-amount-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen add-vesting &lt;from&gt; &lt;recipient&gt; &lt;amount&gt; [options]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#solen-propose-block-time-from-new-block-time-ms-description" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2621,7 +2687,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#solen-claim-vesting-from" class="md-nav__link">
+  <a href="#solen-claim-vesting-from_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         solen claim-vesting &lt;from&gt;
@@ -2822,105 +2888,163 @@
 </code></pre></div>
 <p>The sender must be the jailed validator's key.</p>
 <hr />
+<h3 id="solen-claim-vesting-from"><code>solen claim-vesting &lt;from&gt;</code><a class="headerlink" href="#solen-claim-vesting-from" title="Permanent link">&para;</a></h3>
+<p>Claim vested tokens. If the caller has a vesting schedule and the cliff period has passed, any unlocked tokens are credited to their account balance.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>solen<span class="w"> </span>claim-vesting<span class="w"> </span>mykey
+</code></pre></div>
+<hr />
+<h3 id="solen-set-vesting-admin-from-new-admin"><code>solen set-vesting-admin &lt;from&gt; &lt;new-admin&gt;</code><a class="headerlink" href="#solen-set-vesting-admin-from-new-admin" title="Permanent link">&para;</a></h3>
+<p>Set the vesting admin account. The admin can add new vesting schedules post-genesis. Can only be called by the current admin, or by anyone if no admin is set (first-time setup).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>solen<span class="w"> </span>set-vesting-admin<span class="w"> </span>mykey<span class="w"> </span>foundation-multisig
+</code></pre></div>
+<hr />
+<h3 id="solen-add-vesting-from-recipient-amount-options"><code>solen add-vesting &lt;from&gt; &lt;recipient&gt; &lt;amount&gt; [options]</code><a class="headerlink" href="#solen-add-vesting-from-recipient-amount-options" title="Permanent link">&para;</a></h3>
+<p>Add a vesting schedule for a recipient (admin only). The vesting clock starts from the current epoch. Used for post-launch token sales to validators and investors.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Investor vesting (6-month cliff, 2-year vest)</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>solen<span class="w"> </span>add-vesting<span class="w"> </span>admin-key<span class="w"> </span>investor-address<span class="w"> </span><span class="m">100000</span><span class="w"> </span>--vesting-type<span class="w"> </span>investor
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Validator vesting (3-month cliff, 1-year vest)</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>solen<span class="w"> </span>add-vesting<span class="w"> </span>admin-key<span class="w"> </span>validator-address<span class="w"> </span><span class="m">50000</span><span class="w"> </span>--vesting-type<span class="w"> </span>validator
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># Custom vesting (6-month cliff, 18-month vest)</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>solen<span class="w"> </span>add-vesting<span class="w"> </span>admin-key<span class="w"> </span>recipient<span class="w"> </span><span class="m">75000</span><span class="w"> </span>--vesting-type<span class="w"> </span>custom<span class="w"> </span>--cliff-months<span class="w"> </span><span class="m">6</span><span class="w"> </span>--vest-months<span class="w"> </span><span class="m">18</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Vesting Type</th>
+<th>Cliff</th>
+<th>Linear Vest</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>team</code></td>
+<td>1 year</td>
+<td>3 years</td>
+<td>4 years</td>
+</tr>
+<tr>
+<td><code>investor</code></td>
+<td>6 months</td>
+<td>2 years</td>
+<td>2.5 years</td>
+</tr>
+<tr>
+<td><code>validator</code></td>
+<td>3 months</td>
+<td>1 year</td>
+<td>1.25 years</td>
+</tr>
+<tr>
+<td><code>custom</code></td>
+<td><code>--cliff-months</code></td>
+<td><code>--vest-months</code></td>
+<td>cliff + vest</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h3 id="solen-propose-block-time-from-new-block-time-ms-description"><code>solen propose-block-time &lt;from&gt; &lt;new-block-time-ms&gt; &lt;description&gt;</code><a class="headerlink" href="#solen-propose-block-time-from-new-block-time-ms-description" title="Permanent link">&para;</a></h3>
 <p>Submit a governance proposal to change the block time.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>solen<span class="w"> </span>propose-block-time<span class="w"> </span>mykey<span class="w"> </span><span class="m">3000</span><span class="w"> </span><span class="s2">&quot;Increase block time to 3 seconds for stability&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>solen<span class="w"> </span>propose-block-time<span class="w"> </span>mykey<span class="w"> </span><span class="m">3000</span><span class="w"> </span><span class="s2">&quot;Increase block time to 3 seconds for stability&quot;</span>
 </code></pre></div>
 <p>Proposals require a deposit and go through a voting period before they can be finalized and executed.</p>
 <hr />
 <h3 id="solen-propose-min-stake-from-new-min-stake-description"><code>solen propose-min-stake &lt;from&gt; &lt;new-min-stake&gt; &lt;description&gt;</code><a class="headerlink" href="#solen-propose-min-stake-from-new-min-stake-description" title="Permanent link">&para;</a></h3>
 <p>Submit a governance proposal to change the minimum validator self-stake.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>solen<span class="w"> </span>propose-min-stake<span class="w"> </span>mykey<span class="w"> </span><span class="m">15000</span><span class="w"> </span><span class="s2">&quot;Lower min stake for testnet onboarding&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>solen<span class="w"> </span>propose-min-stake<span class="w"> </span>mykey<span class="w"> </span><span class="m">15000</span><span class="w"> </span><span class="s2">&quot;Lower min stake for testnet onboarding&quot;</span>
 </code></pre></div>
 <p>The amount is in SOLEN (e.g., 15000 = 15,000 SOLEN). Takes effect after voting period + timelock.</p>
 <hr />
 <h3 id="solen-vote-from-proposal-id-yes-weight-amount"><code>solen vote &lt;from&gt; &lt;proposal-id&gt; --yes [--weight &lt;amount&gt;]</code><a class="headerlink" href="#solen-vote-from-proposal-id-yes-weight-amount" title="Permanent link">&para;</a></h3>
 <p>Vote on a governance proposal. Use <code>--yes</code> to vote in favor, omit it to vote against.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Vote yes with default weight (1 SOLEN)</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>solen<span class="w"> </span>vote<span class="w"> </span>mykey<span class="w"> </span><span class="m">1</span><span class="w"> </span>--yes
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Vote yes with 1000 SOLEN weight</span>
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>solen<span class="w"> </span>vote<span class="w"> </span>mykey<span class="w"> </span><span class="m">1</span><span class="w"> </span>--yes<span class="w"> </span>--weight<span class="w"> </span><span class="m">1000</span>
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># Vote no</span>
-<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>solen<span class="w"> </span>vote<span class="w"> </span>mykey<span class="w"> </span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Vote yes with default weight (1 SOLEN)</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>solen<span class="w"> </span>vote<span class="w"> </span>mykey<span class="w"> </span><span class="m">1</span><span class="w"> </span>--yes
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Vote yes with 1000 SOLEN weight</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>solen<span class="w"> </span>vote<span class="w"> </span>mykey<span class="w"> </span><span class="m">1</span><span class="w"> </span>--yes<span class="w"> </span>--weight<span class="w"> </span><span class="m">1000</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># Vote no</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>solen<span class="w"> </span>vote<span class="w"> </span>mykey<span class="w"> </span><span class="m">1</span>
 </code></pre></div>
 <hr />
 <h3 id="solen-finalize-proposal-from-proposal-id"><code>solen finalize-proposal &lt;from&gt; &lt;proposal-id&gt;</code><a class="headerlink" href="#solen-finalize-proposal-from-proposal-id" title="Permanent link">&para;</a></h3>
 <p>Finalize a governance proposal after the voting period has ended. Tallies votes and determines if the proposal passed or was rejected.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>solen<span class="w"> </span>finalize-proposal<span class="w"> </span>mykey<span class="w"> </span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>solen<span class="w"> </span>finalize-proposal<span class="w"> </span>mykey<span class="w"> </span><span class="m">1</span>
 </code></pre></div>
 <hr />
 <h3 id="solen-execute-proposal-from-proposal-id"><code>solen execute-proposal &lt;from&gt; &lt;proposal-id&gt;</code><a class="headerlink" href="#solen-execute-proposal-from-proposal-id" title="Permanent link">&para;</a></h3>
 <p>Execute a passed governance proposal after the timelock period. Applies the proposed parameter change on-chain.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>solen<span class="w"> </span>execute-proposal<span class="w"> </span>mykey<span class="w"> </span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>solen<span class="w"> </span>execute-proposal<span class="w"> </span>mykey<span class="w"> </span><span class="m">1</span>
 </code></pre></div>
 <hr />
 <h3 id="solen-register-paymaster-from"><code>solen register-paymaster &lt;from&gt;</code><a class="headerlink" href="#solen-register-paymaster-from" title="Permanent link">&para;</a></h3>
 <p>Register a deployed contract as a paymaster (fee sponsor). Paymasters can pay transaction fees on behalf of users, enabling gasless transactions.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>solen<span class="w"> </span>register-paymaster<span class="w"> </span>my-contract
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>solen<span class="w"> </span>register-paymaster<span class="w"> </span>my-contract
 </code></pre></div>
 <p>The sender must be the key of a deployed contract account.</p>
 <hr />
 <h3 id="solen-unregister-paymaster-from"><code>solen unregister-paymaster &lt;from&gt;</code><a class="headerlink" href="#solen-unregister-paymaster-from" title="Permanent link">&para;</a></h3>
 <p>Remove a contract's paymaster registration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>solen<span class="w"> </span>unregister-paymaster<span class="w"> </span>my-contract
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>solen<span class="w"> </span>unregister-paymaster<span class="w"> </span>my-contract
 </code></pre></div>
 <hr />
 <h3 id="solen-initiate-recovery-from-target-new-public-key"><code>solen initiate-recovery &lt;from&gt; &lt;target&gt; &lt;new-public-key&gt;</code><a class="headerlink" href="#solen-initiate-recovery-from-target-new-public-key" title="Permanent link">&para;</a></h3>
 <p>Initiate guardian recovery for a lost account. The sender must be a guardian of the target account.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>solen<span class="w"> </span>initiate-recovery<span class="w"> </span>guardian-key<span class="w"> </span>&lt;target-account-hex&gt;<span class="w"> </span>&lt;new-public-key-hex&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>solen<span class="w"> </span>initiate-recovery<span class="w"> </span>guardian-key<span class="w"> </span>&lt;target-account-hex&gt;<span class="w"> </span>&lt;new-public-key-hex&gt;
 </code></pre></div>
 <p>This creates a pending recovery request. Other guardians must confirm it before it can be executed.</p>
 <hr />
 <h3 id="solen-confirm-recovery-from-recovery-id"><code>solen confirm-recovery &lt;from&gt; &lt;recovery-id&gt;</code><a class="headerlink" href="#solen-confirm-recovery-from-recovery-id" title="Permanent link">&para;</a></h3>
 <p>Confirm a pending guardian recovery. The sender must be a guardian of the target account.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>solen<span class="w"> </span>confirm-recovery<span class="w"> </span>guardian-key<span class="w"> </span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>solen<span class="w"> </span>confirm-recovery<span class="w"> </span>guardian-key<span class="w"> </span><span class="m">1</span>
 </code></pre></div>
 <p>A recovery requires confirmations from a majority of guardians before it can be executed.</p>
 <hr />
 <h3 id="solen-cancel-recovery-from-recovery-id"><code>solen cancel-recovery &lt;from&gt; &lt;recovery-id&gt;</code><a class="headerlink" href="#solen-cancel-recovery-from-recovery-id" title="Permanent link">&para;</a></h3>
 <p>Cancel a pending recovery. The sender must be the owner of the account being recovered.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>solen<span class="w"> </span>cancel-recovery<span class="w"> </span>mykey<span class="w"> </span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>solen<span class="w"> </span>cancel-recovery<span class="w"> </span>mykey<span class="w"> </span><span class="m">1</span>
 </code></pre></div>
 <hr />
 <h3 id="solen-execute-recovery-from-recovery-id"><code>solen execute-recovery &lt;from&gt; &lt;recovery-id&gt;</code><a class="headerlink" href="#solen-execute-recovery-from-recovery-id" title="Permanent link">&para;</a></h3>
 <p>Execute a recovery after the timelock expires and sufficient guardian confirmations have been received. Anyone can call this once the conditions are met.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>solen<span class="w"> </span>execute-recovery<span class="w"> </span>mykey<span class="w"> </span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>solen<span class="w"> </span>execute-recovery<span class="w"> </span>mykey<span class="w"> </span><span class="m">1</span>
 </code></pre></div>
 <p>The target account's public key is replaced with the new key specified during initiation.</p>
 <hr />
 <h3 id="solen-register-rollup-from-rollup-id-name-proof-type-type"><code>solen register-rollup &lt;from&gt; &lt;rollup-id&gt; &lt;name&gt; [--proof-type &lt;type&gt;]</code><a class="headerlink" href="#solen-register-rollup-from-rollup-id-name-proof-type-type" title="Permanent link">&para;</a></h3>
 <p>Register a rollup domain on L1. Requires a 10,000 SOLEN deposit.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>solen<span class="w"> </span>register-rollup<span class="w"> </span>mykey<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;My Rollup&quot;</span><span class="w"> </span>--proof-type<span class="w"> </span>mock
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>solen<span class="w"> </span>register-rollup<span class="w"> </span>mykey<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;My Rollup&quot;</span><span class="w"> </span>--proof-type<span class="w"> </span>mock
 </code></pre></div>
 <hr />
 <h3 id="solen-key-lock"><code>solen key lock</code><a class="headerlink" href="#solen-key-lock" title="Permanent link">&para;</a></h3>
 <p>Encrypt all keys in the local keystore with a password (Argon2id + AES-256-GCM).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>solen<span class="w"> </span>key<span class="w"> </span>lock
-<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="c1"># Prompts for new password (min 8 chars) + confirmation</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>solen<span class="w"> </span>key<span class="w"> </span>lock
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="c1"># Prompts for new password (min 8 chars) + confirmation</span>
 </code></pre></div>
 <h3 id="solen-key-unlock"><code>solen key unlock</code><a class="headerlink" href="#solen-key-unlock" title="Permanent link">&para;</a></h3>
 <p>Decrypt all keys, removing password protection.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>solen<span class="w"> </span>key<span class="w"> </span>unlock
-<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="c1"># Prompts for current password</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>solen<span class="w"> </span>key<span class="w"> </span>unlock
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="c1"># Prompts for current password</span>
 </code></pre></div>
 <h3 id="solen-key-change-password"><code>solen key change-password</code><a class="headerlink" href="#solen-key-change-password" title="Permanent link">&para;</a></h3>
 <p>Change the keystore password.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>solen<span class="w"> </span>key<span class="w"> </span>change-password
-<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="c1"># Prompts for current password, then new password + confirmation</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>solen<span class="w"> </span>key<span class="w"> </span>change-password
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="c1"># Prompts for current password, then new password + confirmation</span>
 </code></pre></div>
 <hr />
 <h3 id="solen-multisig-from-threshold-n-signers-key1key2"><code>solen multisig &lt;from&gt; --threshold &lt;N&gt; --signers &lt;key1,key2,...&gt;</code><a class="headerlink" href="#solen-multisig-from-threshold-n-signers-key1key2" title="Permanent link">&para;</a></h3>
 <p>Convert an account to multi-sig (threshold signing). The account must currently be owned by <code>&lt;from&gt;</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1"># Create a 2-of-3 multi-sig</span>
-<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>solen<span class="w"> </span>multisig<span class="w"> </span>mykey<span class="w"> </span>--threshold<span class="w"> </span><span class="m">2</span><span class="w"> </span>--signers<span class="w"> </span><span class="s2">&quot;aabb...01,ccdd...02,eeff...03&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="c1"># Create a 2-of-3 multi-sig</span>
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>solen<span class="w"> </span>multisig<span class="w"> </span>mykey<span class="w"> </span>--threshold<span class="w"> </span><span class="m">2</span><span class="w"> </span>--signers<span class="w"> </span><span class="s2">&quot;aabb...01,ccdd...02,eeff...03&quot;</span>
 </code></pre></div>
 <p>After conversion, all future operations on this account require at least <code>N</code> valid signatures from the signers list. The signature field must contain concatenated <code>pubkey[32] + sig[64]</code> pairs (96 bytes each).</p>
 <hr />
-<h3 id="solen-claim-vesting-from"><code>solen claim-vesting &lt;from&gt;</code><a class="headerlink" href="#solen-claim-vesting-from" title="Permanent link">&para;</a></h3>
+<h3 id="solen-claim-vesting-from_1"><code>solen claim-vesting &lt;from&gt;</code><a class="headerlink" href="#solen-claim-vesting-from_1" title="Permanent link">&para;</a></h3>
 <p>Claim vested tokens from your vesting schedule (team or investor allocations).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>solen<span class="w"> </span>claim-vesting<span class="w"> </span>mykey
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>solen<span class="w"> </span>claim-vesting<span class="w"> </span>mykey
 </code></pre></div>
 <p>If tokens are available to claim, they will be credited to your account balance. The command calls the vesting system contract (<code>0xFFFF...FF06</code>) with the <code>claim</code> method.</p>
 <hr />
@@ -2965,13 +3089,13 @@
 </tbody>
 </table>
 <p>Call them using <code>solen call</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="c1"># Delegate to a validator via system call</span>
-<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>solen<span class="w"> </span>call<span class="w"> </span>mykey<span class="w"> </span>ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff01<span class="w"> </span>delegate<span class="w"> </span>--args<span class="w"> </span><span class="s2">&quot;&lt;validator&gt;&lt;amount&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c1"># Delegate to a validator via system call</span>
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>solen<span class="w"> </span>call<span class="w"> </span>mykey<span class="w"> </span>ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff01<span class="w"> </span>delegate<span class="w"> </span>--args<span class="w"> </span><span class="s2">&quot;&lt;validator&gt;&lt;amount&gt;&quot;</span>
 </code></pre></div>
 <hr />
 <h3 id="solen-deploy-from-wasm-file"><code>solen deploy &lt;from&gt; &lt;wasm-file&gt;</code><a class="headerlink" href="#solen-deploy-from-wasm-file" title="Permanent link">&para;</a></h3>
 <p>Deploy a WASM contract.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>solen<span class="w"> </span>deploy<span class="w"> </span>faucet<span class="w"> </span>target/wasm32-unknown-unknown/release/my_contract.wasm
+<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>solen<span class="w"> </span>deploy<span class="w"> </span>faucet<span class="w"> </span>target/wasm32-unknown-unknown/release/my_contract.wasm
 </code></pre></div>
 <p>The CLI will:</p>
 <ol>
@@ -2982,11 +3106,11 @@
 <hr />
 <h3 id="solen-call-from-contract-id-method-args-hex"><code>solen call &lt;from&gt; &lt;contract-id&gt; &lt;method&gt; [--args &lt;hex&gt;]</code><a class="headerlink" href="#solen-call-from-contract-id-method-args-hex" title="Permanent link">&para;</a></h3>
 <p>Call a contract method.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="c1"># No arguments</span>
-<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>solen<span class="w"> </span>call<span class="w"> </span>faucet<span class="w"> </span>&lt;CONTRACT_ID&gt;<span class="w"> </span>increment
-<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>
-<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a><span class="c1"># With arguments (hex-encoded)</span>
-<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a>solen<span class="w"> </span>call<span class="w"> </span>faucet<span class="w"> </span>&lt;CONTRACT_ID&gt;<span class="w"> </span>mint<span class="w"> </span>--args<span class="w"> </span><span class="s2">&quot;197f6b23e16c8532...40420f0000...&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="c1"># No arguments</span>
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>solen<span class="w"> </span>call<span class="w"> </span>faucet<span class="w"> </span>&lt;CONTRACT_ID&gt;<span class="w"> </span>increment
+<a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>
+<a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a><span class="c1"># With arguments (hex-encoded)</span>
+<a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a>solen<span class="w"> </span>call<span class="w"> </span>faucet<span class="w"> </span>&lt;CONTRACT_ID&gt;<span class="w"> </span>mint<span class="w"> </span>--args<span class="w"> </span><span class="s2">&quot;197f6b23e16c8532...40420f0000...&quot;</span>
 </code></pre></div>
 <p>The CLI simulates the call first, then submits if simulation succeeds.</p>
 <hr />
@@ -3043,11 +3167,11 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c1"># Use a different RPC endpoint</span>
-<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>solen<span class="w"> </span>--rpc<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span>status
-<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>
-<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="c1"># Use testnet defaults</span>
-<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>solen<span class="w"> </span>--network<span class="w"> </span>testnet<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="c1"># Use a different RPC endpoint</span>
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>solen<span class="w"> </span>--rpc<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span>status
+<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>
+<a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="c1"># Use testnet defaults</span>
+<a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a>solen<span class="w"> </span>--network<span class="w"> </span>testnet<span class="w"> </span>status
 </code></pre></div>
 
 

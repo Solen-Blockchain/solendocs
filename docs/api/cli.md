@@ -206,6 +206,50 @@ The sender must be the jailed validator's key.
 
 ---
 
+### `solen claim-vesting <from>`
+
+Claim vested tokens. If the caller has a vesting schedule and the cliff period has passed, any unlocked tokens are credited to their account balance.
+
+```bash
+solen claim-vesting mykey
+```
+
+---
+
+### `solen set-vesting-admin <from> <new-admin>`
+
+Set the vesting admin account. The admin can add new vesting schedules post-genesis. Can only be called by the current admin, or by anyone if no admin is set (first-time setup).
+
+```bash
+solen set-vesting-admin mykey foundation-multisig
+```
+
+---
+
+### `solen add-vesting <from> <recipient> <amount> [options]`
+
+Add a vesting schedule for a recipient (admin only). The vesting clock starts from the current epoch. Used for post-launch token sales to validators and investors.
+
+```bash
+# Investor vesting (6-month cliff, 2-year vest)
+solen add-vesting admin-key investor-address 100000 --vesting-type investor
+
+# Validator vesting (3-month cliff, 1-year vest)
+solen add-vesting admin-key validator-address 50000 --vesting-type validator
+
+# Custom vesting (6-month cliff, 18-month vest)
+solen add-vesting admin-key recipient 75000 --vesting-type custom --cliff-months 6 --vest-months 18
+```
+
+| Vesting Type | Cliff | Linear Vest | Total |
+|-------------|-------|-------------|-------|
+| `team` | 1 year | 3 years | 4 years |
+| `investor` | 6 months | 2 years | 2.5 years |
+| `validator` | 3 months | 1 year | 1.25 years |
+| `custom` | `--cliff-months` | `--vest-months` | cliff + vest |
+
+---
+
 ### `solen propose-block-time <from> <new-block-time-ms> <description>`
 
 Submit a governance proposal to change the block time.

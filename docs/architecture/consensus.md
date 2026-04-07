@@ -63,12 +63,42 @@ When competing blocks arrive at the same height from different proposers, the no
 
 ### Peer Reputation
 
-The P2P layer tracks peer behavior and temporarily bans misbehaving peers:
+The P2P layer tracks peer behavior with a multi-layered reputation system:
+
+**Application-level scoring:**
 
 - Decode failures, invalid blocks, and rate limit violations decrease a peer's score
 - Valid blocks and attestations increase score
-- Peers below a threshold score are banned for 5 minutes
-- Scores decay toward zero over time, allowing recovery
+- Peers below a threshold score are temporarily banned with **escalating ban durations** (5min, 10min, 20min, up to 1 hour)
+- After a ban expires, the peer starts at a negative score so the next offense triggers an immediate re-ban
+- Scores decay toward zero over time, allowing eventual recovery
+
+**Gossipsub peer scoring:**
+
+Solen integrates with libp2p's gossipsub peer scoring to automatically manage mesh topology:
+
+- Peers that relay blocks from a different fork receive a **-500 gossipsub application score**
+- Gossipsub automatically prunes low-scored peers from the mesh, freeing slots for honest peers
+- Peers below the **graylist threshold (-300)** have all messages ignored at the transport level
+- This prevents hostile peers from poisoning the gossipsub mesh and disrupting validator communication
+
+### Partition Detection
+
+If a validator loses connectivity to its peers and cannot reach quorum, it detects the partition and halts block production rather than diverging:
+
+- After **3 consecutive force-finalizations** without quorum, the validator enters **partition mode**
+- In partition mode, the validator stops proposing blocks and clears all peer bans to allow reconnection
+- When a valid block is received from a peer, the partition state clears and normal production resumes
+- This prevents isolated validators from creating divergent chains during network partitions
+
+### Fork Isolation
+
+Nodes protect against syncing from chains with a different genesis:
+
+- The **genesis state root** is persisted on first startup and used to identify the correct chain
+- Sync blocks that produce a different state root are rejected, and the sending peer's state root is cached for instant future rejection
+- The `--genesis-hash` CLI flag allows explicit fork isolation when joining a network after a chain reset
+- Once a fork mismatch is detected, the node disables sync triggers from announcements and only syncs via direct block receipt from peers on the correct chain
 
 ## Slashing
 
@@ -90,11 +120,11 @@ Missing 50 consecutive blocks results in:
 
 ### Unjailing
 
-A jailed validator can be reactivated by submitting an `unjail` transaction. The validator rejoins the active consensus set at the next epoch boundary and resumes block production in the round-robin rotation.
+A jailed validator can be reactivated by submitting an `unjail` transaction. The validator rejoins the active consensus set at the next epoch boundary and resumes block production in the stake-weighted proposer rotation.
 
 ### Backup Proposers
 
-When the designated proposer is offline, backup proposers take over in deterministic order — the next validator in the round-robin sequence after the designated proposer. The first backup waits **3x block_time** (18s on mainnet) before proposing. Each subsequent backup waits an additional **2x block_time** (12s on mainnet) beyond the previous backup's deadline. This ensures liveness even when multiple consecutive proposers are unavailable.
+When the designated proposer is offline, backup proposers take over in deterministic stake-weighted priority order. The first backup waits **3x block_time** (18s on mainnet) before proposing. Each subsequent backup waits an additional **2x block_time** (12s on mainnet) beyond the previous backup's deadline. This ensures liveness even when multiple consecutive proposers are unavailable.
 
 All slashed funds are sent to the **Foundation Treasury** (`0xFFFF...FF04`).
 
@@ -119,7 +149,7 @@ The consensus engine includes several hardened security measures:
 - **State root verification:** Every finalized block includes a state root that is independently verified. During initial sync, the node validates state roots against the received block data to detect tampered state.
 - **RPC rate limiting:** Write operations are rate-limited to prevent denial-of-service attacks on the mempool (see [JSON-RPC Rate Limits](../api/json-rpc.md#rate-limits)).
 - **Attestation validation:** Block attestations (votes) are validated against the active validator set — only validators with stake in the current epoch can participate in consensus voting. Duplicate or invalid attestations are rejected.
-- **Proposer validation:** Block proposals are verified to come from the expected proposer in the round-robin rotation. Blocks from unauthorized proposers are rejected.
+- **Proposer validation:** Block proposals are verified to come from a validator in the active set. Blocks from unauthorized proposers are rejected.
 
 ## Configuration
 

@@ -33,7 +33,20 @@ Options:
     --explorer-port <PORT>     Explorer API port (0 to disable)
     --genesis <PATH>           Path to genesis.json config file
     --snapshot <URL|PATH>      Bootstrap from a state snapshot
+    --genesis-hash <HEX>       Expected genesis state root (64 hex chars) for fork isolation
+    --init-genesis             Generate a genesis.json for the selected network and exit
 ```
+
+### Fork Isolation
+
+When joining a network after a chain reset or when hostile nodes are present on the same P2P topics, use `--genesis-hash` to ensure the node only syncs with the correct chain:
+
+```bash
+solen-node --network testnet \
+    --genesis-hash 62d536b9c0534f31fdcb623c3642112e951edb124997be0d7741c30d654e2919
+```
+
+The genesis hash is automatically computed and persisted on first startup. The `--genesis-hash` flag overrides this with an explicit value. Nodes with a different genesis state root will have their sync blocks rejected and the sending peers will be penalized at the gossipsub level.
 
 ### Network Defaults
 

@@ -857,6 +857,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#partition-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Partition Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fork-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fork Isolation
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2108,6 +2130,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#partition-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Partition Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fork-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fork Isolation
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2307,12 +2351,38 @@
 <h3 id="fork-scoring">Fork Scoring<a class="headerlink" href="#fork-scoring" title="Permanent link">&para;</a></h3>
 <p>When competing blocks arrive at the same height from different proposers, the node uses <strong>stake-weighted fork scoring</strong> to choose the best block. The block from the higher-priority proposer (earlier in the stake-weighted order for that height) replaces any lower-priority pending block.</p>
 <h3 id="peer-reputation">Peer Reputation<a class="headerlink" href="#peer-reputation" title="Permanent link">&para;</a></h3>
-<p>The P2P layer tracks peer behavior and temporarily bans misbehaving peers:</p>
+<p>The P2P layer tracks peer behavior with a multi-layered reputation system:</p>
+<p><strong>Application-level scoring:</strong></p>
 <ul>
 <li>Decode failures, invalid blocks, and rate limit violations decrease a peer's score</li>
 <li>Valid blocks and attestations increase score</li>
-<li>Peers below a threshold score are banned for 5 minutes</li>
-<li>Scores decay toward zero over time, allowing recovery</li>
+<li>Peers below a threshold score are temporarily banned with <strong>escalating ban durations</strong> (5min, 10min, 20min, up to 1 hour)</li>
+<li>After a ban expires, the peer starts at a negative score so the next offense triggers an immediate re-ban</li>
+<li>Scores decay toward zero over time, allowing eventual recovery</li>
+</ul>
+<p><strong>Gossipsub peer scoring:</strong></p>
+<p>Solen integrates with libp2p's gossipsub peer scoring to automatically manage mesh topology:</p>
+<ul>
+<li>Peers that relay blocks from a different fork receive a <strong>-500 gossipsub application score</strong></li>
+<li>Gossipsub automatically prunes low-scored peers from the mesh, freeing slots for honest peers</li>
+<li>Peers below the <strong>graylist threshold (-300)</strong> have all messages ignored at the transport level</li>
+<li>This prevents hostile peers from poisoning the gossipsub mesh and disrupting validator communication</li>
+</ul>
+<h3 id="partition-detection">Partition Detection<a class="headerlink" href="#partition-detection" title="Permanent link">&para;</a></h3>
+<p>If a validator loses connectivity to its peers and cannot reach quorum, it detects the partition and halts block production rather than diverging:</p>
+<ul>
+<li>After <strong>3 consecutive force-finalizations</strong> without quorum, the validator enters <strong>partition mode</strong></li>
+<li>In partition mode, the validator stops proposing blocks and clears all peer bans to allow reconnection</li>
+<li>When a valid block is received from a peer, the partition state clears and normal production resumes</li>
+<li>This prevents isolated validators from creating divergent chains during network partitions</li>
+</ul>
+<h3 id="fork-isolation">Fork Isolation<a class="headerlink" href="#fork-isolation" title="Permanent link">&para;</a></h3>
+<p>Nodes protect against syncing from chains with a different genesis:</p>
+<ul>
+<li>The <strong>genesis state root</strong> is persisted on first startup and used to identify the correct chain</li>
+<li>Sync blocks that produce a different state root are rejected, and the sending peer's state root is cached for instant future rejection</li>
+<li>The <code>--genesis-hash</code> CLI flag allows explicit fork isolation when joining a network after a chain reset</li>
+<li>Once a fork mismatch is detected, the node disables sync triggers from announcements and only syncs via direct block receipt from peers on the correct chain</li>
 </ul>
 <h2 id="slashing">Slashing<a class="headerlink" href="#slashing" title="Permanent link">&para;</a></h2>
 <p>Validators can be slashed for two types of misbehavior:</p>
@@ -2329,9 +2399,9 @@
 <li><strong>Jailing</strong> — the validator is removed from the active set</li>
 </ul>
 <h3 id="unjailing">Unjailing<a class="headerlink" href="#unjailing" title="Permanent link">&para;</a></h3>
-<p>A jailed validator can be reactivated by submitting an <code>unjail</code> transaction. The validator rejoins the active consensus set at the next epoch boundary and resumes block production in the round-robin rotation.</p>
+<p>A jailed validator can be reactivated by submitting an <code>unjail</code> transaction. The validator rejoins the active consensus set at the next epoch boundary and resumes block production in the stake-weighted proposer rotation.</p>
 <h3 id="backup-proposers">Backup Proposers<a class="headerlink" href="#backup-proposers" title="Permanent link">&para;</a></h3>
-<p>When the designated proposer is offline, backup proposers take over in deterministic order — the next validator in the round-robin sequence after the designated proposer. The first backup waits <strong>3x block_time</strong> (18s on mainnet) before proposing. Each subsequent backup waits an additional <strong>2x block_time</strong> (12s on mainnet) beyond the previous backup's deadline. This ensures liveness even when multiple consecutive proposers are unavailable.</p>
+<p>When the designated proposer is offline, backup proposers take over in deterministic stake-weighted priority order. The first backup waits <strong>3x block_time</strong> (18s on mainnet) before proposing. Each subsequent backup waits an additional <strong>2x block_time</strong> (12s on mainnet) beyond the previous backup's deadline. This ensures liveness even when multiple consecutive proposers are unavailable.</p>
 <p>All slashed funds are sent to the <strong>Foundation Treasury</strong> (<code>0xFFFF...FF04</code>).</p>
 <blockquote>
 <p><strong>Note:</strong> Slashing is deterministic and on-chain — penalties are executed as system transactions within blocks, not applied out-of-band.</p>
@@ -2351,7 +2421,7 @@
 <li><strong>State root verification:</strong> Every finalized block includes a state root that is independently verified. During initial sync, the node validates state roots against the received block data to detect tampered state.</li>
 <li><strong>RPC rate limiting:</strong> Write operations are rate-limited to prevent denial-of-service attacks on the mempool (see <a href="../../api/json-rpc/#rate-limits">JSON-RPC Rate Limits</a>).</li>
 <li><strong>Attestation validation:</strong> Block attestations (votes) are validated against the active validator set — only validators with stake in the current epoch can participate in consensus voting. Duplicate or invalid attestations are rejected.</li>
-<li><strong>Proposer validation:</strong> Block proposals are verified to come from the expected proposer in the round-robin rotation. Blocks from unauthorized proposers are rejected.</li>
+<li><strong>Proposer validation:</strong> Block proposals are verified to come from a validator in the active set. Blocks from unauthorized proposers are rejected.</li>
 </ul>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>Consensus parameters can be modified through <a href="../../tokenomics/governance/">governance</a> proposals:</p>
