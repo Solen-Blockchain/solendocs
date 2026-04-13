@@ -1507,6 +1507,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#websocket-subscriptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WebSocket Subscriptions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="WebSocket Subscriptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#solen_subscribenewblocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_subscribeNewBlocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen_subscribetxconfirmation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_subscribeTxConfirmation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen_subscribevalidatorchanges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_subscribeValidatorChanges
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#rate-limits" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2571,6 +2621,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#websocket-subscriptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WebSocket Subscriptions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="WebSocket Subscriptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#solen_subscribenewblocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_subscribeNewBlocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen_subscribetxconfirmation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_subscribeTxConfirmation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen_subscribevalidatorchanges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_subscribeValidatorChanges
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#rate-limits" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2613,14 +2713,16 @@
 
 
 <h1 id="json-rpc-api">JSON-RPC API<a class="headerlink" href="#json-rpc-api" title="Permanent link">&para;</a></h1>
-<p>Solen exposes a JSON-RPC 2.0 API over HTTP for querying chain state and submitting operations.</p>
+<p>Solen exposes a JSON-RPC 2.0 API over HTTP and WebSocket for querying chain state, submitting operations, and subscribing to real-time events.</p>
 <h2 id="connection">Connection<a class="headerlink" href="#connection" title="Permanent link">&para;</a></h2>
+<p>The RPC server accepts both HTTP POST and WebSocket connections on the same port.</p>
 <table>
 <thead>
 <tr>
 <th>Network</th>
 <th>Default Port</th>
-<th>URL</th>
+<th>HTTP</th>
+<th>WebSocket</th>
 </tr>
 </thead>
 <tbody>
@@ -2628,20 +2730,23 @@
 <td>Mainnet</td>
 <td>9944</td>
 <td><code>http://127.0.0.1:9944</code></td>
+<td><code>ws://127.0.0.1:9944</code></td>
 </tr>
 <tr>
 <td>Testnet</td>
 <td>19944</td>
 <td><code>http://127.0.0.1:19944</code></td>
+<td><code>ws://127.0.0.1:19944</code></td>
 </tr>
 <tr>
 <td>Devnet</td>
 <td>29944</td>
 <td><code>http://127.0.0.1:29944</code></td>
+<td><code>ws://127.0.0.1:29944</code></td>
 </tr>
 </tbody>
 </table>
-<p>All requests use HTTP POST with <code>Content-Type: application/json</code>.</p>
+<p>All RPC methods are available over both transports. WebSocket additionally supports real-time subscriptions (see <a href="#websocket-subscriptions">WebSocket Subscriptions</a> below).</p>
 <h2 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h2>
 <h3 id="solen_chainstatus"><code>solen_chainStatus</code><a class="headerlink" href="#solen_chainstatus" title="Permanent link">&para;</a></h3>
 <p>Get the current chain status.</p>
@@ -3848,6 +3953,184 @@ Anyone can call this. Replaces the target account's auth methods with the new on
 </code></pre></div>
 <p>All amount values are in SOLEN (human-readable). Decimals supported (e.g., <code>100.5</code>).
 Use <code>--rpc &lt;url&gt;</code> to specify the RPC endpoint and <code>--chain-id &lt;id&gt;</code> for the network.</p>
+<hr />
+<h2 id="websocket-subscriptions">WebSocket Subscriptions<a class="headerlink" href="#websocket-subscriptions" title="Permanent link">&para;</a></h2>
+<p>Connect via WebSocket (<code>ws://host:port</code>) to subscribe to real-time events. Subscriptions use the standard JSON-RPC 2.0 subscription protocol.</p>
+<h3 id="solen_subscribenewblocks"><code>solen_subscribeNewBlocks</code><a class="headerlink" href="#solen_subscribenewblocks" title="Permanent link">&para;</a></h3>
+<p>Subscribe to new finalized blocks.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Notification (<code>solen_newBlock</code>):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>height</code></td>
+<td><code>u64</code></td>
+<td>Block height</td>
+</tr>
+<tr>
+<td><code>epoch</code></td>
+<td><code>u64</code></td>
+<td>Current epoch</td>
+</tr>
+<tr>
+<td><code>block_hash</code></td>
+<td><code>string</code></td>
+<td>Hex-encoded block hash</td>
+</tr>
+<tr>
+<td><code>state_root</code></td>
+<td><code>string</code></td>
+<td>Hex-encoded state root</td>
+</tr>
+<tr>
+<td><code>proposer</code></td>
+<td><code>string</code></td>
+<td>Block proposer (Base58)</td>
+</tr>
+<tr>
+<td><code>timestamp_ms</code></td>
+<td><code>u64</code></td>
+<td>Block timestamp (milliseconds)</td>
+</tr>
+<tr>
+<td><code>tx_count</code></td>
+<td><code>usize</code></td>
+<td>Number of transactions in the block</td>
+</tr>
+<tr>
+<td><code>gas_used</code></td>
+<td><code>u64</code></td>
+<td>Total gas used</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1">// Subscribe</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_subscribeNewBlocks&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:[]}</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1">// Response</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="s2">&quot;subscription_id&quot;</span><span class="p">}</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1">// Notification</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_newBlock&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:{</span><span class="nt">&quot;subscription&quot;</span><span class="p">:</span><span class="s2">&quot;subscription_id&quot;</span><span class="p">,</span><span class="nt">&quot;result&quot;</span><span class="p">:{</span><span class="nt">&quot;height&quot;</span><span class="p">:</span><span class="mi">42</span><span class="p">,</span><span class="nt">&quot;epoch&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="nt">&quot;block_hash&quot;</span><span class="p">:</span><span class="s2">&quot;ab12...&quot;</span><span class="p">,</span><span class="nt">&quot;state_root&quot;</span><span class="p">:</span><span class="s2">&quot;cd34...&quot;</span><span class="p">,</span><span class="nt">&quot;proposer&quot;</span><span class="p">:</span><span class="s2">&quot;5Dxq...&quot;</span><span class="p">,</span><span class="nt">&quot;timestamp_ms&quot;</span><span class="p">:</span><span class="mi">1713000000000</span><span class="p">,</span><span class="nt">&quot;tx_count&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="nt">&quot;gas_used&quot;</span><span class="p">:</span><span class="mi">150000</span><span class="p">}}}</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1">// Unsubscribe</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_unsubscribeNewBlocks&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:[</span><span class="s2">&quot;subscription_id&quot;</span><span class="p">]}</span>
+</code></pre></div>
+<hr />
+<h3 id="solen_subscribetxconfirmation"><code>solen_subscribeTxConfirmation</code><a class="headerlink" href="#solen_subscribetxconfirmation" title="Permanent link">&para;</a></h3>
+<p>Watch for a specific transaction confirmation. The subscription automatically closes after the transaction is included in a finalized block.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sender</code></td>
+<td><code>string</code></td>
+<td>Sender account ID (Base58 or hex)</td>
+</tr>
+<tr>
+<td><code>nonce</code></td>
+<td><code>u64</code></td>
+<td>Transaction nonce</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Notification (<code>solen_txConfirmation</code>):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>block_height</code></td>
+<td><code>u64</code></td>
+<td>Block the transaction was included in</td>
+</tr>
+<tr>
+<td><code>tx_hash</code></td>
+<td><code>string</code></td>
+<td>Hex-encoded transaction hash</td>
+</tr>
+<tr>
+<td><code>sender</code></td>
+<td><code>string</code></td>
+<td>Sender account (Base58)</td>
+</tr>
+<tr>
+<td><code>nonce</code></td>
+<td><code>u64</code></td>
+<td>Transaction nonce</td>
+</tr>
+<tr>
+<td><code>success</code></td>
+<td><code>bool</code></td>
+<td>Whether execution succeeded</td>
+</tr>
+<tr>
+<td><code>gas_used</code></td>
+<td><code>u64</code></td>
+<td>Gas consumed</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1">// Subscribe (watch for sender&#39;s nonce 5)</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_subscribeTxConfirmation&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:[</span><span class="s2">&quot;2ZrMqiKGz6TUvJkyBKyNMf3Y7dMrJ5JqWSCCYGn1VWbp&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">]}</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1">// Notification (delivered once, then subscription closes)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_txConfirmation&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:{</span><span class="nt">&quot;subscription&quot;</span><span class="p">:</span><span class="s2">&quot;subscription_id&quot;</span><span class="p">,</span><span class="nt">&quot;result&quot;</span><span class="p">:{</span><span class="nt">&quot;block_height&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span><span class="nt">&quot;tx_hash&quot;</span><span class="p">:</span><span class="s2">&quot;ef56...&quot;</span><span class="p">,</span><span class="nt">&quot;sender&quot;</span><span class="p">:</span><span class="s2">&quot;2ZrM...&quot;</span><span class="p">,</span><span class="nt">&quot;nonce&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="nt">&quot;gas_used&quot;</span><span class="p">:</span><span class="mi">21000</span><span class="p">}}}</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Use this after <code>solen_submitOperation</code> to get notified when your transaction lands, instead of polling <code>getBlock</code> or <code>getAccount</code>.</p>
+</div>
+<hr />
+<h3 id="solen_subscribevalidatorchanges"><code>solen_subscribeValidatorChanges</code><a class="headerlink" href="#solen_subscribevalidatorchanges" title="Permanent link">&para;</a></h3>
+<p>Subscribe to validator set changes at epoch boundaries.</p>
+<p><strong>Parameters:</strong> None</p>
+<p><strong>Notification (<code>solen_validatorChange</code>):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>epoch</code></td>
+<td><code>u64</code></td>
+<td>New epoch number</td>
+</tr>
+<tr>
+<td><code>active_count</code></td>
+<td><code>usize</code></td>
+<td>Number of active validators</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_subscribeValidatorChanges&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:[]}</span>
+</code></pre></div>
 <hr />
 <h2 id="rate-limits">Rate Limits<a class="headerlink" href="#rate-limits" title="Permanent link">&para;</a></h2>
 <p>The RPC server enforces per-method rate limits to prevent abuse:</p>

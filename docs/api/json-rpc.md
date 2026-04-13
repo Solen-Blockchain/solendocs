@@ -1,16 +1,18 @@
 # JSON-RPC API
 
-Solen exposes a JSON-RPC 2.0 API over HTTP for querying chain state and submitting operations.
+Solen exposes a JSON-RPC 2.0 API over HTTP and WebSocket for querying chain state, submitting operations, and subscribing to real-time events.
 
 ## Connection
 
-| Network | Default Port | URL |
-|---------|-------------|-----|
-| Mainnet | 9944 | `http://127.0.0.1:9944` |
-| Testnet | 19944 | `http://127.0.0.1:19944` |
-| Devnet | 29944 | `http://127.0.0.1:29944` |
+The RPC server accepts both HTTP POST and WebSocket connections on the same port.
 
-All requests use HTTP POST with `Content-Type: application/json`.
+| Network | Default Port | HTTP | WebSocket |
+|---------|-------------|------|-----------|
+| Mainnet | 9944 | `http://127.0.0.1:9944` | `ws://127.0.0.1:9944` |
+| Testnet | 19944 | `http://127.0.0.1:19944` | `ws://127.0.0.1:19944` |
+| Devnet | 29944 | `http://127.0.0.1:29944` | `ws://127.0.0.1:29944` |
+
+All RPC methods are available over both transports. WebSocket additionally supports real-time subscriptions (see [WebSocket Subscriptions](#websocket-subscriptions) below).
 
 ## Methods
 
@@ -737,6 +739,105 @@ solen-cli key list
 
 All amount values are in SOLEN (human-readable). Decimals supported (e.g., `100.5`).
 Use `--rpc <url>` to specify the RPC endpoint and `--chain-id <id>` for the network.
+
+---
+
+## WebSocket Subscriptions
+
+Connect via WebSocket (`ws://host:port`) to subscribe to real-time events. Subscriptions use the standard JSON-RPC 2.0 subscription protocol.
+
+### `solen_subscribeNewBlocks`
+
+Subscribe to new finalized blocks.
+
+**Parameters:** None
+
+**Notification (`solen_newBlock`):**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `height` | `u64` | Block height |
+| `epoch` | `u64` | Current epoch |
+| `block_hash` | `string` | Hex-encoded block hash |
+| `state_root` | `string` | Hex-encoded state root |
+| `proposer` | `string` | Block proposer (Base58) |
+| `timestamp_ms` | `u64` | Block timestamp (milliseconds) |
+| `tx_count` | `usize` | Number of transactions in the block |
+| `gas_used` | `u64` | Total gas used |
+
+**Example:**
+
+```json
+// Subscribe
+{"jsonrpc":"2.0","id":1,"method":"solen_subscribeNewBlocks","params":[]}
+
+// Response
+{"jsonrpc":"2.0","id":1,"result":"subscription_id"}
+
+// Notification
+{"jsonrpc":"2.0","method":"solen_newBlock","params":{"subscription":"subscription_id","result":{"height":42,"epoch":0,"block_hash":"ab12...","state_root":"cd34...","proposer":"5Dxq...","timestamp_ms":1713000000000,"tx_count":3,"gas_used":150000}}}
+
+// Unsubscribe
+{"jsonrpc":"2.0","id":2,"method":"solen_unsubscribeNewBlocks","params":["subscription_id"]}
+```
+
+---
+
+### `solen_subscribeTxConfirmation`
+
+Watch for a specific transaction confirmation. The subscription automatically closes after the transaction is included in a finalized block.
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `sender` | `string` | Sender account ID (Base58 or hex) |
+| `nonce` | `u64` | Transaction nonce |
+
+**Notification (`solen_txConfirmation`):**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `block_height` | `u64` | Block the transaction was included in |
+| `tx_hash` | `string` | Hex-encoded transaction hash |
+| `sender` | `string` | Sender account (Base58) |
+| `nonce` | `u64` | Transaction nonce |
+| `success` | `bool` | Whether execution succeeded |
+| `gas_used` | `u64` | Gas consumed |
+
+**Example:**
+
+```json
+// Subscribe (watch for sender's nonce 5)
+{"jsonrpc":"2.0","id":1,"method":"solen_subscribeTxConfirmation","params":["2ZrMqiKGz6TUvJkyBKyNMf3Y7dMrJ5JqWSCCYGn1VWbp", 5]}
+
+// Notification (delivered once, then subscription closes)
+{"jsonrpc":"2.0","method":"solen_txConfirmation","params":{"subscription":"subscription_id","result":{"block_height":100,"tx_hash":"ef56...","sender":"2ZrM...","nonce":5,"success":true,"gas_used":21000}}}
+```
+
+!!! tip
+    Use this after `solen_submitOperation` to get notified when your transaction lands, instead of polling `getBlock` or `getAccount`.
+
+---
+
+### `solen_subscribeValidatorChanges`
+
+Subscribe to validator set changes at epoch boundaries.
+
+**Parameters:** None
+
+**Notification (`solen_validatorChange`):**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `epoch` | `u64` | New epoch number |
+| `active_count` | `usize` | Number of active validators |
+
+**Example:**
+
+```json
+{"jsonrpc":"2.0","id":1,"method":"solen_subscribeValidatorChanges","params":[]}
+```
 
 ---
 
