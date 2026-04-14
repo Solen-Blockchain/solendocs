@@ -4,7 +4,7 @@
 
 ## Overview
 
-The Solen JSON-RPC API is organized into four groups: state queries, write operations, simulation, and rollup operations.
+The Solen JSON-RPC API is organized into five groups: state queries, write operations, simulation, rollup operations, and WebSocket subscriptions. The server accepts both HTTP POST and WebSocket connections on the same port.
 
 ## State Queries
 
@@ -94,6 +94,34 @@ Submits a rollup batch commitment for proof verification on L1. Auto-registers t
 - **Parameters:** `batch` — `{ rollup_id, batch_index, state_root, data_hash, proof }` (hex-encoded hashes)
 - **Returns:** `{ accepted, verified, error }`
 - **Status:** Implemented
+
+## WebSocket Subscriptions
+
+Connect via `ws://host:port` (same port as HTTP RPC). All RPC methods above are also callable over WebSocket. Subscriptions use the JSON-RPC 2.0 subscription protocol.
+
+### `solen_subscribeNewBlocks`
+
+Streams every finalized block.
+
+- **Parameters:** none
+- **Notification (`solen_newBlock`):** `{ height, epoch, block_hash, state_root, proposer, timestamp_ms, tx_count, gas_used }`
+- **Unsubscribe:** `solen_unsubscribeNewBlocks`
+
+### `solen_subscribeTxConfirmation(sender, nonce)`
+
+Watches for a specific transaction confirmation. Auto-closes after delivery.
+
+- **Parameters:** `sender` — Account ID (Base58 or hex), `nonce` — transaction nonce (u64)
+- **Notification (`solen_txConfirmation`):** `{ block_height, tx_hash, sender, nonce, success, gas_used }`
+- **Unsubscribe:** `solen_unsubscribeTxConfirmation`
+
+### `solen_subscribeValidatorChanges`
+
+Emitted at epoch boundaries when the validator set changes.
+
+- **Parameters:** none
+- **Notification (`solen_validatorChange`):** `{ epoch, active_count }`
+- **Unsubscribe:** `solen_unsubscribeValidatorChanges`
 
 ## Error Codes
 

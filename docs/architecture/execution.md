@@ -62,9 +62,13 @@ Genesis initialization creates the initial state:
 
 ## Performance
 
-| Benchmark | TPS |
-|-----------|-----|
-| Transfers (authenticated) | ~15,000 |
-| Contract calls (WASM) | ~10,000 |
+Benchmarked on a live 4-validator testnet with BFT consensus and full Ed25519 signature verification.
 
-All numbers include full Ed25519 signature verification on every operation.
+| Benchmark | TPS | Finality |
+|-----------|-----|----------|
+| Transfers (live testnet) | ~1,200 | < 1s |
+| Contract calls (WASM, live testnet) | ~188 | < 1s |
+| Max ops per block | 5,000 | — |
+| RPC ingestion rate | 10,000+ tx/s | — |
+
+All numbers measured with full BFT quorum (2/3+ stake-weighted attestations), not single-node execution.

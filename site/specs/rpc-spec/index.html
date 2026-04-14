@@ -1977,6 +1977,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#websocket-subscriptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WebSocket Subscriptions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="WebSocket Subscriptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#solen_subscribenewblocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_subscribeNewBlocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen_subscribetxconfirmationsender-nonce" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_subscribeTxConfirmation(sender, nonce)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen_subscribevalidatorchanges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_subscribeValidatorChanges
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#error-codes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2230,6 +2280,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#websocket-subscriptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WebSocket Subscriptions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="WebSocket Subscriptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#solen_subscribenewblocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_subscribeNewBlocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen_subscribetxconfirmationsender-nonce" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_subscribeTxConfirmation(sender, nonce)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solen_subscribevalidatorchanges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_subscribeValidatorChanges
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#error-codes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2263,7 +2363,7 @@
 <h1 id="spec-003-rpc-api-specification">Spec 003: RPC API Specification<a class="headerlink" href="#spec-003-rpc-api-specification" title="Permanent link">&para;</a></h1>
 <p><strong>Status:</strong> Draft</p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>The Solen JSON-RPC API is organized into four groups: state queries, write operations, simulation, and rollup operations.</p>
+<p>The Solen JSON-RPC API is organized into five groups: state queries, write operations, simulation, rollup operations, and WebSocket subscriptions. The server accepts both HTTP POST and WebSocket connections on the same port.</p>
 <h2 id="state-queries">State Queries<a class="headerlink" href="#state-queries" title="Permanent link">&para;</a></h2>
 <h3 id="solen_getbalanceaccount_id"><code>solen_getBalance(account_id)</code><a class="headerlink" href="#solen_getbalanceaccount_id" title="Permanent link">&para;</a></h3>
 <p>Returns the native token balance for an account.</p>
@@ -2337,6 +2437,29 @@
 <li><strong>Parameters:</strong> <code>batch</code> — <code>{ rollup_id, batch_index, state_root, data_hash, proof }</code> (hex-encoded hashes)</li>
 <li><strong>Returns:</strong> <code>{ accepted, verified, error }</code></li>
 <li><strong>Status:</strong> Implemented</li>
+</ul>
+<h2 id="websocket-subscriptions">WebSocket Subscriptions<a class="headerlink" href="#websocket-subscriptions" title="Permanent link">&para;</a></h2>
+<p>Connect via <code>ws://host:port</code> (same port as HTTP RPC). All RPC methods above are also callable over WebSocket. Subscriptions use the JSON-RPC 2.0 subscription protocol.</p>
+<h3 id="solen_subscribenewblocks"><code>solen_subscribeNewBlocks</code><a class="headerlink" href="#solen_subscribenewblocks" title="Permanent link">&para;</a></h3>
+<p>Streams every finalized block.</p>
+<ul>
+<li><strong>Parameters:</strong> none</li>
+<li><strong>Notification (<code>solen_newBlock</code>):</strong> <code>{ height, epoch, block_hash, state_root, proposer, timestamp_ms, tx_count, gas_used }</code></li>
+<li><strong>Unsubscribe:</strong> <code>solen_unsubscribeNewBlocks</code></li>
+</ul>
+<h3 id="solen_subscribetxconfirmationsender-nonce"><code>solen_subscribeTxConfirmation(sender, nonce)</code><a class="headerlink" href="#solen_subscribetxconfirmationsender-nonce" title="Permanent link">&para;</a></h3>
+<p>Watches for a specific transaction confirmation. Auto-closes after delivery.</p>
+<ul>
+<li><strong>Parameters:</strong> <code>sender</code> — Account ID (Base58 or hex), <code>nonce</code> — transaction nonce (u64)</li>
+<li><strong>Notification (<code>solen_txConfirmation</code>):</strong> <code>{ block_height, tx_hash, sender, nonce, success, gas_used }</code></li>
+<li><strong>Unsubscribe:</strong> <code>solen_unsubscribeTxConfirmation</code></li>
+</ul>
+<h3 id="solen_subscribevalidatorchanges"><code>solen_subscribeValidatorChanges</code><a class="headerlink" href="#solen_subscribevalidatorchanges" title="Permanent link">&para;</a></h3>
+<p>Emitted at epoch boundaries when the validator set changes.</p>
+<ul>
+<li><strong>Parameters:</strong> none</li>
+<li><strong>Notification (<code>solen_validatorChange</code>):</strong> <code>{ epoch, active_count }</code></li>
+<li><strong>Unsubscribe:</strong> <code>solen_unsubscribeValidatorChanges</code></li>
 </ul>
 <h2 id="error-codes">Error Codes<a class="headerlink" href="#error-codes" title="Permanent link">&para;</a></h2>
 <table>

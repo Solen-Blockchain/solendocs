@@ -43,8 +43,9 @@ Solen narrows the responsibilities of the base layer and treats execution domain
 | Fuzz targets | 3 |
 | RPC methods | 20 |
 | Explorer endpoints | 18 |
-| Transfer TPS | ~15,000 |
-| Contract call TPS | ~10,000 |
+| Transfer TPS (live testnet) | ~1,200 |
+| Contract call TPS (live testnet) | ~188 |
+| Finality | < 1 second (single-slot BFT) |
 
 ---
 
