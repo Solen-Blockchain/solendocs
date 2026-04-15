@@ -116,6 +116,8 @@ extra:
       link: https://discord.com/invite/QGxv8bebJc
     - icon: fontawesome/brands/telegram
       link: https://t.me/solenblockchain
+    - icon: fontawesome/brands/reddit
+      link: https://www.reddit.com/r/solenchain/
   meta:
     - name: keywords
       content: Solen, blockchain, documentation, rollups, smart accounts, intents, Layer 1, API, SDK
