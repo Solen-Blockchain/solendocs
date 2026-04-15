@@ -82,6 +82,9 @@ nav:
     - Contract SDK: smart-contracts/contract-sdk.md
     - Host Functions: smart-contracts/host-functions.md
     - Example Contracts: smart-contracts/examples.md
+  - Guides:
+    - Testing Contracts: guides/testing-contracts.md
+    - Troubleshooting: guides/troubleshooting.md
   - API Reference:
     - JSON-RPC API: api/json-rpc.md
     - Explorer REST API: api/explorer.md

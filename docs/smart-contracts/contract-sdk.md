@@ -43,17 +43,33 @@ Every contract must export a `call` function:
 
 ```rust
 #![no_std]
-use solen_contract_sdk::*;
+use solen_contract_sdk::{sdk, storage, events};
 
 #[no_mangle]
 pub extern "C" fn call(input_ptr: i32, input_len: i32) -> i32 {
-    let input = read_input(input_ptr, input_len);
-    let method = parse_method(&input);
+    let input = sdk::read_input(input_ptr, input_len);
+
+    // Parse method name (everything before the first \0 byte).
+    let method_end = input.iter().position(|&b| b == 0).unwrap_or(input.len());
+    let method = &input[..method_end];
+    let args = if method_end + 1 < input.len() { &input[method_end + 1..] } else { &[] };
 
     match method {
-        "my_method" => {
-            // Your logic here
+        b"init" => {
+            // Initialize contract state
+            storage::set(b"initialized", &[1]);
             0
+        }
+        b"increment" => {
+            let count = storage::get_u64(b"count").unwrap_or(0);
+            let new_count = count + 1;
+            storage::set_u64(b"count", new_count);
+            events::emit(b"incremented", &new_count.to_le_bytes());
+            sdk::return_value(&new_count.to_le_bytes())
+        }
+        b"get_count" => {
+            let count = storage::get_u64(b"count").unwrap_or(0);
+            sdk::return_value(&count.to_le_bytes())
         }
         _ => 0,
     }
@@ -62,56 +78,129 @@ pub extern "C" fn call(input_ptr: i32, input_len: i32) -> i32 {
 
 ## Input Format
 
-The `call` function receives a pointer and length to the input buffer. The input contains:
+The `call` function receives a pointer and length to the input buffer. The input format is:
 
-1. **Method name** (variable length, null-terminated)
-2. **Arguments** (remaining bytes after the method name)
-
-Use `parse_method()` and `parse_args()` to extract these.
-
-## Storage
-
-Contracts have their own isolated storage namespace:
-
-```rust
-// Read a value
-let value = storage_read(b"my_key");
-
-// Write a value
-storage_write(b"my_key", b"my_value");
-
-// Convenience helpers for common types
-let count: u64 = storage_read_u64(b"count");
-storage_write_u64(b"count", count + 1);
+```
+[method_name] [0x00] [arguments...]
 ```
 
-## Events
+- **Method name**: UTF-8 bytes, terminated by a null byte (`0x00`)
+- **Arguments**: Raw bytes after the null terminator. Format depends on the method.
 
-Emit events for off-chain indexing:
+**Parsing pattern:**
 
 ```rust
-emit_event(b"transfer", &data);
+let input = sdk::read_input(input_ptr, input_len);
+let method_end = input.iter().position(|&b| b == 0).unwrap_or(input.len());
+let method = &input[..method_end];
+let args = if method_end + 1 < input.len() { &input[method_end + 1..] } else { &[] };
 ```
 
-Events are indexed by the `solen-indexer` and available through the Explorer API.
-
-## Return Data
-
-Set return data for the caller:
+**Common argument patterns:**
 
 ```rust
-set_return_data(&result_bytes);
+// Read a 32-byte account ID from args
+fn read_account(args: &[u8], offset: usize) -> [u8; 32] {
+    let mut id = [0u8; 32];
+    id.copy_from_slice(&args[offset..offset + 32]);
+    id
+}
+
+// Read a u128 amount (16 bytes, little-endian) from args
+fn read_u128(args: &[u8], offset: usize) -> u128 {
+    let mut buf = [0u8; 16];
+    buf.copy_from_slice(&args[offset..offset + 16]);
+    u128::from_le_bytes(buf)
+}
+
+// Read a u64 from args
+fn read_u64(args: &[u8], offset: usize) -> u64 {
+    let mut buf = [0u8; 8];
+    buf.copy_from_slice(&args[offset..offset + 8]);
+    u64::from_le_bytes(buf)
+}
 ```
 
-The `call` function's return value is the length of the return data.
+## SDK Modules
 
-## Context
+### `sdk` — Input, Output, and Context
 
-Access execution context:
+| Function | Description |
+|----------|-------------|
+| `sdk::read_input(ptr, len)` | Read the raw input buffer |
+| `sdk::return_value(data)` | Set return data and return its length |
+| `sdk::caller()` | Get the 32-byte account ID of the caller |
+| `sdk::block_height()` | Get the current block height |
+| `sdk::self_id()` | Get this contract's own account ID |
+| `sdk::transfer(to, amount)` | Transfer native SOLEN from the contract (max 50 per call) |
+
+### `storage` — Persistent Key-Value Storage
+
+Each contract has its own isolated storage namespace. Other contracts cannot read your storage.
+
+| Function | Description |
+|----------|-------------|
+| `storage::get(key)` | Read raw bytes. Returns `Option<&[u8]>` (`None` if key doesn't exist) |
+| `storage::set(key, value)` | Write raw bytes |
+| `storage::get_u64(key)` | Read a u64 |
+| `storage::set_u64(key, value)` | Write a u64 |
+| `storage::get_u128(key)` | Read a u128 |
+| `storage::set_u128(key, value)` | Write a u128 |
+
+!!! warning "Scratch Buffer"
+    `storage::get()` reads into a shared 4096-byte scratch buffer. If your values exceed 4KB, use the raw `storage_read` host function directly.
+
+### `events` — Event Emission
+
+| Function | Description |
+|----------|-------------|
+| `events::emit(topic, data)` | Emit an event with a topic string and data payload |
+
+Events are indexed by the block explorer and available through the Explorer REST API. Use them for all state changes that off-chain applications need to track.
+
+**Event data encoding convention:**
 
 ```rust
-let caller: AccountId = get_caller();      // Who called this contract
-let height: u64 = get_block_height();      // Current block height
+// Transfer event: recipient[32] + amount[16]
+let mut data = Vec::new();
+data.extend_from_slice(&recipient);
+data.extend_from_slice(&amount.to_le_bytes());
+events::emit(b"transfer", &data);
+```
+
+## Gas Costs
+
+Every host function call consumes fuel (gas). If fuel is exhausted, the contract execution is halted and all state changes are rolled back.
+
+| Operation | Base Cost | Per-Byte Cost |
+|-----------|-----------|---------------|
+| Storage write | 2,000 | 10 per byte (key + value) |
+| Storage read | 500 | 10 per byte (key) |
+| Event emission | 2,000 | 10 per byte (topic + data) |
+| Native transfer | 5,000 | — |
+| Return data | 500 | 10 per byte |
+
+**Default fuel limit:** 1,000,000 per contract call (~100-200 storage operations).
+
+## Access Control Pattern
+
+```rust
+fn require_owner(args_or_storage: &[u8]) -> bool {
+    let caller = sdk::caller();
+    let owner = storage::get(b"owner");
+    match owner {
+        Some(o) if o.len() >= 32 => caller == o[..32],
+        _ => false,
+    }
+}
+
+// In your method:
+b"admin_method" => {
+    if !require_owner(&[]) {
+        return 0; // unauthorized
+    }
+    // ... admin logic
+}
 ```
 
 ## Deploying
@@ -122,11 +211,16 @@ solen deploy <FROM_ACCOUNT> path/to/contract.wasm
 
 # Call a method
 solen call <FROM_ACCOUNT> <CONTRACT_ID> <METHOD> --args <HEX_ARGS>
+
+# Read-only view call (no signature needed)
+solen call-view <CONTRACT_ID> <METHOD>
 ```
 
 ## Best Practices
 
 1. **Keep contracts small** — Use `opt-level = "z"` and LTO in release builds
-2. **Validate inputs** — Check argument lengths and formats
+2. **Validate all inputs** — Check argument lengths before reading bytes
 3. **Use events** — Emit events for all state changes for indexability
-4. **Test locally** — Use `--in-memory` node mode for fast iteration
+4. **Check callers** — Always verify authorization for sensitive operations
+5. **Handle missing keys** — `storage::get()` returns `None` for unset keys
+6. **Use base units** — 1 SOLEN = 100,000,000 base units (8 decimal places)

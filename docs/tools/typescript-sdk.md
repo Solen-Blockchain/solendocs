@@ -155,7 +155,7 @@ const myAddress = keypair.publicKey; // this IS your account ID (Base58)
 ```typescript
 import { SolenClient, SmartAccount } from "@solen/wallet-sdk";
 
-const client = new SolenClient({ rpcUrl: "http://127.0.0.1:29944" });
+const client = new SolenClient({ rpcUrl: "http://127.0.0.1:9944" });
 
 // Account addresses are Ed25519 public keys.
 // Both Base58 (~44 chars) and hex (64 chars) are accepted.
@@ -188,3 +188,154 @@ Run with:
 ```bash
 npx tsx demo.ts
 ```
+
+## WebSocket Subscriptions
+
+The RPC server supports WebSocket connections on the same port for real-time event streaming. Connect via `ws://` (or `wss://` for testnet):
+
+```typescript
+// Subscribe to new blocks via WebSocket
+const ws = new WebSocket("wss://testnet-rpc.solenchain.io");
+
+ws.onopen = () => {
+  // Subscribe to new finalized blocks
+  ws.send(JSON.stringify({
+    jsonrpc: "2.0",
+    id: 1,
+    method: "solen_subscribeNewBlocks",
+    params: []
+  }));
+};
+
+ws.onmessage = (event) => {
+  const msg = JSON.parse(event.data);
+
+  // Subscription confirmation (returns subscription ID)
+  if (msg.result && msg.id === 1) {
+    console.log("Subscribed:", msg.result);
+    return;
+  }
+
+  // Block notification
+  if (msg.method === "solen_newBlock") {
+    const block = msg.params.result;
+    console.log(`Block #${block.height} | ${block.tx_count} txs | ${block.gas_used} gas`);
+  }
+};
+```
+
+### Available Subscriptions
+
+| Method | Notification | Parameters | Description |
+|--------|-------------|-----------|-------------|
+| `solen_subscribeNewBlocks` | `solen_newBlock` | none | Every finalized block |
+| `solen_subscribeTxConfirmation` | `solen_txConfirmation` | `sender`, `nonce` | Specific tx confirmation (auto-closes) |
+| `solen_subscribeValidatorChanges` | `solen_validatorChange` | none | Validator set changes at epoch boundaries |
+
+### Watch for Transaction Confirmation
+
+```typescript
+// After submitting a transaction, watch for confirmation
+ws.send(JSON.stringify({
+  jsonrpc: "2.0",
+  id: 2,
+  method: "solen_subscribeTxConfirmation",
+  params: ["SENDER_ADDRESS_HEX", NONCE]
+}));
+
+// The notification arrives once when the tx lands in a block, then the subscription closes automatically.
+```
+
+## Building and Signing Operations
+
+To submit transactions, you need to build a `UserOperation`, sign it, and submit:
+
+```typescript
+import { SmartAccount, SolenClient, nameToHex } from "@solen/wallet-sdk";
+
+const client = new SolenClient({ rpcUrl: "http://127.0.0.1:9944" });
+
+// Create a smart account from a seed
+const alice = SmartAccount.fromSeed("your-seed-hex-64-chars", client);
+
+// Transfer native SOLEN
+const op = await alice.buildTransfer(
+  nameToHex("bob"),  // recipient (hex account ID)
+  500_00000000       // 500 SOLEN in base units
+);
+
+// Submit to the network
+const result = await client.submitOperation(op);
+console.log("Accepted:", result.accepted);
+```
+
+### Simulate Before Submitting
+
+```typescript
+// Dry-run to check gas cost and success
+const sim = await client.simulateOperation(op);
+if (sim.success) {
+  console.log(`Gas estimate: ${sim.gas_used}`);
+  const result = await client.submitOperation(op);
+} else {
+  console.error("Simulation failed:", sim.error);
+}
+```
+
+## Multi-Sig Operations
+
+Solen supports threshold multi-sig at the account level. Set up a 2-of-3 multi-sig:
+
+```bash
+# Set up threshold auth (CLI)
+solen multisig alice 2 \
+  <PUBKEY_1_HEX> \
+  <PUBKEY_2_HEX> \
+  <PUBKEY_3_HEX>
+```
+
+To sign a multi-sig transaction, concatenate `pubkey[32] + signature[64]` pairs (96 bytes each). At least `threshold` valid signatures from the signers list must be present:
+
+```typescript
+// Build the operation
+const op = await alice.buildTransfer(bobAddress, 1000_00000000);
+
+// Sign with key 1
+const sig1 = key1.sign(op.signingMessage());
+// Sign with key 2
+const sig2 = key2.sign(op.signingMessage());
+
+// Concatenate: pubkey1[32] + sig1[64] + pubkey2[32] + sig2[64]
+op.signature = Buffer.concat([
+  key1.publicKeyBytes, sig1,
+  key2.publicKeyBytes, sig2,
+]);
+
+await client.submitOperation(op);
+```
+
+Other auth methods available: `Ed25519`, `Passkey` (WebAuthn), `Session` (time-limited keys), `Guardian` (social recovery).
+
+## Base Units
+
+1 SOLEN = 100,000,000 base units (8 decimal places). All API amounts use base units.
+
+```typescript
+const SOLEN = 100_000_000n; // BigInt
+const amount = 500n * SOLEN; // 500 SOLEN
+```
+
+## Testnet Configuration
+
+```typescript
+// Local devnet
+const devClient = new SolenClient({ rpcUrl: "http://127.0.0.1:9944" });
+
+// Public testnet
+const testClient = new SolenClient({ rpcUrl: "https://testnet-rpc.solenchain.io" });
+```
+
+| Network | RPC URL | Chain ID |
+|---------|---------|----------|
+| Devnet (local) | `http://127.0.0.1:9944` | 1337 |
+| Testnet | `https://testnet-rpc.solenchain.io` | 9000 |

@@ -32,12 +32,14 @@ You should see:
 
 ```
 INFO solen_node: === Solen Node v0.1.0 ===
-INFO solen_storage::rocks: RocksDB opened path=data/solen-db
+INFO solen_storage::rocks: RocksDB opened path=data/devnet
 INFO solen_node: genesis state initialized
-INFO solen_rpc::server: JSON-RPC server started addr=127.0.0.1:9944
+INFO solen_rpc::server: JSON-RPC server started (HTTP + WebSocket) addr=127.0.0.1:29944
 INFO solen_node: Node running. Press Ctrl+C to stop.
 INFO solen_consensus::engine: block finalized height=1 ops=0 gas=0
 ```
+
+The default network is **devnet** (port 29944). WebSocket is available at `ws://127.0.0.1:29944`.
 
 The node produces blocks every 2 seconds. Leave this running.
 
@@ -156,7 +158,15 @@ ACCOUNT="197f6b23e16c8532c6abc838facd5ea789be0c76b2920334039bfa8b3d368d61"
 ./target/release/solen call faucet <TOKEN_ID> balance_of --args "${ACCOUNT}"
 ```
 
-The return data contains the balance as a 16-byte little-endian u128.
+The return data contains the balance as a 16-byte little-endian u128. To decode it:
+
+```bash
+# Decode hex return data to a number
+python3 -c "print(int.from_bytes(bytes.fromhex('RETURN_DATA_HEX'), 'little'))"
+```
+
+!!! tip "SOLEN Base Units"
+    1 SOLEN = 100,000,000 base units (8 decimal places). All amounts in the API and contracts use base units. To display as SOLEN: divide by 100,000,000.
 
 ## Step 10: Transfer Tokens
 
@@ -190,6 +200,7 @@ Create a script `demo.ts`:
 ```typescript
 import { SolenClient } from "./src/index";
 
+// Default devnet port is 29944
 const client = new SolenClient({ rpcUrl: "http://127.0.0.1:29944" });
 
 // Account addresses are Ed25519 public keys. Both Base58 and hex are accepted.
@@ -227,6 +238,39 @@ Stop the node with ++ctrl+c++. To reset state:
 ```bash
 rm -rf data/solen-db
 ```
+
+## Deploy to Testnet
+
+Once your contract works locally, deploy it to the live testnet:
+
+**1. Get testnet tokens from the faucet:**
+
+```bash
+curl -X POST https://testnet-faucet.solenchain.io/faucet \
+  -H "Content-Type: application/json" \
+  -d '{"address": "YOUR_ACCOUNT_ADDRESS"}'
+```
+
+**2. Point the CLI at testnet:**
+
+```bash
+./target/release/solen --network testnet status
+./target/release/solen --network testnet deploy faucet \
+  target/wasm32-unknown-unknown/release/solen_example_token.wasm
+```
+
+**Testnet endpoints:**
+
+| Service | URL |
+|---------|-----|
+| RPC (HTTP + WebSocket) | `https://testnet-rpc.solenchain.io` / `wss://testnet-rpc.solenchain.io` |
+| Faucet | `https://testnet-faucet.solenchain.io` |
+| Block Explorer | [solenscan.io](https://solenscan.io) |
+
+| Network | Chain ID |
+|---------|----------|
+| Testnet | 9000 |
+| Devnet (local) | 1337 |
 
 ## What You Built
 

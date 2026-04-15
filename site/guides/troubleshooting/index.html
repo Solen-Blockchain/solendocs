@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://docs.solenchain.io/getting-started/quick-start/">
+        <link rel="canonical" href="https://docs.solenchain.io/guides/troubleshooting/">
       
       
-        <link rel="prev" href="../introduction/">
+        <link rel="prev" href="../testing-contracts/">
       
       
-        <link rel="next" href="../first-dapp/">
+        <link rel="next" href="../../api/json-rpc/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Quick Start - Solen Documentation</title>
+        <title>Troubleshooting - Solen Documentation</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#quick-start" class="md-skip">
+        <a href="#troubleshooting" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Quick Start
+              Troubleshooting
             
           </span>
         </div>
@@ -243,13 +243,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../introduction/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../getting-started/introduction/" class="md-tabs__link">
           
   
   
@@ -305,11 +303,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../guides/testing-contracts/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../testing-contracts/" class="md-tabs__link">
           
   
   
@@ -496,31 +496,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -538,7 +535,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -556,7 +553,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../introduction/" class="md-nav__link">
+      <a href="../../getting-started/introduction/" class="md-nav__link">
         
   
   
@@ -581,37 +578,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Quick Start
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../getting-started/quick-start/" class="md-nav__link">
         
   
   
@@ -627,125 +597,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prerequisites
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#build" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Build
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#run-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Run Tests
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#start-a-node" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Start a Node
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#network-environments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Environments
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cli-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CLI Options
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#multi-node-local-network" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Multi-Node Local Network
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verify-it-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Verify It Works
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -758,7 +609,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../first-dapp/" class="md-nav__link">
+      <a href="../../getting-started/first-dapp/" class="md-nav__link">
         
   
   
@@ -1192,28 +1043,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -1231,7 +1085,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1249,7 +1103,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/testing-contracts/" class="md-nav__link">
+      <a href="../testing-contracts/" class="md-nav__link">
         
   
   
@@ -1274,10 +1128,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../guides/troubleshooting/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1293,6 +1174,231 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#transaction-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transaction Errors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Transaction Errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simulation-failed-invalid-nonce" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Simulation failed: invalid nonce"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#insufficient-balance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "insufficient balance"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mempool-full-or-duplicate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "mempool full or duplicate"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nonce-too-far-ahead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "nonce too far ahead"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#signature-verification-failed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "signature verification failed"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contract-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contract Errors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Contract Errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#invalid-wasm-bytecode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "invalid WASM bytecode"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#out-of-gas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "out of gas"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-trapped" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "execution trapped"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contract-return-data-is-empty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contract return data is empty
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Node Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#too-many-open-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Too many open files"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#node-stuck-after-starting-block-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node stuck after "starting block production"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-root-mismatch-requesting-snapshot-resync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "state root mismatch — requesting snapshot resync"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rpc-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RPC Errors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Help
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2057,10 +2163,193 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
+  <a href="#transaction-errors" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Prerequisites
+        Transaction Errors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Transaction Errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simulation-failed-invalid-nonce" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Simulation failed: invalid nonce"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#insufficient-balance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "insufficient balance"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mempool-full-or-duplicate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "mempool full or duplicate"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nonce-too-far-ahead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "nonce too far ahead"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#signature-verification-failed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "signature verification failed"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contract-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contract Errors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Contract Errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#invalid-wasm-bytecode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "invalid WASM bytecode"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#out-of-gas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "out of gas"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-trapped" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "execution trapped"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contract-return-data-is-empty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contract return data is empty
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Node Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#too-many-open-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Too many open files"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#node-stuck-after-starting-block-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node stuck after "starting block production"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-root-mismatch-requesting-snapshot-resync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "state root mismatch — requesting snapshot resync"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rpc-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RPC Errors
       
     </span>
   </a>
@@ -2068,87 +2357,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#build" class="md-nav__link">
+  <a href="#getting-help" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Build
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#run-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Run Tests
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#start-a-node" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Start a Node
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#network-environments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Environments
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cli-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CLI Options
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#multi-node-local-network" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Multi-Node Local Network
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verify-it-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Verify It Works
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
+        Getting Help
       
     </span>
   </a>
@@ -2175,177 +2387,137 @@
   
 
 
-<h1 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h1>
-<p>Get a Solen node running locally in a few minutes.</p>
-<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Rust 1.78+</strong> — Install via <a href="https://rustup.rs">rustup</a>:
-  <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>--proto<span class="w"> </span><span class="s1">&#39;=https&#39;</span><span class="w"> </span>--tlsv1.2<span class="w"> </span>-sSf<span class="w"> </span>https://sh.rustup.rs<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
-</code></pre></div></li>
-<li><strong>C build tools</strong> — <code>build-essential</code> and <code>clang</code>:
-  <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>build-essential<span class="w"> </span>clang<span class="w">  </span><span class="c1"># Ubuntu/Debian</span>
-</code></pre></div></li>
-<li><strong>WASM target</strong> (for compiling contracts):
-  <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>rustup<span class="w"> </span>target<span class="w"> </span>add<span class="w"> </span>wasm32-unknown-unknown
-</code></pre></div></li>
-</ul>
-<h2 id="build">Build<a class="headerlink" href="#build" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git<span class="w"> </span>clone<span class="w"> </span>&lt;repo-url&gt;<span class="w"> </span>solen<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>solen
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cargo<span class="w"> </span>build<span class="w"> </span>--workspace
+<h1 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h1>
+<p>Common issues and how to fix them.</p>
+<h2 id="transaction-errors">Transaction Errors<a class="headerlink" href="#transaction-errors" title="Permanent link">&para;</a></h2>
+<h3 id="simulation-failed-invalid-nonce">"Simulation failed: invalid nonce"<a class="headerlink" href="#simulation-failed-invalid-nonce" title="Permanent link">&para;</a></h3>
+<p>Your nonce is out of sync. This usually happens when sending multiple transactions quickly.</p>
+<p><strong>Fix:</strong> Use <code>getNextNonce</code> instead of reading the nonce from <code>getAccount</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>solen<span class="w"> </span>--network<span class="w"> </span>testnet<span class="w"> </span>call<span class="w"> </span>v1<span class="w"> </span>&lt;CONTRACT&gt;<span class="w"> </span>&lt;METHOD&gt;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># The CLI does this automatically, but if sending rapidly, wait for the previous tx to land.</span>
 </code></pre></div>
-<div class="admonition tip">
-<p class="admonition-title">RocksDB Compilation</p>
-<p>On some Linux systems, RocksDB may need:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">C_INCLUDE_PATH</span><span class="o">=</span>/usr/lib/gcc/x86_64-linux-gnu/11/include
+<h3 id="insufficient-balance">"insufficient balance"<a class="headerlink" href="#insufficient-balance" title="Permanent link">&para;</a></h3>
+<p>Your account doesn't have enough SOLEN to cover the transaction fee.</p>
+<p><strong>Fix:</strong> Get testnet tokens from the faucet:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://testnet-faucet.solenchain.io/faucet<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;address&quot;: &quot;YOUR_ADDRESS&quot;}&#39;</span>
+</code></pre></div>
+<h3 id="mempool-full-or-duplicate">"mempool full or duplicate"<a class="headerlink" href="#mempool-full-or-duplicate" title="Permanent link">&para;</a></h3>
+<p>Either the mempool is at capacity or you submitted the same (sender, nonce) pair twice.</p>
+<p><strong>Fix:</strong> Wait a few seconds for the mempool to clear, then retry. If using rapid submissions, use <code>getNextNonce</code> to get the correct nonce.</p>
+<h3 id="nonce-too-far-ahead">"nonce too far ahead"<a class="headerlink" href="#nonce-too-far-ahead" title="Permanent link">&para;</a></h3>
+<p>Your transaction's nonce is more than 64 ahead of your on-chain nonce. This is a spam protection limit.</p>
+<p><strong>Fix:</strong> Wait for your pending transactions to be included in blocks before submitting more.</p>
+<h3 id="signature-verification-failed">"signature verification failed"<a class="headerlink" href="#signature-verification-failed" title="Permanent link">&para;</a></h3>
+<p>The operation signature doesn't match any of the account's auth methods.</p>
+<p><strong>Fix:</strong>
+- Verify you're signing with the correct key for the account
+- Check the chain ID matches the network (testnet = 9000, devnet = 1337)
+- Ensure the signing message format matches: <code>chain_id[8] + sender[32] + nonce[8] + max_fee[16] + blake3(actions_json)[32]</code></p>
+<h2 id="contract-errors">Contract Errors<a class="headerlink" href="#contract-errors" title="Permanent link">&para;</a></h2>
+<h3 id="invalid-wasm-bytecode">"invalid WASM bytecode"<a class="headerlink" href="#invalid-wasm-bytecode" title="Permanent link">&para;</a></h3>
+<p>The WASM module doesn't have the required exports or is malformed.</p>
+<p><strong>Fix:</strong>
+- Ensure your contract exports <code>call</code> and <code>memory</code>
+- Build with <code>--target wasm32-unknown-unknown --release</code>
+- Check <code>crate-type = ["cdylib"]</code> in Cargo.toml</p>
+<h3 id="out-of-gas">"out of gas"<a class="headerlink" href="#out-of-gas" title="Permanent link">&para;</a></h3>
+<p>Your contract exceeded the 1,000,000 fuel limit.</p>
+<p><strong>Fix:</strong>
+- Reduce the number of storage operations per call
+- Batch fewer operations per transaction
+- Check for infinite loops in your contract logic</p>
+<h3 id="execution-trapped">"execution trapped"<a class="headerlink" href="#execution-trapped" title="Permanent link">&para;</a></h3>
+<p>The WASM contract panicked (e.g., array out of bounds, explicit <code>unreachable</code>).</p>
+<p><strong>Fix:</strong>
+- Check array access bounds in your contract
+- Ensure <code>storage::get()</code> return values are checked for <code>None</code>
+- Use <code>if args.len() &lt; EXPECTED_LEN { return 0; }</code> before reading args</p>
+<h3 id="contract-return-data-is-empty">Contract return data is empty<a class="headerlink" href="#contract-return-data-is-empty" title="Permanent link">&para;</a></h3>
+<p>The contract didn't call <code>sdk::return_value()</code>.</p>
+<p><strong>Fix:</strong> Add <code>sdk::return_value(&amp;data)</code> as the last line of your method, and return its value from <code>call</code>.</p>
+<h2 id="node-issues">Node Issues<a class="headerlink" href="#node-issues" title="Permanent link">&para;</a></h2>
+<h3 id="too-many-open-files">"Too many open files"<a class="headerlink" href="#too-many-open-files" title="Permanent link">&para;</a></h3>
+<p>The node or service hit the OS file descriptor limit.</p>
+<p><strong>Fix:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Temporary</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">ulimit</span><span class="w"> </span>-n<span class="w"> </span><span class="m">65536</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Permanent (systemd service)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Add to [Service] section:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">LimitNOFILE</span><span class="o">=</span><span class="m">65536</span>
 </code></pre></div></p>
-</div>
-<h2 id="run-tests">Run Tests<a class="headerlink" href="#run-tests" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cargo<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--workspace
+<h3 id="node-stuck-after-starting-block-production">Node stuck after "starting block production"<a class="headerlink" href="#node-stuck-after-starting-block-production" title="Permanent link">&para;</a></h3>
+<p>The node can't reach peers or thinks it's partitioned.</p>
+<p><strong>Fix:</strong>
+1. Check peer connectivity: other validators must be reachable on the P2P port (40333 for testnet)
+2. Restart the node — this resets the partition detection counter
+3. If data is corrupted: stop the node, delete the data directory, restart to resync from snapshot</p>
+<h3 id="state-root-mismatch-requesting-snapshot-resync">"state root mismatch — requesting snapshot resync"<a class="headerlink" href="#state-root-mismatch-requesting-snapshot-resync" title="Permanent link">&para;</a></h3>
+<p>Your node's state diverged from the network.</p>
+<p><strong>Fix:</strong> This triggers automatic resync. Wait for the snapshot download to complete. If it fails, manually resync:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>solen-node
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/opt/solen/data/testnet
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>systemctl<span class="w"> </span>start<span class="w"> </span>solen-node
 </code></pre></div>
-<p>This runs 198 tests including unit tests, 4 property-based invariant tests, security regression tests, adversarial consensus tests, VM sandbox tests, and integration tests across all crates.</p>
-<h2 id="start-a-node">Start a Node<a class="headerlink" href="#start-a-node" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>cargo<span class="w"> </span>run<span class="w"> </span>--bin<span class="w"> </span>solen-node
-</code></pre></div>
-<p>This starts a single-validator devnet with:</p>
+<h2 id="rpc-errors">RPC Errors<a class="headerlink" href="#rpc-errors" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Service</th>
-<th>Address</th>
+<th>Code</th>
+<th>Meaning</th>
+<th>Common Cause</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>JSON-RPC</td>
-<td><code>http://127.0.0.1:29944</code></td>
+<td><code>-32600</code></td>
+<td>Invalid request</td>
+<td>Malformed JSON-RPC body</td>
 </tr>
 <tr>
-<td>Explorer API</td>
-<td><code>http://127.0.0.1:29955</code></td>
+<td><code>-32601</code></td>
+<td>Method not found</td>
+<td>Typo in method name</td>
 </tr>
 <tr>
-<td>P2P</td>
-<td>port <code>50333</code></td>
+<td><code>-32602</code></td>
+<td>Invalid params</td>
+<td>Wrong parameter types or count</td>
+</tr>
+<tr>
+<td><code>-32603</code></td>
+<td>Internal error</td>
+<td>Rate limited or server error</td>
+</tr>
+<tr>
+<td><code>-32000</code></td>
+<td>Account not found</td>
+<td>Address doesn't exist on-chain</td>
+</tr>
+<tr>
+<td><code>-32001</code></td>
+<td>Insufficient balance</td>
+<td>Not enough SOLEN for tx</td>
+</tr>
+<tr>
+<td><code>-32002</code></td>
+<td>Invalid nonce</td>
+<td>Nonce already used or too far ahead</td>
+</tr>
+<tr>
+<td><code>-32003</code></td>
+<td>Signature failed</td>
+<td>Wrong key or chain ID</td>
 </tr>
 </tbody>
 </table>
-<p>The node produces blocks every 2 seconds and creates three genesis accounts:</p>
-<table>
-<thead>
-<tr>
-<th>Account</th>
-<th>Seed (hex)</th>
-<th>Balance</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>faucet</code></td>
-<td><code>2a</code> repeated 32x</td>
-<td>10,000,000 SOLEN</td>
-</tr>
-<tr>
-<td><code>alice</code></td>
-<td><code>0a</code> repeated 32x</td>
-<td>10,000 base units</td>
-</tr>
-<tr>
-<td><code>bob</code></td>
-<td><code>0b</code> repeated 32x</td>
-<td>5,000 base units</td>
-</tr>
-</tbody>
-</table>
-<h2 id="network-environments">Network Environments<a class="headerlink" href="#network-environments" title="Permanent link">&para;</a></h2>
-<p>Use <code>--network</code> to select the environment:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>solen-node<span class="w"> </span>--network<span class="w"> </span>devnet<span class="w">    </span><span class="c1"># default</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>solen-node<span class="w"> </span>--network<span class="w"> </span>testnet
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>solen-node<span class="w"> </span>--network<span class="w"> </span>mainnet
-</code></pre></div>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>RPC Port</th>
-<th>P2P Port</th>
-<th>Explorer Port</th>
-<th>Data Directory</th>
-<th>Block Time</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>mainnet</strong></td>
-<td>9944</td>
-<td>30333</td>
-<td>9955</td>
-<td><code>data/mainnet</code></td>
-<td>6s</td>
-</tr>
-<tr>
-<td><strong>testnet</strong></td>
-<td>19944</td>
-<td>40333</td>
-<td>19955</td>
-<td><code>data/testnet</code></td>
-<td>2s</td>
-</tr>
-<tr>
-<td><strong>devnet</strong></td>
-<td>29944</td>
-<td>50333</td>
-<td>29955</td>
-<td><code>data/devnet</code></td>
-<td>2s</td>
-</tr>
-</tbody>
-</table>
-<p>Any default can be overridden:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>solen-node<span class="w"> </span>--network<span class="w"> </span>testnet<span class="w"> </span>--rpc-port<span class="w"> </span><span class="m">8888</span>
-</code></pre></div>
-<h2 id="cli-options">CLI Options<a class="headerlink" href="#cli-options" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>solen-node [OPTIONS]
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Options:
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    --network &lt;NETWORK&gt;        devnet, testnet, or mainnet [default: devnet]
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    --rpc-port &lt;PORT&gt;          JSON-RPC port
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    --p2p-port &lt;PORT&gt;          P2P listen port
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    --data-dir &lt;DIR&gt;           RocksDB data directory
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    --block-time &lt;MS&gt;          Block interval in ms
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    --bootstrap &lt;MULTIADDR&gt;    Bootstrap peer address (repeatable)
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    --validator-seed &lt;HEX&gt;     32-byte hex seed for validator key
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    --no-p2p                   Disable P2P networking
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    --in-memory                Use in-memory storage (no persistence)
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    --archive                  Archive mode: keep all blocks (no pruning)
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    --explorer-port &lt;PORT&gt;     Explorer API port (0 to disable)
-</code></pre></div>
-<h2 id="multi-node-local-network">Multi-Node Local Network<a class="headerlink" href="#multi-node-local-network" title="Permanent link">&para;</a></h2>
-<p>Run multiple nodes locally by assigning different ports and data directories:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Terminal 1 — Node A</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>cargo<span class="w"> </span>run<span class="w"> </span>--bin<span class="w"> </span>solen-node
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Terminal 2 — Node B</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>cargo<span class="w"> </span>run<span class="w"> </span>--bin<span class="w"> </span>solen-node<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span>--rpc-port<span class="w"> </span><span class="m">29945</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span>--p2p-port<span class="w"> </span><span class="m">50334</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span>--data-dir<span class="w"> </span>data/devnet-2<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span>--explorer-port<span class="w"> </span><span class="m">29956</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span>--bootstrap<span class="w"> </span>/ip4/127.0.0.1/tcp/50333
-</code></pre></div>
-<h2 id="verify-it-works">Verify It Works<a class="headerlink" href="#verify-it-works" title="Permanent link">&para;</a></h2>
-<p>Once the node is running, check the chain status:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_chainStatus&quot;,&quot;params&quot;:[],&quot;id&quot;:1}&#39;</span>
-</code></pre></div>
-<p>Or use the CLI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>cargo<span class="w"> </span>run<span class="w"> </span>--bin<span class="w"> </span>solen<span class="w"> </span>--<span class="w"> </span>status
-</code></pre></div>
-<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<h2 id="getting-help">Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../first-dapp/">Build Your First dApp</a> — Deploy a token contract</li>
-<li><a href="../../tools/running-a-node/">Running a Node</a> — Production node configuration</li>
-<li><a href="../../api/cli/">CLI Reference</a> — Full CLI command reference</li>
+<li><strong>Discord:</strong> <a href="https://discord.com/invite/QGxv8bebJc">discord.com/invite/QGxv8bebJc</a></li>
+<li><strong>Telegram:</strong> <a href="https://t.me/solenblockchain">t.me/solenblockchain</a></li>
+<li><strong>GitHub Issues:</strong> <a href="https://github.com/Solen-Blockchain/solen/issues">github.com/Solen-Blockchain/solen/issues</a></li>
 </ul>
 
 
@@ -2384,7 +2556,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../introduction/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Introduction">
+          <a href="../testing-contracts/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Testing Contracts">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2394,20 +2566,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Introduction
+                Testing Contracts
               </div>
             </div>
           </a>
         
         
           
-          <a href="../first-dapp/" class="md-footer__link md-footer__link--next" aria-label="Next: Build Your First dApp">
+          <a href="../../api/json-rpc/" class="md-footer__link md-footer__link--next" aria-label="Next: JSON-RPC API">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Build Your First dApp
+                JSON-RPC API
               </div>
             </div>
             <div class="md-footer__button md-icon">
