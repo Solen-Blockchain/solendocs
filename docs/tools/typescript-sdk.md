@@ -191,11 +191,11 @@ npx tsx demo.ts
 
 ## WebSocket Subscriptions
 
-The RPC server supports WebSocket connections on the same port for real-time event streaming. Connect via `ws://` (or `wss://` for testnet):
+The RPC server supports WebSocket connections on the same port for real-time event streaming. Connect via `ws://` (or `wss://` for mainnet):
 
 ```typescript
 // Subscribe to new blocks via WebSocket
-const ws = new WebSocket("wss://testnet-rpc.solenchain.io");
+const ws = new WebSocket("wss://rpc.solenchain.io");
 
 ws.onopen = () => {
   // Subscribe to new finalized blocks

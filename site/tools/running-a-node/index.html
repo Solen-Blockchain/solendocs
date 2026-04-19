@@ -2915,11 +2915,11 @@
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>solen-node<span class="w"> </span>--snapshot<span class="w"> </span>/path/to/snapshot.bin
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># From an RPC endpoint</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>solen-node<span class="w"> </span>--snapshot<span class="w"> </span>https://testnet-rpc.solenchain.io
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>solen-node<span class="w"> </span>--snapshot<span class="w"> </span>https://rpc.solenchain.io
 </code></pre></div>
 <h3 id="creating-snapshots">Creating Snapshots<a class="headerlink" href="#creating-snapshots" title="Permanent link">&para;</a></h3>
 <p>Any archive node can serve snapshots via the <code>solen_getSnapshot</code> RPC method:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://testnet-rpc.solenchain.io<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://rpc.solenchain.io<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getSnapshot&quot;,&quot;params&quot;:[],&quot;id&quot;:1}&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; r=json.load(sys.stdin)[&#39;result&#39;]; print(f&#39;Height: {r[\&quot;height\&quot;]}, Entries: {r[\&quot;entries\&quot;]}, Size: {r[\&quot;compressed_bytes\&quot;]} bytes&#39;)&quot;</span>
@@ -3015,26 +3015,23 @@
 <p>Your validator's account ID = public key. Fund this account with at least 500,000 SOLEN.</p>
 <h3 id="2-register-as-validator">2. Register as Validator<a class="headerlink" href="#2-register-as-validator" title="Permanent link">&para;</a></h3>
 <p>Register with the minimum stake (500,000 SOLEN):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>solen<span class="w"> </span>--rpc<span class="w"> </span>https://testnet-rpc.solenchain.io<span class="w"> </span>--chain-id<span class="w"> </span><span class="m">9000</span><span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>solen<span class="w"> </span>--rpc<span class="w"> </span>https://rpc.solenchain.io<span class="w"> </span>--chain-id<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>register-validator<span class="w"> </span>my-validator<span class="w"> </span><span class="m">500000</span>
 </code></pre></div>
 <p>All CLI amounts are in <strong>SOLEN</strong> (not base units). Decimals are supported: <code>100.5</code> = 100.5 SOLEN.</p>
 <p>This calls the staking system contract to register your account as a validator with self-stake. Your validator will be eligible for block production starting the next epoch (~100 blocks).</p>
 <h3 id="3-run-the-validator-node">3. Run the Validator Node<a class="headerlink" href="#3-run-the-validator-node" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>solen-node<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span>--network<span class="w"> </span>testnet<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span>--network<span class="w"> </span>mainnet<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>--genesis<span class="w"> </span>/path/to/genesis.json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>--data-dir<span class="w"> </span>/opt/solen/data/testnet<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>--data-dir<span class="w"> </span>/opt/solen/data/mainnet<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span>--validator-seed<span class="w"> </span>&lt;your-32-byte-hex-seed&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span>--bootstrap<span class="w"> </span>/dns4/testnet-seed1.solenchain.io/tcp/40333<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span>--bootstrap<span class="w"> </span>/dns4/testnet-seed2.solenchain.io/tcp/40333<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span>--bootstrap<span class="w"> </span>/dns4/testnet-seed3.solenchain.io/tcp/40333<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span>--bootstrap<span class="w"> </span>/dns4/testnet-seed4.solenchain.io/tcp/40333
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span>--bootstrap<span class="w"> </span>/ip4/&lt;seed-node-ip&gt;/tcp/30333
 </code></pre></div>
 <p>The node will sync with the network, and once your stake is active, it will begin participating in consensus.</p>
 <h3 id="4-verify">4. Verify<a class="headerlink" href="#4-verify" title="Permanent link">&para;</a></h3>
 <p>Check that your validator appears in the validator list:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>solen<span class="w"> </span>--rpc<span class="w"> </span>https://testnet-rpc.solenchain.io<span class="w"> </span>validators
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>solen<span class="w"> </span>--rpc<span class="w"> </span>https://rpc.solenchain.io<span class="w"> </span>validators
 </code></pre></div>
 <h3 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h3>
 <table>

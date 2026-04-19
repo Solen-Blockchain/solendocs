@@ -13,8 +13,8 @@ hide:
 
 Solen narrows the responsibilities of the base layer and treats execution domains as first-class components. The design combines a minimal settlement chain, native rollups, smart accounts by default, privacy-capable proof interfaces, and intent-oriented transaction flow.
 
-!!! warning "Development Status"
-    Solen is a development prototype (v0.1.0). It has not been audited and is not intended for production use.
+!!! success "Mainnet Live"
+    Solen mainnet launched April 2026 with 11 validators, 6-second block times, and a cross-chain bridge to Base. RPC: `https://rpc.solenchain.io` | Explorer: [solenscan.io](https://solenscan.io)
 
 ---
 

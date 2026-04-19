@@ -115,7 +115,7 @@ You can also provide a snapshot explicitly:
 solen-node --snapshot /path/to/snapshot.bin
 
 # From an RPC endpoint
-solen-node --snapshot https://testnet-rpc.solenchain.io
+solen-node --snapshot https://rpc.solenchain.io
 ```
 
 ### Creating Snapshots
@@ -123,7 +123,7 @@ solen-node --snapshot https://testnet-rpc.solenchain.io
 Any archive node can serve snapshots via the `solen_getSnapshot` RPC method:
 
 ```bash
-curl -s -X POST https://testnet-rpc.solenchain.io \
+curl -s -X POST https://rpc.solenchain.io \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"solen_getSnapshot","params":[],"id":1}' \
   | python3 -c "import sys,json; r=json.load(sys.stdin)['result']; print(f'Height: {r[\"height\"]}, Entries: {r[\"entries\"]}, Size: {r[\"compressed_bytes\"]} bytes')"
@@ -181,7 +181,7 @@ Your validator's account ID = public key. Fund this account with at least 500,00
 Register with the minimum stake (500,000 SOLEN):
 
 ```bash
-solen --rpc https://testnet-rpc.solenchain.io --chain-id 9000 \
+solen --rpc https://rpc.solenchain.io --chain-id 1 \
   register-validator my-validator 500000
 ```
 
@@ -193,14 +193,11 @@ This calls the staking system contract to register your account as a validator w
 
 ```bash
 solen-node \
-    --network testnet \
+    --network mainnet \
     --genesis /path/to/genesis.json \
-    --data-dir /opt/solen/data/testnet \
+    --data-dir /opt/solen/data/mainnet \
     --validator-seed <your-32-byte-hex-seed> \
-    --bootstrap /dns4/testnet-seed1.solenchain.io/tcp/40333 \
-    --bootstrap /dns4/testnet-seed2.solenchain.io/tcp/40333 \
-    --bootstrap /dns4/testnet-seed3.solenchain.io/tcp/40333 \
-    --bootstrap /dns4/testnet-seed4.solenchain.io/tcp/40333
+    --bootstrap /ip4/<seed-node-ip>/tcp/30333
 ```
 
 The node will sync with the network, and once your stake is active, it will begin participating in consensus.
@@ -210,7 +207,7 @@ The node will sync with the network, and once your stake is active, it will begi
 Check that your validator appears in the validator list:
 
 ```bash
-solen --rpc https://testnet-rpc.solenchain.io validators
+solen --rpc https://rpc.solenchain.io validators
 ```
 
 ### Requirements
