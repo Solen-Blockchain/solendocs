@@ -83,6 +83,7 @@ nav:
     - Host Functions: smart-contracts/host-functions.md
     - Example Contracts: smart-contracts/examples.md
   - Guides:
+    - Exchange Integration: guides/exchange-integration.md
     - Testing Contracts: guides/testing-contracts.md
     - Troubleshooting: guides/troubleshooting.md
   - API Reference:
