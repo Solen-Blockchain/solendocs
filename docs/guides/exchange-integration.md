@@ -498,24 +498,125 @@ async function rpc(method: string, params: any[]) {
 
 ## Deposit Detection
 
-To detect incoming deposits, poll recent blocks and check for transfer events to your deposit addresses.
+For exchanges managing many deposit addresses, the recommended approach is to scan each finalized block for transfer events matching your address set. This is more efficient than polling individual accounts and guarantees no deposits are missed.
 
-### Method 1: Poll Account Transactions
+### Recommended: Block Scanner (Many Addresses)
+
+Scan every new block and check transfer events against your set of deposit addresses. This is the standard pattern used by exchanges.
+
+```typescript
+import bs58 from "bs58";
+
+const RPC = "https://rpc.solenchain.io";
+const API = "https://api.solenchain.io";
+
+// Your set of deposit addresses (loaded from database)
+const depositAddresses = new Set<string>([
+  "dJNVRKH1Jh2TYBrjJUfNwQrB5b1S8xiCW926yEKWiur",
+  "H9we5VhjE42uCXXgy1YTcFV5bZReBcqxznMNkryHz8KY",
+  // ... thousands of addresses
+]);
+
+let lastProcessedHeight = 0; // persist this to disk/database
+
+async function getChainHeight(): Promise<number> {
+  const resp = await fetch(RPC, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      jsonrpc: "2.0", id: 1,
+      method: "solen_chainStatus", params: [],
+    }),
+  });
+  const json = await resp.json();
+  return json.result.height;
+}
+
+async function getBlockTxs(height: number): Promise<any[]> {
+  const resp = await fetch(`${API}/api/blocks/${height}/txs`);
+  if (!resp.ok) return [];
+  return resp.json();
+}
+
+async function scanForDeposits() {
+  const currentHeight = await getChainHeight();
+  if (currentHeight <= lastProcessedHeight) return;
+
+  for (let h = lastProcessedHeight + 1; h <= currentHeight; h++) {
+    const txs = await getBlockTxs(h);
+
+    for (const tx of txs) {
+      if (!tx.success) continue;
+
+      for (const event of (tx.events || [])) {
+        // Transfer events: topic="transfer", data = recipient[32] + amount[16] (hex)
+        if (event.topic === "transfer" && event.data && event.data.length >= 96) {
+          const recipientHex = event.data.substring(0, 64);
+          const recipientBytes = Buffer.from(recipientHex, "hex");
+          const recipientAddress = bs58.encode(recipientBytes);
+
+          if (depositAddresses.has(recipientAddress)) {
+            // Parse amount (little-endian u128, bytes 32-48 = hex chars 64-96)
+            const amountHex = event.data.substring(64, 96);
+            const amount = parseLEu128(amountHex);
+
+            console.log(`Deposit detected!`);
+            console.log(`  Block: ${h}`);
+            console.log(`  To: ${recipientAddress}`);
+            console.log(`  From: ${tx.sender}`);
+            console.log(`  Amount: ${Number(amount) / 1e8} SOLEN`);
+            console.log(`  Tx: ${h}-${tx.index}`);
+
+            // Credit the deposit in your database
+            await creditDeposit({
+              address: recipientAddress,
+              amount: amount,
+              blockHeight: h,
+              txIndex: tx.index,
+              sender: tx.sender,
+            });
+          }
+        }
+      }
+    }
+
+    lastProcessedHeight = h;
+    // Persist lastProcessedHeight to database/disk
+  }
+}
+
+function parseLEu128(hex: string): bigint {
+  let val = 0n;
+  for (let i = hex.length - 2; i >= 0; i -= 2) {
+    val = (val << 8n) | BigInt(parseInt(hex.substring(i, i + 2), 16));
+  }
+  return val;
+}
+
+// Poll every 6 seconds (one block interval)
+setInterval(scanForDeposits, 6000);
+```
+
+!!! tip "Performance"
+    This approach scales to millions of deposit addresses since it only does a `Set.has()` lookup per transfer event. The bottleneck is the API call per block, not the address count. For high throughput, run your own node and query the explorer API locally on port 9955.
+
+### Alternative: Poll Individual Accounts
+
+For a small number of addresses, you can poll each account directly:
 
 ```bash
 # Get recent transactions for a deposit address
 curl -s https://api.solenchain.io/api/accounts/YOUR_DEPOSIT_ADDRESS/txs?limit=20
 ```
 
-### Method 2: WebSocket Subscription
+### Alternative: WebSocket Subscription
 
-Subscribe to transaction confirmations for real-time deposit detection:
+For real-time notification on a specific address:
 
 ```typescript
 const ws = new WebSocket("wss://rpc.solenchain.io");
 
 ws.onopen = () => {
-  // Subscribe to transactions for a specific address
   ws.send(JSON.stringify({
     jsonrpc: "2.0", id: 1,
     method: "solen_subscribeTxConfirmation",
@@ -527,14 +628,14 @@ ws.onmessage = (event) => {
   const data = JSON.parse(event.data);
   if (data.params?.result) {
     const tx = data.params.result;
-    console.log(`Deposit confirmed at height ${tx.height}, amount: ${tx.amount}`);
+    console.log(`Deposit confirmed at height ${tx.height}`);
   }
 };
 ```
 
 ### Confirmation Requirement
 
-Solen has **deterministic finality**. Once a block is finalized, it cannot be reverted. A single confirmation (the block being finalized) is sufficient for crediting deposits. There is no risk of reorgs.
+Solen has **deterministic finality**. Once a block is finalized, it cannot be reverted. A single confirmation (the block being finalized) is sufficient for crediting deposits. There is no risk of reorgs or double-spends.
 
 ---
 
