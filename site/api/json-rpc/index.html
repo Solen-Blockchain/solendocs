@@ -2388,6 +2388,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/transaction-signing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transaction Signing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3150,14 +3178,14 @@
 </div>
 </div>
 <p><strong>Signing message format:</strong></p>
-<p>The signature is computed over a deterministic message that includes the chain ID to prevent cross-chain replay:</p>
+<p>The signature is computed over a deterministic 96-byte message that includes the chain ID to prevent cross-chain replay:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>chain_id     [8 bytes, little-endian u64]
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>sender       [32 bytes]
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>nonce        [8 bytes, little-endian u64]
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>max_fee      [16 bytes, little-endian u128]
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>actions_hash [32 bytes, BLAKE3 hash of JSON-serialized actions]
 </code></pre></div>
-<p>Total: 96 bytes. Sign with Ed25519 to produce a 64-byte signature.</p>
+<p>Sign with Ed25519 to produce a 64-byte signature. See <a href="../../specs/transaction-signing/">Transaction Signing</a> for the canonical, byte-level spec including JSON canonicalization rules and test vectors — that doc is authoritative for any wallet or hardware-wallet integration.</p>
 <p><strong>Chain IDs:</strong></p>
 <table>
 <thead>

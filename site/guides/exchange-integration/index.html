@@ -2430,6 +2430,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/transaction-signing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transaction Signing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3173,7 +3201,7 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Key Storage</p>
-<p>The private key (seed) must be stored securely. It is the only way to sign transactions from this address. There is no key derivation path — the seed directly generates the keypair.</p>
+<p>The private key (seed) must be stored securely. It is the only way to sign transactions from this address. Today the seed directly generates the keypair (no derivation path); a BIP-39 / SLIP-0010 path under SLIP-0044 coin type <code>20260424</code> is planned once the <a href="https://github.com/satoshilabs/slips/pull/2010">SLIP registration</a> merges. See <a href="../../specs/transaction-signing/#hd-derivation">Transaction Signing → HD Derivation</a>.</p>
 </div>
 <hr />
 <h2 id="6-validate-an-address">6. Validate an Address<a class="headerlink" href="#6-validate-an-address" title="Permanent link">&para;</a></h2>
@@ -3290,13 +3318,14 @@
 <a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a><span class="p">}</span>
 </code></pre></div>
 <h4 id="3-build-the-signing-message">3. Build the signing message<a class="headerlink" href="#3-build-the-signing-message" title="Permanent link">&para;</a></h4>
-<p>The signing message is 96 bytes, constructed as:</p>
+<p>The signing message is 96 bytes:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>chain_id    [8 bytes, little-endian u64]  = 1 for mainnet
 <a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>sender      [32 bytes]                    = public key
 <a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>nonce       [8 bytes, little-endian u64]
 <a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>max_fee     [16 bytes, little-endian u128]
 <a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>actions_hash [32 bytes]                   = BLAKE3 hash of JSON-serialized actions
 </code></pre></div>
+<p>For the canonical byte-level spec (JSON canonicalization rules, multi-sig encoding, edge cases, test vectors) see <a href="../../specs/transaction-signing/">Transaction Signing</a>.</p>
 <p>The <code>actions_hash</code> is computed by JSON-serializing the actions array in the Rust serde format and hashing with BLAKE3:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1">// Actions in Rust serde format:</span>
 <a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">rustActions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[{</span>

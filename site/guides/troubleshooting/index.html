@@ -2157,6 +2157,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/transaction-signing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transaction Signing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2441,8 +2469,8 @@
 <p>The operation signature doesn't match any of the account's auth methods.</p>
 <p><strong>Fix:</strong>
 - Verify you're signing with the correct key for the account
-- Check the chain ID matches the network (testnet = 9000, devnet = 1337)
-- Ensure the signing message format matches: <code>chain_id[8] + sender[32] + nonce[8] + max_fee[16] + blake3(actions_json)[32]</code></p>
+- Check the chain ID matches the network (mainnet = 1, testnet = 9000, devnet = 1337)
+- Ensure the signing message format matches: <code>chain_id[8] + sender[32] + nonce[8] + max_fee[16] + blake3(actions_json)[32]</code> — see <a href="../../specs/transaction-signing/">Transaction Signing</a> for the canonical spec</p>
 <h2 id="contract-errors">Contract Errors<a class="headerlink" href="#contract-errors" title="Permanent link">&para;</a></h2>
 <h3 id="invalid-wasm-bytecode">"invalid WASM bytecode"<a class="headerlink" href="#invalid-wasm-bytecode" title="Permanent link">&para;</a></h3>
 <p>The WASM module doesn't have the required exports or is malformed.</p>

@@ -106,6 +106,7 @@ nav:
     - Terminology: specs/terminology.md
     - State Model: specs/state-model.md
     - RPC Specification: specs/rpc-spec.md
+    - Transaction Signing: specs/transaction-signing.md
 
 extra:
   social:

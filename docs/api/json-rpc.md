@@ -187,7 +187,7 @@ Submit a signed user operation to the mempool.
 
 **Signing message format:**
 
-The signature is computed over a deterministic message that includes the chain ID to prevent cross-chain replay:
+The signature is computed over a deterministic 96-byte message that includes the chain ID to prevent cross-chain replay:
 
 ```
 chain_id     [8 bytes, little-endian u64]
@@ -197,7 +197,7 @@ max_fee      [16 bytes, little-endian u128]
 actions_hash [32 bytes, BLAKE3 hash of JSON-serialized actions]
 ```
 
-Total: 96 bytes. Sign with Ed25519 to produce a 64-byte signature.
+Sign with Ed25519 to produce a 64-byte signature. See [Transaction Signing](../specs/transaction-signing.md) for the canonical, byte-level spec including JSON canonicalization rules and test vectors — that doc is authoritative for any wallet or hardware-wallet integration.
 
 **Chain IDs:**
 

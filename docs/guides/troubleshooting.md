@@ -45,8 +45,8 @@ The operation signature doesn't match any of the account's auth methods.
 
 **Fix:**
 - Verify you're signing with the correct key for the account
-- Check the chain ID matches the network (testnet = 9000, devnet = 1337)
-- Ensure the signing message format matches: `chain_id[8] + sender[32] + nonce[8] + max_fee[16] + blake3(actions_json)[32]`
+- Check the chain ID matches the network (mainnet = 1, testnet = 9000, devnet = 1337)
+- Ensure the signing message format matches: `chain_id[8] + sender[32] + nonce[8] + max_fee[16] + blake3(actions_json)[32]` — see [Transaction Signing](../specs/transaction-signing.md) for the canonical spec
 
 ## Contract Errors
 

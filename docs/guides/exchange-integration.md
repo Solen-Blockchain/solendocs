@@ -232,7 +232,7 @@ print(f"Private Key: {private_key}")
 ```
 
 !!! warning "Key Storage"
-    The private key (seed) must be stored securely. It is the only way to sign transactions from this address. There is no key derivation path — the seed directly generates the keypair.
+    The private key (seed) must be stored securely. It is the only way to sign transactions from this address. Today the seed directly generates the keypair (no derivation path); a BIP-39 / SLIP-0010 path under SLIP-0044 coin type `20260424` is planned once the [SLIP registration](https://github.com/satoshilabs/slips/pull/2010) merges. See [Transaction Signing → HD Derivation](../specs/transaction-signing.md#hd-derivation).
 
 ---
 
@@ -364,7 +364,7 @@ curl -s -X POST https://rpc.solenchain.io \
 
 #### 3. Build the signing message
 
-The signing message is 96 bytes, constructed as:
+The signing message is 96 bytes:
 
 ```
 chain_id    [8 bytes, little-endian u64]  = 1 for mainnet
@@ -373,6 +373,8 @@ nonce       [8 bytes, little-endian u64]
 max_fee     [16 bytes, little-endian u128]
 actions_hash [32 bytes]                   = BLAKE3 hash of JSON-serialized actions
 ```
+
+For the canonical byte-level spec (JSON canonicalization rules, multi-sig encoding, edge cases, test vectors) see [Transaction Signing](../specs/transaction-signing.md).
 
 The `actions_hash` is computed by JSON-serializing the actions array in the Rust serde format and hashing with BLAKE3:
 
