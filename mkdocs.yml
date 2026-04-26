@@ -84,6 +84,7 @@ nav:
     - Example Contracts: smart-contracts/examples.md
   - Guides:
     - Exchange Integration: guides/exchange-integration.md
+    - Exchange Integration (PHP): guides/exchange-integration-php.md
     - Testing Contracts: guides/testing-contracts.md
     - Troubleshooting: guides/troubleshooting.md
   - API Reference:
