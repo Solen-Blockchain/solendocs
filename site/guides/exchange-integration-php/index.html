@@ -1268,6 +1268,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#6-generate-a-keypair" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Generate a Keypair
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#blake3-helper" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2235,6 +2246,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#6-generate-a-keypair" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Generate a Keypair
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#blake3-helper" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2723,61 +2745,87 @@
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="x">}</span>
 </code></pre></div>
 <hr />
+<h2 id="6-generate-a-keypair">6. Generate a Keypair<a class="headerlink" href="#6-generate-a-keypair" title="Permanent link">&para;</a></h2>
+<p>Solen uses Ed25519 keypairs. The <strong>account address IS the public key</strong>, Base58-encoded. libsodium is already a prerequisite of this guide, so no extra extension is needed.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="cp">&lt;?php</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">require_once</span> <span class="s1">&#39;Solen.php&#39;</span><span class="p">;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1">// Generate a cryptographically secure 32-byte seed (the private key).</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nv">$seed</span> <span class="o">=</span> <span class="nb">random_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1">// Derive the Ed25519 keypair from the seed. The public key IS the address.</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nv">$kp</span>        <span class="o">=</span> <span class="nb">sodium_crypto_sign_seed_keypair</span><span class="p">(</span><span class="nv">$seed</span><span class="p">);</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="nv">$publicKey</span> <span class="o">=</span> <span class="nb">sodium_crypto_sign_publickey</span><span class="p">(</span><span class="nv">$kp</span><span class="p">);</span> <span class="c1">// 32 bytes</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="nv">$address</span>      <span class="o">=</span> <span class="nx">base58_encode</span><span class="p">(</span><span class="nv">$publicKey</span><span class="p">);</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="nv">$privateKey</span>   <span class="o">=</span> <span class="nb">bin2hex</span><span class="p">(</span><span class="nv">$seed</span><span class="p">);</span>       <span class="c1">// 64-char hex — feed this to sendTransfer()</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="nv">$publicKeyHex</span> <span class="o">=</span> <span class="nb">bin2hex</span><span class="p">(</span><span class="nv">$publicKey</span><span class="p">);</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="k">echo</span> <span class="s2">&quot;Address:     </span><span class="si">$address</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="k">echo</span> <span class="s2">&quot;Private Key: </span><span class="si">$privateKey</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="k">echo</span> <span class="s2">&quot;Public Key:  </span><span class="si">$publicKeyHex</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+</code></pre></div>
+<p>The <code>$privateKey</code> hex string is exactly what <code>sendTransfer()</code> in <a href="#1-send-solen">§1</a> expects as <code>senderSeedHex</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Key Storage</p>
+<p>The private key (seed) must be stored securely — it is the only way to sign transactions from this address, and there is no recovery if it is lost or leaked. <strong>Always use <code>random_bytes()</code></strong>, never <code>rand()</code> / <code>mt_rand()</code> / <code>uniqid()</code> — those are not cryptographically secure and will produce guessable keys. Today the seed directly generates the keypair (no derivation path); a BIP-39 / SLIP-0010 path under SLIP-0044 coin type <code>20260424</code> is planned once the <a href="https://github.com/satoshilabs/slips/pull/2010">SLIP registration</a> merges. See <a href="../../specs/transaction-signing/#hd-derivation">Transaction Signing → HD Derivation</a>.</p>
+</div>
+<hr />
 <h2 id="blake3-helper"><code>blake3()</code> Helper<a class="headerlink" href="#blake3-helper" title="Permanent link">&para;</a></h2>
 <p>Wire ONE of these to your install — the rest of the code calls <code>blake3($bytes): string</code> expecting <strong>raw 32 bytes</strong> out:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">PECL extension</label><label for="__tabbed_1_2">Composer (cyphrme/blake3)</label><label for="__tabbed_1_3">Shell out to b3sum (prototyping only)</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="x">function blake3(string $data): string {</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="x">    // The pecl/blake3 extension exposes blake3() globally; the second arg</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="x">    // selects raw binary output.</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="x">    return blake3_hash($data, true);</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="x">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="x">function blake3(string $data): string {</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="x">    // The pecl/blake3 extension exposes blake3() globally; the second arg</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="x">    // selects raw binary output.</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="x">    return blake3_hash($data, true);</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="x">}</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="x">use Cyphrme\Blake3\Blake3;</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="x">function blake3(string $data): string {</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="x">    return Blake3::hash($data); // returns 32 raw bytes</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="x">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="x">use Cyphrme\Blake3\Blake3;</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="x">function blake3(string $data): string {</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="x">    return Blake3::hash($data); // returns 32 raw bytes</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="x">}</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="x">function blake3(string $data): string {</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="x">    $proc = proc_open([&#39;b3sum&#39;, &#39;--raw&#39;],</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="x">        [0 =&gt; [&#39;pipe&#39;,&#39;r&#39;], 1 =&gt; [&#39;pipe&#39;,&#39;w&#39;]], $pipes);</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="x">    fwrite($pipes[0], $data);</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="x">    fclose($pipes[0]);</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="x">    $hash = stream_get_contents($pipes[1]);</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="x">    fclose($pipes[1]);</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="x">    proc_close($proc);</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="x">    return $hash;</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="x">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="x">function blake3(string $data): string {</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="x">    $proc = proc_open([&#39;b3sum&#39;, &#39;--raw&#39;],</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="x">        [0 =&gt; [&#39;pipe&#39;,&#39;r&#39;], 1 =&gt; [&#39;pipe&#39;,&#39;w&#39;]], $pipes);</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="x">    fwrite($pipes[0], $data);</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="x">    fclose($pipes[0]);</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="x">    $hash = stream_get_contents($pipes[1]);</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="x">    fclose($pipes[1]);</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="x">    proc_close($proc);</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="x">    return $hash;</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="x">}</span>
 </code></pre></div>
 </div>
 </div>
 </div>
 <h3 id="verifying-your-signer-against-the-official-test-vectors">Verifying your signer against the official test vectors<a class="headerlink" href="#verifying-your-signer-against-the-official-test-vectors" title="Permanent link">&para;</a></h3>
 <p>Before sending real funds, prove your PHP signer matches the Rust reference by reproducing one entry from <a href="https://github.com/Solen-Blockchain/solen/blob/main/tools/vectors/vectors.json"><code>tools/vectors/vectors.json</code></a>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="x">$seed = hex2bin(&#39;1111111111111111111111111111111111111111111111111111111111111111&#39;);</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="x">$kp   = sodium_crypto_sign_seed_keypair($seed);</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="x">$pub  = sodium_crypto_sign_publickey($kp);</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="x">$sec  = sodium_crypto_sign_secretkey($kp);</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="x">// Take the canonical actions JSON straight from the vectors file:</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="x">$actionsJson = &#39;[{&quot;Transfer&quot;:{&quot;to&quot;:[23,203,121,251,43,65,32,242,177,236,101,228,25,141,110,8,178,142,129,63,235,1,228,164,0,131,155,133,225,128,128,206],&quot;amount&quot;:1500000000}}]&#39;;</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="x">$msg  = pack(&#39;P&#39;, 1);                                    // chain_id = 1</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="x">$msg .= $pub;</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="x">$msg .= pack(&#39;P&#39;, 0);                                    // nonce = 0</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="x">$msg .= pack(&#39;P&#39;, 100000) . str_repeat(&quot;\x00&quot;, 8);       // max_fee = 100_000 (low u64 + zero high)</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="x">$msg .= blake3($actionsJson);</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="x">$sig = sodium_crypto_sign_detached($msg, $sec);</span>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="x">echo bin2hex($sig) . &quot;\n&quot;;</span>
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="x">// Expected:</span>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="x">//   a09196808274e828ff4a24ed551147d28ba211057bfe2af7b616e90ab989ab93</span>
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="x">//   66fb990228b648ca1e9a67de600c15012d628bf7d86d85b787cc4f65f7ccb20e</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="x">$seed = hex2bin(&#39;1111111111111111111111111111111111111111111111111111111111111111&#39;);</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="x">$kp   = sodium_crypto_sign_seed_keypair($seed);</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="x">$pub  = sodium_crypto_sign_publickey($kp);</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="x">$sec  = sodium_crypto_sign_secretkey($kp);</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="x">// Take the canonical actions JSON straight from the vectors file:</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="x">$actionsJson = &#39;[{&quot;Transfer&quot;:{&quot;to&quot;:[23,203,121,251,43,65,32,242,177,236,101,228,25,141,110,8,178,142,129,63,235,1,228,164,0,131,155,133,225,128,128,206],&quot;amount&quot;:1500000000}}]&#39;;</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="x">$msg  = pack(&#39;P&#39;, 1);                                    // chain_id = 1</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="x">$msg .= $pub;</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="x">$msg .= pack(&#39;P&#39;, 0);                                    // nonce = 0</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="x">$msg .= pack(&#39;P&#39;, 100000) . str_repeat(&quot;\x00&quot;, 8);       // max_fee = 100_000 (low u64 + zero high)</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="x">$msg .= blake3($actionsJson);</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="x">$sig = sodium_crypto_sign_detached($msg, $sec);</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="x">echo bin2hex($sig) . &quot;\n&quot;;</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="x">// Expected:</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="x">//   a09196808274e828ff4a24ed551147d28ba211057bfe2af7b616e90ab989ab93</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="x">//   66fb990228b648ca1e9a67de600c15012d628bf7d86d85b787cc4f65f7ccb20e</span>
 </code></pre></div>
 <p>If the signature matches the vectors-file <code>signature_hex</code>, your signer is correctly wired. If not, the most common culprits are:</p>
 <ol>

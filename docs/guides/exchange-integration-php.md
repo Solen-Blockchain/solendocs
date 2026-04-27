@@ -469,6 +469,37 @@ function getAccountHistory(SolenClient $client, string $address, int $limit = 50
 
 ---
 
+## 6. Generate a Keypair
+
+Solen uses Ed25519 keypairs. The **account address IS the public key**, Base58-encoded. libsodium is already a prerequisite of this guide, so no extra extension is needed.
+
+```php
+<?php
+require_once 'Solen.php';
+
+// Generate a cryptographically secure 32-byte seed (the private key).
+$seed = random_bytes(32);
+
+// Derive the Ed25519 keypair from the seed. The public key IS the address.
+$kp        = sodium_crypto_sign_seed_keypair($seed);
+$publicKey = sodium_crypto_sign_publickey($kp); // 32 bytes
+
+$address      = base58_encode($publicKey);
+$privateKey   = bin2hex($seed);       // 64-char hex — feed this to sendTransfer()
+$publicKeyHex = bin2hex($publicKey);
+
+echo "Address:     $address\n";
+echo "Private Key: $privateKey\n";
+echo "Public Key:  $publicKeyHex\n";
+```
+
+The `$privateKey` hex string is exactly what `sendTransfer()` in [§1](#1-send-solen) expects as `senderSeedHex`.
+
+!!! warning "Key Storage"
+    The private key (seed) must be stored securely — it is the only way to sign transactions from this address, and there is no recovery if it is lost or leaked. **Always use `random_bytes()`**, never `rand()` / `mt_rand()` / `uniqid()` — those are not cryptographically secure and will produce guessable keys. Today the seed directly generates the keypair (no derivation path); a BIP-39 / SLIP-0010 path under SLIP-0044 coin type `20260424` is planned once the [SLIP registration](https://github.com/satoshilabs/slips/pull/2010) merges. See [Transaction Signing → HD Derivation](../specs/transaction-signing.md#hd-derivation).
+
+---
+
 ## `blake3()` Helper
 
 Wire ONE of these to your install — the rest of the code calls `blake3($bytes): string` expecting **raw 32 bytes** out:
