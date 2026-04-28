@@ -86,10 +86,53 @@ const block = await client.getLatestBlock();
 
 #### `submitOperation(operation)`
 
-Submit a signed user operation.
+Submit a signed user operation. Returns immediately once the mempool accepts it — does **not** wait for on-chain inclusion.
 
 ```typescript
 const result = await client.submitOperation(signedOp);
+// { accepted: true, error: null }
+```
+
+#### `submitOperationConfirm(operation, timeoutSecs?)`
+
+Submit a signed user operation **and wait** for it to land in a finalized block. Designed for exchange integrations and any caller that wants a single round-trip with full confirmation data instead of submit-then-poll.
+
+- `timeoutSecs` defaults to 60 and is capped server-side at 180.
+- A reverted on-chain tx returns `confirmed: true, success: false` — **do not credit funds when `success: false`**.
+- If the tx already landed when the call arrives, the response uses a deterministic `tx_hash = blake3(sender ‖ nonce_le)` and `block_height: 0`.
+
+```typescript
+const r = await client.submitOperationConfirm(signedOp, 60);
+
+if (!r.accepted) {
+  // Mempool rejected (bad nonce, zero balance, duplicate, rate-limit).
+  throw new Error(r.error ?? "submit rejected");
+}
+if (!r.confirmed) {
+  // Submitted, no inclusion within timeout — treat as pending, NOT failed.
+  return { status: "pending" };
+}
+if (!r.success) {
+  // On-chain revert: nonce consumed, do NOT retry with the same nonce.
+  return { status: "reverted", txHash: r.tx_hash, error: r.error };
+}
+return { status: "confirmed", txHash: r.tx_hash, blockHeight: r.block_height };
+```
+
+Result type:
+
+```typescript
+interface SubmitConfirmResult {
+  accepted: boolean;
+  confirmed: boolean;
+  success: boolean;
+  block_height: number;
+  tx_hash: string;
+  sender: string;
+  nonce: number;
+  gas_used: number;
+  error: string | null;
+}
 ```
 
 #### `simulateOperation(operation)`

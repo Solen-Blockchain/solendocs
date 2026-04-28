@@ -213,16 +213,26 @@ function sendTransfer(
     // 5. Sign with Ed25519.
     $signature = sodium_crypto_sign_detached($msg, $secret); // 64 bytes
 
-    // 6. Submit.
-    $result = $client->rpc('solen_submitOperation', [[
+    // 6. Submit and wait for finalized block inclusion (one round-trip).
+    //    For exchange withdrawals this is the recommended endpoint — it
+    //    returns once the tx is on-chain (or until `timeout_secs` elapses,
+    //    default 60s, max 180s server-side).
+    $op = [
         'sender'    => array_values(unpack('C*', $sender)),
         'nonce'     => $nonce,
         'actions'   => $actions,
         'max_fee'   => $maxFee,
         'signature' => array_values(unpack('C*', $signature)),
-    ]]);
+    ];
+    $result = $client->rpc('solen_submitOperationConfirm', [$op, 60]);
 
-    return $result; // { accepted: bool, error: string|null }
+    // $result fields: accepted, confirmed, success, block_height, tx_hash,
+    // sender, nonce, gas_used, error. Outcomes:
+    //   accepted=false             → mempool rejected; withdrawal did NOT happen
+    //   confirmed=false            → submitted but no inclusion within timeout (pending)
+    //   confirmed=true,success=false → REVERTED on-chain; nonce consumed, do NOT credit
+    //   confirmed=true,success=true  → confirmed and irreversible (BFT finality, no reorgs)
+    return $result;
 }
 
 // Example
@@ -233,8 +243,24 @@ $result = sendTransfer(
     recipient:     'dJNVRKH1Jh2TYBrjJUfNwQrB5b1S8xiCW926yEKWiur',
     amount:        150_000_000_000, // 1500 SOLEN
 );
-print_r($result);
+
+if (!$result['accepted']) {
+    throw new RuntimeException("Mempool rejected: {$result['error']}");
+}
+if (!$result['confirmed']) {
+    // Pending — record and check later via solen_getAccount nonce advancement.
+    echo "Pending: {$result['error']}\n";
+} elseif (!$result['success']) {
+    // On-chain revert: nonce is consumed, the user paid gas, no funds moved.
+    // DO NOT credit. DO NOT retry with the same nonce.
+    echo "Reverted: tx_hash={$result['tx_hash']} error={$result['error']}\n";
+} else {
+    echo "Confirmed: tx_hash={$result['tx_hash']} block={$result['block_height']} gas={$result['gas_used']}\n";
+}
 ```
+
+!!! tip "Why prefer `solen_submitOperationConfirm` for withdrawals"
+    Solen has deterministic single-slot BFT finality — no reorgs, no confirmation count needed. One round-trip on this endpoint replaces the typical "submit → poll for inclusion → poll for confirmations" pattern. If your worker crashes mid-call, retrying the same signed op is safe: the server detects already-landed txs via an on-chain backfill check and returns `confirmed: true, success: true` with a deterministic `tx_hash = blake3(sender ‖ nonce_le)` so you can de-dupe by hash.
 
 !!! warning "Amount above 2^63"
     PHP's `int` is signed 64-bit. SOLEN's total supply (2 × 10^17 base units) fits comfortably, but if you ever need to sign for `amount` ≥ 2^63 you'll need a custom JSON serializer that emits the value as an unquoted decimal literal — `json_encode` cannot serialize a string-as-number without quotes. Use GMP for the math and `str_replace` the placeholder string into the encoded JSON.

@@ -209,6 +209,95 @@ Sign with Ed25519 to produce a 64-byte signature. See [Transaction Signing](../s
 
 **Multi-sig signatures:** For `Threshold` auth, concatenate `pubkey[32] + sig[64]` pairs (96 bytes each). At least `threshold` valid signatures from the signers list must be present.
 
+**Returns:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `accepted` | `bool` | Whether the mempool took the operation |
+| `error` | `string?` | Rejection reason when `accepted` is false |
+
+`accepted: true` means the op passed validation and was queued for inclusion — **not** that it was confirmed on-chain. Use `solen_submitOperationConfirm` (below) or `solen_subscribeTxConfirmation` if you need to wait for block inclusion.
+
+---
+
+### `solen_submitOperationConfirm`
+
+Submit a signed user operation **and wait** for it to be included in a finalized block. Designed for exchange integrations and any caller that wants a single round-trip with full confirmation data instead of submit-then-poll.
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `operation` | `UserOperation` | The signed operation object (same shape as `solen_submitOperation`) |
+| `timeout_secs` | `u64?` | Max seconds to wait for inclusion. Default `60`, capped server-side at `180`. Pass `null` for the default. |
+
+**Returns:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `accepted` | `bool` | Mempool took the op (passed nonce/balance/rate-limit checks) |
+| `confirmed` | `bool` | The matching `(sender, nonce)` was seen in a finalized block before timeout |
+| `success` | `bool` | On-chain execution succeeded (`false` means the tx was included but reverted) |
+| `block_height` | `u64` | Block the tx landed in (`0` if unknown — see "Backfill" below) |
+| `tx_hash` | `string` | Hex-encoded transaction hash |
+| `sender` | `string` | Sender account, Base58 |
+| `nonce` | `u64` | Operation nonce |
+| `gas_used` | `u64` | Gas consumed (`0` if unknown — see "Backfill" below) |
+| `error` | `string?` | Reason for `accepted: false`, `confirmed: false`, or `success: false` |
+
+**Outcome matrix:**
+
+| `accepted` | `confirmed` | `success` | Meaning |
+|---|---|---|---|
+| `false` | `false` | `false` | Mempool rejected (bad nonce, zero balance, rate-limited, duplicate). Returns immediately. |
+| `true` | `false` | `false` | Submit succeeded but no inclusion within `timeout_secs`. May still land later. |
+| `true` | `true` | `false` | Included in a block but **execution reverted**. **Do not credit funds.** |
+| `true` | `true` | `true` | Confirmed and successful. Safe to act on. |
+
+**Example:**
+
+```json
+// Request
+{
+  "jsonrpc":"2.0","id":1,"method":"solen_submitOperationConfirm",
+  "params":[
+    {
+      "sender":"2ZrMqiKGz6TUvJkyBKyNMf3Y7dMrJ5JqWSCCYGn1VWbp",
+      "nonce":42,
+      "actions":[{"type":"Transfer","to":"dJNVRKH1Jh2TYBrjJUfNwQrB5b1S8xiCW926yEKWiur","amount":1500000000}],
+      "max_fee":100000,
+      "signature":"…"
+    },
+    60
+  ]
+}
+
+// Response (confirmed + successful)
+{
+  "jsonrpc":"2.0","id":1,
+  "result":{
+    "accepted":true,"confirmed":true,"success":true,
+    "block_height":98421,
+    "tx_hash":"ef56…",
+    "sender":"2ZrMqiKGz6TUvJkyBKyNMf3Y7dMrJ5JqWSCCYGn1VWbp",
+    "nonce":42,
+    "gas_used":21000,
+    "error":null
+  }
+}
+```
+
+!!! warning "Reverted ≠ failed-to-submit"
+    A reverted on-chain tx returns `confirmed: true, success: false`. The user paid gas and the nonce was consumed, but no funds moved. Exchanges **must not credit deposits or mark withdrawals as paid** when `success: false`.
+
+!!! note "Backfill case"
+    If the tx is already on-chain when the call arrives (e.g. you're retrying with the same nonce after a network hiccup), the response returns `confirmed: true, success: true` with `block_height: 0` and a deterministic `tx_hash = blake3(sender ‖ nonce_le)`. The hash format matches what the engine emits for fresh confirmations. If you need the exact block, query `solen_getAccount` to confirm nonce advancement, then scan recent blocks via `solen_getBlock`.
+
+!!! note "tx_hash semantics"
+    `tx_hash` is `blake3(sender ‖ nonce_le)` — a deterministic 32-byte ID derived from the sender and nonce, **not** a hash of the operation contents. This is consistent across `solen_submitOperationConfirm`, `solen_subscribeTxConfirmation`, and the explorer.
+
+**Concurrency limit:** The server caps simultaneous confirm-waiters at 200. Excess calls return immediately with `accepted: false` and `error: "too many concurrent submitOperationConfirm waiters — retry shortly"`. Run your own RPC node for high-throughput integrations.
+
 ---
 
 ### `solen_simulateOperation`
@@ -816,7 +905,7 @@ Watch for a specific transaction confirmation. The subscription automatically cl
 ```
 
 !!! tip
-    Use this after `solen_submitOperation` to get notified when your transaction lands, instead of polling `getBlock` or `getAccount`.
+    Use this after `solen_submitOperation` to get notified when your transaction lands, instead of polling `getBlock` or `getAccount`. If you'd rather have a single HTTP round-trip than open a WebSocket subscription, use [`solen_submitOperationConfirm`](#solen_submitoperationconfirm) instead — it bundles submit + wait into one call.
 
 ---
 
@@ -848,6 +937,7 @@ The RPC server enforces per-method rate limits to prevent abuse:
 | Method | Limit |
 |--------|-------|
 | `solen_submitOperation` | 50 requests/second |
+| `solen_submitOperationConfirm` | shares the `submitOperation` 50/sec budget; additionally capped at 200 concurrent in-flight waiters |
 | `solen_submitSolution` | 20 requests/second |
 | `solen_getSnapshot` | 2 requests/second |
 

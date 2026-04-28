@@ -1436,6 +1436,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#solen_submitoperationconfirm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_submitOperationConfirm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#solen_simulateoperation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2578,6 +2589,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#solen_submitoperationconfirm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_submitOperationConfirm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#solen_simulateoperation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3238,6 +3260,191 @@
 </tbody>
 </table>
 <p><strong>Multi-sig signatures:</strong> For <code>Threshold</code> auth, concatenate <code>pubkey[32] + sig[64]</code> pairs (96 bytes each). At least <code>threshold</code> valid signatures from the signers list must be present.</p>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>accepted</code></td>
+<td><code>bool</code></td>
+<td>Whether the mempool took the operation</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td><code>string?</code></td>
+<td>Rejection reason when <code>accepted</code> is false</td>
+</tr>
+</tbody>
+</table>
+<p><code>accepted: true</code> means the op passed validation and was queued for inclusion — <strong>not</strong> that it was confirmed on-chain. Use <code>solen_submitOperationConfirm</code> (below) or <code>solen_subscribeTxConfirmation</code> if you need to wait for block inclusion.</p>
+<hr />
+<h3 id="solen_submitoperationconfirm"><code>solen_submitOperationConfirm</code><a class="headerlink" href="#solen_submitoperationconfirm" title="Permanent link">&para;</a></h3>
+<p>Submit a signed user operation <strong>and wait</strong> for it to be included in a finalized block. Designed for exchange integrations and any caller that wants a single round-trip with full confirmation data instead of submit-then-poll.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>operation</code></td>
+<td><code>UserOperation</code></td>
+<td>The signed operation object (same shape as <code>solen_submitOperation</code>)</td>
+</tr>
+<tr>
+<td><code>timeout_secs</code></td>
+<td><code>u64?</code></td>
+<td>Max seconds to wait for inclusion. Default <code>60</code>, capped server-side at <code>180</code>. Pass <code>null</code> for the default.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>accepted</code></td>
+<td><code>bool</code></td>
+<td>Mempool took the op (passed nonce/balance/rate-limit checks)</td>
+</tr>
+<tr>
+<td><code>confirmed</code></td>
+<td><code>bool</code></td>
+<td>The matching <code>(sender, nonce)</code> was seen in a finalized block before timeout</td>
+</tr>
+<tr>
+<td><code>success</code></td>
+<td><code>bool</code></td>
+<td>On-chain execution succeeded (<code>false</code> means the tx was included but reverted)</td>
+</tr>
+<tr>
+<td><code>block_height</code></td>
+<td><code>u64</code></td>
+<td>Block the tx landed in (<code>0</code> if unknown — see "Backfill" below)</td>
+</tr>
+<tr>
+<td><code>tx_hash</code></td>
+<td><code>string</code></td>
+<td>Hex-encoded transaction hash</td>
+</tr>
+<tr>
+<td><code>sender</code></td>
+<td><code>string</code></td>
+<td>Sender account, Base58</td>
+</tr>
+<tr>
+<td><code>nonce</code></td>
+<td><code>u64</code></td>
+<td>Operation nonce</td>
+</tr>
+<tr>
+<td><code>gas_used</code></td>
+<td><code>u64</code></td>
+<td>Gas consumed (<code>0</code> if unknown — see "Backfill" below)</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td><code>string?</code></td>
+<td>Reason for <code>accepted: false</code>, <code>confirmed: false</code>, or <code>success: false</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Outcome matrix:</strong></p>
+<table>
+<thead>
+<tr>
+<th><code>accepted</code></th>
+<th><code>confirmed</code></th>
+<th><code>success</code></th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>false</code></td>
+<td><code>false</code></td>
+<td><code>false</code></td>
+<td>Mempool rejected (bad nonce, zero balance, rate-limited, duplicate). Returns immediately.</td>
+</tr>
+<tr>
+<td><code>true</code></td>
+<td><code>false</code></td>
+<td><code>false</code></td>
+<td>Submit succeeded but no inclusion within <code>timeout_secs</code>. May still land later.</td>
+</tr>
+<tr>
+<td><code>true</code></td>
+<td><code>true</code></td>
+<td><code>false</code></td>
+<td>Included in a block but <strong>execution reverted</strong>. <strong>Do not credit funds.</strong></td>
+</tr>
+<tr>
+<td><code>true</code></td>
+<td><code>true</code></td>
+<td><code>true</code></td>
+<td>Confirmed and successful. Safe to act on.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">// Request</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="p">{</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_submitOperationConfirm&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nt">&quot;params&quot;</span><span class="p">:[</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">      </span><span class="nt">&quot;sender&quot;</span><span class="p">:</span><span class="s2">&quot;2ZrMqiKGz6TUvJkyBKyNMf3Y7dMrJ5JqWSCCYGn1VWbp&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">      </span><span class="nt">&quot;nonce&quot;</span><span class="p">:</span><span class="mi">42</span><span class="p">,</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">      </span><span class="nt">&quot;actions&quot;</span><span class="p">:[{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;Transfer&quot;</span><span class="p">,</span><span class="nt">&quot;to&quot;</span><span class="p">:</span><span class="s2">&quot;dJNVRKH1Jh2TYBrjJUfNwQrB5b1S8xiCW926yEKWiur&quot;</span><span class="p">,</span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="mi">1500000000</span><span class="p">}],</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">      </span><span class="nt">&quot;max_fee&quot;</span><span class="p">:</span><span class="mi">100000</span><span class="p">,</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">      </span><span class="nt">&quot;signature&quot;</span><span class="p">:</span><span class="s2">&quot;…&quot;</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">    </span><span class="mi">60</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="p">}</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="c1">// Response (confirmed + successful)</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="p">{</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">  </span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="w">  </span><span class="nt">&quot;result&quot;</span><span class="p">:{</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="w">    </span><span class="nt">&quot;accepted&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="nt">&quot;confirmed&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="w">    </span><span class="nt">&quot;block_height&quot;</span><span class="p">:</span><span class="mi">98421</span><span class="p">,</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="w">    </span><span class="nt">&quot;tx_hash&quot;</span><span class="p">:</span><span class="s2">&quot;ef56…&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="w">    </span><span class="nt">&quot;sender&quot;</span><span class="p">:</span><span class="s2">&quot;2ZrMqiKGz6TUvJkyBKyNMf3Y7dMrJ5JqWSCCYGn1VWbp&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="w">    </span><span class="nt">&quot;nonce&quot;</span><span class="p">:</span><span class="mi">42</span><span class="p">,</span>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="w">    </span><span class="nt">&quot;gas_used&quot;</span><span class="p">:</span><span class="mi">21000</span><span class="p">,</span>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="w">    </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="kc">null</span>
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="p">}</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Reverted ≠ failed-to-submit</p>
+<p>A reverted on-chain tx returns <code>confirmed: true, success: false</code>. The user paid gas and the nonce was consumed, but no funds moved. Exchanges <strong>must not credit deposits or mark withdrawals as paid</strong> when <code>success: false</code>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Backfill case</p>
+<p>If the tx is already on-chain when the call arrives (e.g. you're retrying with the same nonce after a network hiccup), the response returns <code>confirmed: true, success: true</code> with <code>block_height: 0</code> and a deterministic <code>tx_hash = blake3(sender ‖ nonce_le)</code>. The hash format matches what the engine emits for fresh confirmations. If you need the exact block, query <code>solen_getAccount</code> to confirm nonce advancement, then scan recent blocks via <code>solen_getBlock</code>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">tx_hash semantics</p>
+<p><code>tx_hash</code> is <code>blake3(sender ‖ nonce_le)</code> — a deterministic 32-byte ID derived from the sender and nonce, <strong>not</strong> a hash of the operation contents. This is consistent across <code>solen_submitOperationConfirm</code>, <code>solen_subscribeTxConfirmation</code>, and the explorer.</p>
+</div>
+<p><strong>Concurrency limit:</strong> The server caps simultaneous confirm-waiters at 200. Excess calls return immediately with <code>accepted: false</code> and <code>error: "too many concurrent submitOperationConfirm waiters — retry shortly"</code>. Run your own RPC node for high-throughput integrations.</p>
 <hr />
 <h3 id="solen_simulateoperation"><code>solen_simulateOperation</code><a class="headerlink" href="#solen_simulateoperation" title="Permanent link">&para;</a></h3>
 <p>Dry-run an operation without committing state changes.</p>
@@ -3327,9 +3534,9 @@
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getValidators&quot;,&quot;params&quot;:[],&quot;id&quot;:1}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getValidators&quot;,&quot;params&quot;:[],&quot;id&quot;:1}&#39;</span>
 </code></pre></div>
 <hr />
 <h3 id="solen_getstakinginfo"><code>solen_getStakingInfo</code><a class="headerlink" href="#solen_getstakinginfo" title="Permanent link">&para;</a></h3>
@@ -3445,9 +3652,9 @@
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getGovernanceProposals&quot;,&quot;params&quot;:[],&quot;id&quot;:1}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getGovernanceProposals&quot;,&quot;params&quot;:[],&quot;id&quot;:1}&#39;</span>
 </code></pre></div>
 <hr />
 <h3 id="solen_callview"><code>solen_callView</code><a class="headerlink" href="#solen_callview" title="Permanent link">&para;</a></h3>
@@ -3512,9 +3719,9 @@
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_callView&quot;,&quot;params&quot;:[&quot;&lt;contract-id&gt;&quot;,&quot;total_supply&quot;],&quot;id&quot;:1}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_callView&quot;,&quot;params&quot;:[&quot;&lt;contract-id&gt;&quot;,&quot;total_supply&quot;],&quot;id&quot;:1}&#39;</span>
 </code></pre></div>
 <hr />
 <h3 id="solen_getvestinginfo"><code>solen_getVestingInfo</code><a class="headerlink" href="#solen_getvestinginfo" title="Permanent link">&para;</a></h3>
@@ -3580,9 +3787,9 @@
 </table>
 <p>If the account has no vesting schedule, <code>has_schedule</code> is <code>false</code> and all amounts are <code>"0"</code>.</p>
 <p><strong>Example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getVestingInfo&quot;,&quot;params&quot;:[&quot;2ZrMqiKGz6TUvJkyBKyNMf3Y7dMrJ5JqWSCCYGn1VWbp&quot;],&quot;id&quot;:1}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getVestingInfo&quot;,&quot;params&quot;:[&quot;2ZrMqiKGz6TUvJkyBKyNMf3Y7dMrJ5JqWSCCYGn1VWbp&quot;],&quot;id&quot;:1}&#39;</span>
 </code></pre></div>
 <hr />
 <h3 id="solen_getpendingintents"><code>solen_getPendingIntents</code><a class="headerlink" href="#solen_getpendingintents" title="Permanent link">&para;</a></h3>
@@ -3853,9 +4060,9 @@
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getSnapshot&quot;,&quot;params&quot;:[],&quot;id&quot;:1}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:29944<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;solen_getSnapshot&quot;,&quot;params&quot;:[],&quot;id&quot;:1}&#39;</span>
 </code></pre></div>
 <hr />
 <h3 id="solen_getrollupstatus"><code>solen_getRollupStatus</code><a class="headerlink" href="#solen_getrollupstatus" title="Permanent link">&para;</a></h3>
@@ -4098,15 +4305,15 @@ Args: <code>rollup_id[8] + name_len[4] + name[...] + proof_type_len[4] + proof_t
 <h3 id="guardian-recovery-methods">Guardian Recovery Methods<a class="headerlink" href="#guardian-recovery-methods" title="Permanent link">&para;</a></h3>
 <p>Social recovery for lost keys. Users add <code>Guardian</code> auth methods to their account, designating trusted accounts that can collectively recover access.</p>
 <p><strong>Setup:</strong> Use <code>SetAuth</code> action to add guardians to your account:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="p">{</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SetAuth&quot;</span><span class="p">,</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="nt">&quot;auth_methods&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;Ed25519&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;public_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-key-hex&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;Guardian&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;guardian_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;guardian-1-hex&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;Guardian&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;guardian_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;guardian-2-hex&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;Guardian&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;guardian_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;guardian-3-hex&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">  </span><span class="p">]</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SetAuth&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="nt">&quot;auth_methods&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;Ed25519&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;public_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-key-hex&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;Guardian&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;guardian_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;guardian-1-hex&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;Guardian&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;guardian_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;guardian-2-hex&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;Guardian&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;guardian_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;guardian-3-hex&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="p">}</span>
 </code></pre></div></p>
 <p><strong><code>initiate_recovery</code></strong> — A guardian initiates recovery for a target account.
 Args: <code>target_account[32] + new_auth_methods_json[...]</code>
@@ -4130,47 +4337,47 @@ Anyone can call this. Replaces the target account's auth methods with the new on
 <hr />
 <h2 id="cli-commands">CLI Commands<a class="headerlink" href="#cli-commands" title="Permanent link">&para;</a></h2>
 <p>The <code>solen-cli</code> tool provides command-line access to all system operations:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Chain info</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>solen-cli<span class="w"> </span>status
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>solen-cli<span class="w"> </span>balance<span class="w"> </span>&lt;account&gt;
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>solen-cli<span class="w"> </span>validators
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># Transfers</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>solen-cli<span class="w"> </span>transfer<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;to&gt;<span class="w"> </span>&lt;amount&gt;
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># Staking</span>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>solen-cli<span class="w"> </span>register-validator<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;amount&gt;
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>solen-cli<span class="w"> </span>stake<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;validator&gt;<span class="w"> </span>&lt;amount&gt;
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>solen-cli<span class="w"> </span>unstake<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;validator&gt;<span class="w"> </span>&lt;amount&gt;
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>solen-cli<span class="w"> </span>withdraw-stake<span class="w"> </span>&lt;from&gt;
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="c1"># Governance</span>
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>solen-cli<span class="w"> </span>propose-block-time<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;ms&gt;<span class="w"> </span>&lt;description&gt;
-<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>solen-cli<span class="w"> </span>vote<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;proposal-id&gt;<span class="w"> </span>--yes<span class="w"> </span>&lt;weight&gt;
-<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>solen-cli<span class="w"> </span>finalize-proposal<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;proposal-id&gt;
-<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>solen-cli<span class="w"> </span>execute-proposal<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;proposal-id&gt;
-<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>
-<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="c1"># Contracts</span>
-<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>solen-cli<span class="w"> </span>deploy<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;wasm-file&gt;
-<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>solen-cli<span class="w"> </span>call<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;target&gt;<span class="w"> </span>&lt;method&gt;<span class="w"> </span><span class="o">[</span>--args<span class="w"> </span>&lt;hex&gt;<span class="o">]</span>
-<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>
-<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a><span class="c1"># Rollups</span>
-<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>solen-cli<span class="w"> </span>register-rollup<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;rollup-id&gt;<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>--proof-type<span class="w"> </span>mock<span class="o">]</span><span class="w"> </span><span class="o">[</span>--genesis-state-root<span class="w"> </span>&lt;hex&gt;<span class="o">]</span>
-<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>
-<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a><span class="c1"># Paymasters</span>
-<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>solen-cli<span class="w"> </span>register-paymaster<span class="w"> </span>&lt;from&gt;
-<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>solen-cli<span class="w"> </span>unregister-paymaster<span class="w"> </span>&lt;from&gt;
-<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>
-<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a><span class="c1"># Guardian recovery</span>
-<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>solen-cli<span class="w"> </span>initiate-recovery<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;target&gt;<span class="w"> </span>&lt;new-public-key&gt;
-<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a>solen-cli<span class="w"> </span>confirm-recovery<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;recovery-id&gt;
-<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a>solen-cli<span class="w"> </span>cancel-recovery<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;recovery-id&gt;
-<a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a>solen-cli<span class="w"> </span>execute-recovery<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;recovery-id&gt;
-<a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a>
-<a id="__codelineno-15-38" name="__codelineno-15-38" href="#__codelineno-15-38"></a><span class="c1"># Key management</span>
-<a id="__codelineno-15-39" name="__codelineno-15-39" href="#__codelineno-15-39"></a>solen-cli<span class="w"> </span>key<span class="w"> </span>generate<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-15-40" name="__codelineno-15-40" href="#__codelineno-15-40"></a>solen-cli<span class="w"> </span>key<span class="w"> </span>import<span class="w"> </span>&lt;name&gt;<span class="w"> </span>&lt;seed-hex&gt;
-<a id="__codelineno-15-41" name="__codelineno-15-41" href="#__codelineno-15-41"></a>solen-cli<span class="w"> </span>key<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Chain info</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>solen-cli<span class="w"> </span>status
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>solen-cli<span class="w"> </span>balance<span class="w"> </span>&lt;account&gt;
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>solen-cli<span class="w"> </span>validators
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># Transfers</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>solen-cli<span class="w"> </span>transfer<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;to&gt;<span class="w"> </span>&lt;amount&gt;
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="c1"># Staking</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>solen-cli<span class="w"> </span>register-validator<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;amount&gt;
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>solen-cli<span class="w"> </span>stake<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;validator&gt;<span class="w"> </span>&lt;amount&gt;
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>solen-cli<span class="w"> </span>unstake<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;validator&gt;<span class="w"> </span>&lt;amount&gt;
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>solen-cli<span class="w"> </span>withdraw-stake<span class="w"> </span>&lt;from&gt;
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="c1"># Governance</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>solen-cli<span class="w"> </span>propose-block-time<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;ms&gt;<span class="w"> </span>&lt;description&gt;
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>solen-cli<span class="w"> </span>vote<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;proposal-id&gt;<span class="w"> </span>--yes<span class="w"> </span>&lt;weight&gt;
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>solen-cli<span class="w"> </span>finalize-proposal<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;proposal-id&gt;
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>solen-cli<span class="w"> </span>execute-proposal<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;proposal-id&gt;
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="c1"># Contracts</span>
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>solen-cli<span class="w"> </span>deploy<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;wasm-file&gt;
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>solen-cli<span class="w"> </span>call<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;target&gt;<span class="w"> </span>&lt;method&gt;<span class="w"> </span><span class="o">[</span>--args<span class="w"> </span>&lt;hex&gt;<span class="o">]</span>
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a><span class="c1"># Rollups</span>
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>solen-cli<span class="w"> </span>register-rollup<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;rollup-id&gt;<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>--proof-type<span class="w"> </span>mock<span class="o">]</span><span class="w"> </span><span class="o">[</span>--genesis-state-root<span class="w"> </span>&lt;hex&gt;<span class="o">]</span>
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a><span class="c1"># Paymasters</span>
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a>solen-cli<span class="w"> </span>register-paymaster<span class="w"> </span>&lt;from&gt;
+<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a>solen-cli<span class="w"> </span>unregister-paymaster<span class="w"> </span>&lt;from&gt;
+<a id="__codelineno-16-31" name="__codelineno-16-31" href="#__codelineno-16-31"></a>
+<a id="__codelineno-16-32" name="__codelineno-16-32" href="#__codelineno-16-32"></a><span class="c1"># Guardian recovery</span>
+<a id="__codelineno-16-33" name="__codelineno-16-33" href="#__codelineno-16-33"></a>solen-cli<span class="w"> </span>initiate-recovery<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;target&gt;<span class="w"> </span>&lt;new-public-key&gt;
+<a id="__codelineno-16-34" name="__codelineno-16-34" href="#__codelineno-16-34"></a>solen-cli<span class="w"> </span>confirm-recovery<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;recovery-id&gt;
+<a id="__codelineno-16-35" name="__codelineno-16-35" href="#__codelineno-16-35"></a>solen-cli<span class="w"> </span>cancel-recovery<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;recovery-id&gt;
+<a id="__codelineno-16-36" name="__codelineno-16-36" href="#__codelineno-16-36"></a>solen-cli<span class="w"> </span>execute-recovery<span class="w"> </span>&lt;from&gt;<span class="w"> </span>&lt;recovery-id&gt;
+<a id="__codelineno-16-37" name="__codelineno-16-37" href="#__codelineno-16-37"></a>
+<a id="__codelineno-16-38" name="__codelineno-16-38" href="#__codelineno-16-38"></a><span class="c1"># Key management</span>
+<a id="__codelineno-16-39" name="__codelineno-16-39" href="#__codelineno-16-39"></a>solen-cli<span class="w"> </span>key<span class="w"> </span>generate<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-16-40" name="__codelineno-16-40" href="#__codelineno-16-40"></a>solen-cli<span class="w"> </span>key<span class="w"> </span>import<span class="w"> </span>&lt;name&gt;<span class="w"> </span>&lt;seed-hex&gt;
+<a id="__codelineno-16-41" name="__codelineno-16-41" href="#__codelineno-16-41"></a>solen-cli<span class="w"> </span>key<span class="w"> </span>list
 </code></pre></div>
 <p>All amount values are in SOLEN (human-readable). Decimals supported (e.g., <code>100.5</code>).
 Use <code>--rpc &lt;url&gt;</code> to specify the RPC endpoint and <code>--chain-id &lt;id&gt;</code> for the network.</p>
@@ -4233,17 +4440,17 @@ Use <code>--rpc &lt;url&gt;</code> to specify the RPC endpoint and <code>--chain
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1">// Subscribe</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_subscribeNewBlocks&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:[]}</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1">// Response</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="s2">&quot;subscription_id&quot;</span><span class="p">}</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1">// Notification</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_newBlock&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:{</span><span class="nt">&quot;subscription&quot;</span><span class="p">:</span><span class="s2">&quot;subscription_id&quot;</span><span class="p">,</span><span class="nt">&quot;result&quot;</span><span class="p">:{</span><span class="nt">&quot;height&quot;</span><span class="p">:</span><span class="mi">42</span><span class="p">,</span><span class="nt">&quot;epoch&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="nt">&quot;block_hash&quot;</span><span class="p">:</span><span class="s2">&quot;ab12...&quot;</span><span class="p">,</span><span class="nt">&quot;state_root&quot;</span><span class="p">:</span><span class="s2">&quot;cd34...&quot;</span><span class="p">,</span><span class="nt">&quot;proposer&quot;</span><span class="p">:</span><span class="s2">&quot;5Dxq...&quot;</span><span class="p">,</span><span class="nt">&quot;timestamp_ms&quot;</span><span class="p">:</span><span class="mi">1713000000000</span><span class="p">,</span><span class="nt">&quot;tx_count&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="nt">&quot;gas_used&quot;</span><span class="p">:</span><span class="mi">150000</span><span class="p">}}}</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1">// Unsubscribe</span>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_unsubscribeNewBlocks&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:[</span><span class="s2">&quot;subscription_id&quot;</span><span class="p">]}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1">// Subscribe</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_subscribeNewBlocks&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:[]}</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1">// Response</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="s2">&quot;subscription_id&quot;</span><span class="p">}</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1">// Notification</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_newBlock&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:{</span><span class="nt">&quot;subscription&quot;</span><span class="p">:</span><span class="s2">&quot;subscription_id&quot;</span><span class="p">,</span><span class="nt">&quot;result&quot;</span><span class="p">:{</span><span class="nt">&quot;height&quot;</span><span class="p">:</span><span class="mi">42</span><span class="p">,</span><span class="nt">&quot;epoch&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="nt">&quot;block_hash&quot;</span><span class="p">:</span><span class="s2">&quot;ab12...&quot;</span><span class="p">,</span><span class="nt">&quot;state_root&quot;</span><span class="p">:</span><span class="s2">&quot;cd34...&quot;</span><span class="p">,</span><span class="nt">&quot;proposer&quot;</span><span class="p">:</span><span class="s2">&quot;5Dxq...&quot;</span><span class="p">,</span><span class="nt">&quot;timestamp_ms&quot;</span><span class="p">:</span><span class="mi">1713000000000</span><span class="p">,</span><span class="nt">&quot;tx_count&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="nt">&quot;gas_used&quot;</span><span class="p">:</span><span class="mi">150000</span><span class="p">}}}</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1">// Unsubscribe</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_unsubscribeNewBlocks&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:[</span><span class="s2">&quot;subscription_id&quot;</span><span class="p">]}</span>
 </code></pre></div>
 <hr />
 <h3 id="solen_subscribetxconfirmation"><code>solen_subscribeTxConfirmation</code><a class="headerlink" href="#solen_subscribetxconfirmation" title="Permanent link">&para;</a></h3>
@@ -4313,15 +4520,15 @@ Use <code>--rpc &lt;url&gt;</code> to specify the RPC endpoint and <code>--chain
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1">// Subscribe (watch for sender&#39;s nonce 5)</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_subscribeTxConfirmation&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:[</span><span class="s2">&quot;2ZrMqiKGz6TUvJkyBKyNMf3Y7dMrJ5JqWSCCYGn1VWbp&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">]}</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1">// Notification (delivered once, then subscription closes)</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_txConfirmation&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:{</span><span class="nt">&quot;subscription&quot;</span><span class="p">:</span><span class="s2">&quot;subscription_id&quot;</span><span class="p">,</span><span class="nt">&quot;result&quot;</span><span class="p">:{</span><span class="nt">&quot;block_height&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span><span class="nt">&quot;tx_hash&quot;</span><span class="p">:</span><span class="s2">&quot;ef56...&quot;</span><span class="p">,</span><span class="nt">&quot;sender&quot;</span><span class="p">:</span><span class="s2">&quot;2ZrM...&quot;</span><span class="p">,</span><span class="nt">&quot;nonce&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="nt">&quot;gas_used&quot;</span><span class="p">:</span><span class="mi">21000</span><span class="p">}}}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1">// Subscribe (watch for sender&#39;s nonce 5)</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_subscribeTxConfirmation&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:[</span><span class="s2">&quot;2ZrMqiKGz6TUvJkyBKyNMf3Y7dMrJ5JqWSCCYGn1VWbp&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">]}</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1">// Notification (delivered once, then subscription closes)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_txConfirmation&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:{</span><span class="nt">&quot;subscription&quot;</span><span class="p">:</span><span class="s2">&quot;subscription_id&quot;</span><span class="p">,</span><span class="nt">&quot;result&quot;</span><span class="p">:{</span><span class="nt">&quot;block_height&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span><span class="nt">&quot;tx_hash&quot;</span><span class="p">:</span><span class="s2">&quot;ef56...&quot;</span><span class="p">,</span><span class="nt">&quot;sender&quot;</span><span class="p">:</span><span class="s2">&quot;2ZrM...&quot;</span><span class="p">,</span><span class="nt">&quot;nonce&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="nt">&quot;gas_used&quot;</span><span class="p">:</span><span class="mi">21000</span><span class="p">}}}</span>
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>Use this after <code>solen_submitOperation</code> to get notified when your transaction lands, instead of polling <code>getBlock</code> or <code>getAccount</code>.</p>
+<p>Use this after <code>solen_submitOperation</code> to get notified when your transaction lands, instead of polling <code>getBlock</code> or <code>getAccount</code>. If you'd rather have a single HTTP round-trip than open a WebSocket subscription, use <a href="#solen_submitoperationconfirm"><code>solen_submitOperationConfirm</code></a> instead — it bundles submit + wait into one call.</p>
 </div>
 <hr />
 <h3 id="solen_subscribevalidatorchanges"><code>solen_subscribeValidatorChanges</code><a class="headerlink" href="#solen_subscribevalidatorchanges" title="Permanent link">&para;</a></h3>
@@ -4350,7 +4557,7 @@ Use <code>--rpc &lt;url&gt;</code> to specify the RPC endpoint and <code>--chain
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_subscribeValidatorChanges&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:[]}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="p">{</span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;solen_subscribeValidatorChanges&quot;</span><span class="p">,</span><span class="nt">&quot;params&quot;</span><span class="p">:[]}</span>
 </code></pre></div>
 <hr />
 <h2 id="rate-limits">Rate Limits<a class="headerlink" href="#rate-limits" title="Permanent link">&para;</a></h2>
@@ -4366,6 +4573,10 @@ Use <code>--rpc &lt;url&gt;</code> to specify the RPC endpoint and <code>--chain
 <tr>
 <td><code>solen_submitOperation</code></td>
 <td>50 requests/second</td>
+</tr>
+<tr>
+<td><code>solen_submitOperationConfirm</code></td>
+<td>shares the <code>submitOperation</code> 50/sec budget; additionally capped at 200 concurrent in-flight waiters</td>
 </tr>
 <tr>
 <td><code>solen_submitSolution</code></td>

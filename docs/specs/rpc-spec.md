@@ -47,10 +47,20 @@ Returns the current validator set with stake and status information.
 
 ### `solen_submitOperation(signed_op)`
 
-Submits a signed user operation to the mempool.
+Submits a signed user operation to the mempool. Returns immediately after mempool acceptance — does not wait for block inclusion.
 
 - **Parameters:** `signed_op` — complete signed UserOperation
-- **Returns:** Operation hash
+- **Returns:** `{ accepted, error }`
+
+### `solen_submitOperationConfirm(signed_op, timeout_secs?)`
+
+Submits a signed user operation and blocks until it is included in a finalized block (or until `timeout_secs` elapses, default 60s, max 180s). Designed for exchange integrations that want a single HTTP round-trip with full confirmation data.
+
+- **Parameters:** `signed_op` — complete signed UserOperation; `timeout_secs` — optional u64 wait cap
+- **Returns:** `{ accepted, confirmed, success, block_height, tx_hash, sender, nonce, gas_used, error }`
+- **Semantics:** A reverted on-chain tx returns `confirmed: true, success: false` — exchanges must not credit funds on revert.
+- **Concurrency:** Server caps simultaneous confirm-waiters at 200; excess calls reject with `accepted: false`.
+- **Status:** Implemented
 
 ### `solen_submitIntent(signed_intent)`
 

@@ -401,29 +401,93 @@ const signature = ed25519.sign(signingMessage, privateKeySeed);
 
 #### 5. Submit the operation
 
-```bash
-curl -s -X POST https://rpc.solenchain.io \
-  -H "Content-Type: application/json" \
-  -d '{
-    "jsonrpc":"2.0","method":"solen_submitOperation","id":1,
-    "params":[{
-      "sender": [<32 bytes>],
+You have two endpoints. **For exchange withdrawals, use `solen_submitOperationConfirm`** — it submits and waits for finalized block inclusion in a single round-trip, which is exactly what a withdrawal pipeline needs.
+
+=== "Recommended: submit + wait (one round-trip)"
+
+    ```bash
+    curl -s -X POST https://rpc.solenchain.io \
+      -H "Content-Type: application/json" \
+      -d '{
+        "jsonrpc":"2.0","method":"solen_submitOperationConfirm","id":1,
+        "params":[
+          {
+            "sender": [<32 bytes>],
+            "nonce": 42,
+            "actions": [{"Transfer": {"to": [<32 bytes>], "amount": 1500000000}}],
+            "max_fee": 100000,
+            "signature": [<64 bytes>]
+          },
+          60
+        ]
+      }'
+    ```
+
+    **Response (confirmed + successful):**
+
+    ```json
+    {
+      "accepted": true,
+      "confirmed": true,
+      "success": true,
+      "block_height": 98421,
+      "tx_hash": "ef56...",
+      "sender": "2ZrMqiKGz6TUvJkyBKyNMf3Y7dMrJ5JqWSCCYGn1VWbp",
       "nonce": 42,
-      "actions": [{"Transfer": {"to": [<32 bytes>], "amount": 1500000000}}],
-      "max_fee": 100000,
-      "signature": [<64 bytes>]
-    }]
-  }'
-```
+      "gas_used": 21000,
+      "error": null
+    }
+    ```
 
-**Response:**
+=== "Fire-and-forget submit"
 
-```json
-{
-  "accepted": true,
-  "error": null
-}
-```
+    ```bash
+    curl -s -X POST https://rpc.solenchain.io \
+      -H "Content-Type: application/json" \
+      -d '{
+        "jsonrpc":"2.0","method":"solen_submitOperation","id":1,
+        "params":[{
+          "sender": [<32 bytes>],
+          "nonce": 42,
+          "actions": [{"Transfer": {"to": [<32 bytes>], "amount": 1500000000}}],
+          "max_fee": 100000,
+          "signature": [<64 bytes>]
+        }]
+      }'
+    ```
+
+    **Response:**
+
+    ```json
+    { "accepted": true, "error": null }
+    ```
+
+    `accepted: true` means mempool received the op — **not** that it's on-chain yet. Use this only if you have a separate confirmation path (block scanner, `solen_subscribeTxConfirmation` over WebSocket, or a poll of `solen_getAccount`).
+
+### Withdrawal outcome handling
+
+`solen_submitOperationConfirm` returns four distinct outcomes that your withdrawal pipeline must handle differently:
+
+| `accepted` | `confirmed` | `success` | What it means | Action |
+|---|---|---|---|---|
+| `false` | `false` | `false` | Mempool rejected (bad nonce, zero balance, duplicate, rate-limit). | Re-fetch nonce with `solen_getNextNonce`, fix the issue, resubmit. The withdrawal **did not happen**. |
+| `true` | `false` | `false` | Submit ok, no inclusion within timeout. May still land later. | Treat as **pending**, never as failed. Poll `solen_getAccount` for the sender's nonce — if it advanced past the operation's nonce, the tx landed. Do NOT re-sign with the same nonce until you've confirmed the original is gone. |
+| `true` | `true` | `false` | Included in a block but **execution reverted** (gas paid, nonce consumed, no funds moved). | Mark the withdrawal as **failed**, surface the `error` to the user, **do not retry with the same nonce** (it's already burned). Build a new op with the next nonce. |
+| `true` | `true` | `true` | Confirmed and successful. | Mark withdrawal as **paid**. `block_height` and `tx_hash` are safe to record for audit/customer support. |
+
+!!! warning "Reverted ≠ failed-to-submit"
+    A reverted tx (`confirmed: true, success: false`) consumed the nonce. The user paid gas, no funds moved, and you cannot reuse that nonce. **Do not credit deposits or mark withdrawals as paid when `success: false`.**
+
+!!! info "Why prefer the confirm endpoint over polling"
+    Solen has deterministic single-slot finality (no reorgs). Once `confirmed: true, success: true` returns, the result is irreversible — there is no need for a confirmation count. One round-trip replaces the typical "submit → poll for inclusion → poll for confirmations" pattern.
+
+### Idempotency and retries
+
+If your withdrawal worker crashes between calls, retrying with the same `(sender, nonce, actions, signature)` is safe:
+
+- If the original op already landed, `solen_submitOperationConfirm` detects this via the on-chain backfill check and returns `accepted: true, confirmed: true, success: true` with `block_height: 0` and a deterministic `tx_hash = blake3(sender ‖ nonce_le)`. The hash matches what the engine emitted for the original confirmation — so you can de-dupe by hash.
+- If the original was never submitted, the retry submits and waits normally.
+- If a different op with the same nonce landed (e.g. an operator submitted from two workers), `validate_and_submit` rejects with `nonce too low` and `accepted: false`. Treat this as "nonce already used" and check `solen_getAccount` to see what actually happened.
 
 ### Complete Node.js Example
 
@@ -474,16 +538,35 @@ async function sendTransfer(
   // 4. Sign
   const signature = ed25519.sign(msg, senderSeed);
 
-  // 5. Submit
-  const result = await rpc("solen_submitOperation", [{
+  // 5. Submit and wait for finalized block inclusion (one round-trip).
+  //    Returns once the tx lands or after `timeout_secs`.
+  const op = {
     sender: Array.from(senderPubKey),
     nonce,
     actions,
     max_fee: maxFee,
     signature: Array.from(signature),
-  }]);
+  };
+  const { result } = await rpc("solen_submitOperationConfirm", [op, 60]);
 
-  return result;
+  // Branch on the outcome — see the table above.
+  if (!result.accepted) {
+    throw new Error(`Mempool rejected: ${result.error}`);
+  }
+  if (!result.confirmed) {
+    // Still pending — caller decides whether to wait longer or treat as pending.
+    return { status: "pending", op, timeoutError: result.error };
+  }
+  if (!result.success) {
+    // On-chain revert — nonce is consumed, do NOT retry with the same nonce.
+    return { status: "reverted", txHash: result.tx_hash, error: result.error };
+  }
+  return {
+    status: "confirmed",
+    txHash: result.tx_hash,
+    blockHeight: result.block_height,
+    gasUsed: result.gas_used,
+  };
 }
 
 async function rpc(method: string, params: any[]) {

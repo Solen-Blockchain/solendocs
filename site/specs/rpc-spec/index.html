@@ -2078,6 +2078,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#solen_submitoperationconfirmsigned_op-timeout_secs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_submitOperationConfirm(signed_op, timeout_secs?)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#solen_submitintentsigned_intent" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2409,6 +2420,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#solen_submitoperationconfirmsigned_op-timeout_secs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solen_submitOperationConfirm(signed_op, timeout_secs?)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#solen_submitintentsigned_intent" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2620,10 +2642,19 @@
 </ul>
 <h2 id="write-operations">Write Operations<a class="headerlink" href="#write-operations" title="Permanent link">&para;</a></h2>
 <h3 id="solen_submitoperationsigned_op"><code>solen_submitOperation(signed_op)</code><a class="headerlink" href="#solen_submitoperationsigned_op" title="Permanent link">&para;</a></h3>
-<p>Submits a signed user operation to the mempool.</p>
+<p>Submits a signed user operation to the mempool. Returns immediately after mempool acceptance — does not wait for block inclusion.</p>
 <ul>
 <li><strong>Parameters:</strong> <code>signed_op</code> — complete signed UserOperation</li>
-<li><strong>Returns:</strong> Operation hash</li>
+<li><strong>Returns:</strong> <code>{ accepted, error }</code></li>
+</ul>
+<h3 id="solen_submitoperationconfirmsigned_op-timeout_secs"><code>solen_submitOperationConfirm(signed_op, timeout_secs?)</code><a class="headerlink" href="#solen_submitoperationconfirmsigned_op-timeout_secs" title="Permanent link">&para;</a></h3>
+<p>Submits a signed user operation and blocks until it is included in a finalized block (or until <code>timeout_secs</code> elapses, default 60s, max 180s). Designed for exchange integrations that want a single HTTP round-trip with full confirmation data.</p>
+<ul>
+<li><strong>Parameters:</strong> <code>signed_op</code> — complete signed UserOperation; <code>timeout_secs</code> — optional u64 wait cap</li>
+<li><strong>Returns:</strong> <code>{ accepted, confirmed, success, block_height, tx_hash, sender, nonce, gas_used, error }</code></li>
+<li><strong>Semantics:</strong> A reverted on-chain tx returns <code>confirmed: true, success: false</code> — exchanges must not credit funds on revert.</li>
+<li><strong>Concurrency:</strong> Server caps simultaneous confirm-waiters at 200; excess calls reject with <code>accepted: false</code>.</li>
+<li><strong>Status:</strong> Implemented</li>
 </ul>
 <h3 id="solen_submitintentsigned_intent"><code>solen_submitIntent(signed_intent)</code><a class="headerlink" href="#solen_submitintentsigned_intent" title="Permanent link">&para;</a></h3>
 <p>Submits a signed intent for solver resolution. Intents are stored in an in-memory pool and matched with solver solutions.</p>
