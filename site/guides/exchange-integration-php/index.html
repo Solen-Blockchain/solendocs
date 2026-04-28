@@ -1254,6 +1254,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4. Transaction Status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decoding-amount-and-recipient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decoding amount and recipient
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#easy-mode-pre-decoded-transfer-feed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Easy mode: pre-decoded transfer feed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2232,6 +2260,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4. Transaction Status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decoding-amount-and-recipient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decoding amount and recipient
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#easy-mode-pre-decoded-transfer-feed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Easy mode: pre-decoded transfer feed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2620,150 +2676,226 @@
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="k">echo</span> <span class="s2">&quot;Success: &quot;</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$tx</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">?</span> <span class="s1">&#39;true&#39;</span> <span class="o">:</span> <span class="s1">&#39;false&#39;</span><span class="p">)</span> <span class="o">.</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
 <a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="k">echo</span> <span class="s2">&quot;Gas:     </span><span class="si">{</span><span class="nv">$tx</span><span class="p">[</span><span class="s1">&#39;gas_used&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
 <a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$tx</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">])</span> <span class="k">echo</span> <span class="s2">&quot;Error:   </span><span class="si">{</span><span class="nv">$tx</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="k">foreach</span> <span class="p">(</span><span class="nx">decodeTransfers</span><span class="p">(</span><span class="nv">$tx</span><span class="p">)</span> <span class="k">as</span> <span class="nv">$t</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    <span class="k">echo</span> <span class="s2">&quot;→ </span><span class="si">{</span><span class="nv">$t</span><span class="p">[</span><span class="s1">&#39;recipient&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="nv">$t</span><span class="p">[</span><span class="s1">&#39;amount&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> base units</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="p">}</span>
 </code></pre></div>
+<h3 id="decoding-amount-and-recipient">Decoding amount and recipient<a class="headerlink" href="#decoding-amount-and-recipient" title="Permanent link">&para;</a></h3>
+<p>Indexed txs (from <code>/api/tx/...</code> and <code>/api/accounts/.../txs</code>) do <strong>not</strong> expose <code>amount</code> or <code>recipient</code> as top-level fields — a single Solen tx can carry multiple actions, so transfer details live in the tx's <code>events</code> array. Each <code>transfer</code> event's <code>data</code> is 48 raw bytes (96 hex chars):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>recipient[32]  ‖  amount[16, little-endian u128]
+</code></pre></div>
+<p>A small helper handles both that and the <code>fee</code> event (a bare 16-byte LE u128 of the fee debited):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="x">/** Returns [[&#39;recipient&#39; =&gt; base58, &#39;amount&#39; =&gt; decimal-string], ...] */</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="x">function decodeTransfers(array $tx): array {</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="x">    $out = [];</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="x">    foreach (($tx[&#39;events&#39;] ?? []) as $ev) {</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="x">        if (($ev[&#39;topic&#39;] ?? &#39;&#39;) !== &#39;transfer&#39;) continue;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="x">        $data = $ev[&#39;data&#39;] ?? &#39;&#39;;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="x">        if (strlen($data) &lt; 96) continue;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="x">        $out[] = [</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="x">            &#39;recipient&#39; =&gt; base58_encode(hex2bin(substr($data, 0, 64))),</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="x">            &#39;amount&#39;    =&gt; parseLeU128(substr($data, 64, 32)),</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="x">        ];</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="x">    }</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="x">    return $out;</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="x">}</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="x">/** Returns the fee paid (decimal string), or &#39;0&#39; if no fee event. */</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="x">function decodeFee(array $tx): string {</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="x">    foreach (($tx[&#39;events&#39;] ?? []) as $ev) {</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="x">        if (($ev[&#39;topic&#39;] ?? &#39;&#39;) === &#39;fee&#39; &amp;&amp; strlen($ev[&#39;data&#39;] ?? &#39;&#39;) &gt;= 32) {</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="x">            return parseLeU128(substr($ev[&#39;data&#39;], 0, 32));</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="x">        }</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="x">    }</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="x">    return &#39;0&#39;;</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="x">}</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="x">/** Parse a 32-char hex string as little-endian u128, returning a decimal string. */</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="x">function parseLeU128(string $hex): string {</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="x">    $be = &#39;&#39;;</span>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="x">    for ($i = strlen($hex) - 2; $i &gt;= 0; $i -= 2) $be .= substr($hex, $i, 2);</span>
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="x">    return gmp_strval(gmp_init($be, 16), 10);</span>
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a><span class="x">}</span>
+</code></pre></div>
+<p>A tx can emit multiple <code>transfer</code> events (e.g. a contract call that fans out), so always iterate. For deposit detection at scale, prefer the block scanner in <a href="#5-transaction-history-polling">§5</a> over polling per-account history.</p>
+<h3 id="easy-mode-pre-decoded-transfer-feed">Easy mode: pre-decoded transfer feed<a class="headerlink" href="#easy-mode-pre-decoded-transfer-feed" title="Permanent link">&para;</a></h3>
+<p>If you only care about transfers (not raw txs), the explorer also exposes a pre-decoded view that does this projection server-side:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>GET /api/accounts/&lt;addr&gt;/transfers?limit=50&amp;offset=0&amp;direction=in|out|all
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="x">$transfers = $client-&gt;explorer(&quot;/api/accounts/$address/transfers?limit=50&amp;direction=in&quot;);</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="x">foreach ($transfers as $t) {</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="x">    echo &quot;{$t[&#39;txid&#39;]}  {$t[&#39;sender&#39;]} → {$t[&#39;recipient&#39;]}  {$t[&#39;amount_solen&#39;]} SOLEN\n&quot;;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="x">}</span>
+</code></pre></div>
+<p>Each row:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">{</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nt">&quot;txid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;116718-0-0&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="nt">&quot;block_height&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">116718</span><span class="p">,</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="nt">&quot;tx_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span><span class="nt">&quot;event_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span><span class="nt">&quot;emitter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dJNV…iur&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span><span class="nt">&quot;sender&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dJNV…iur&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span><span class="nt">&quot;recipient&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2odK…1w72&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1000000000&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span><span class="nt">&quot;amount_solen&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.00000000&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span><span class="nt">&quot;fee&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;25100&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">  </span><span class="nt">&quot;fee_solen&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.00025100&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">  </span><span class="nt">&quot;timestamp_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1745678901000</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="p">}</span>
+</code></pre></div>
+<p>Notes:</p>
+<ul>
+<li><code>txid</code> is <code>{block_height}-{tx_index}-{event_index}</code> — unique per transfer event, so a fan-out tx produces multiple rows.</li>
+<li><code>amount</code> is base units as a decimal string (preserves u128); <code>amount_solen</code> is the same value with 8 decimals applied for display.</li>
+<li><code>fee</code> is attributed once per tx, to the row representing the fee-payer's primary outgoing transfer (<code>emitter == sender</code>). Other rows report <code>"0"</code> so summing fees across rows doesn't double-count.</li>
+<li><code>direction=in</code> returns only rows where you're the recipient (deposits); <code>direction=out</code> returns only sends. Default <code>all</code> returns both.</li>
+<li><code>emitter</code> distinguishes native SOLEN transfers (<code>emitter == sender</code>) from token contract transfers (<code>emitter == contract address</code>). Filter on this if you only want native deposits.</li>
+</ul>
 <p><strong>Wait-for-confirmation pattern</strong> (when you only know the sender + nonce — e.g. you just submitted and want to block until it lands):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="x">function waitForConfirmation(</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="x">    SolenClient $client,</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="x">    string $sender,</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="x">    int $nonce,</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="x">    int $timeoutSeconds = 30,</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="x">): ?array {</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="x">    $deadline = time() + $timeoutSeconds;</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="x">    while (time() &lt; $deadline) {</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="x">        $account = $client-&gt;rpc(&#39;solen_getAccount&#39;, [$sender]);</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="x">        // If on-chain nonce moved past our nonce, our tx (or one with the same</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="x">        // nonce slot) is included. Look it up via the account tx history.</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="x">        if ((int)$account[&#39;nonce&#39;] &gt; $nonce) {</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="x">            $txs = $client-&gt;explorer(&quot;/api/accounts/$sender/txs?limit=20&quot;);</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="x">            foreach ($txs as $t) {</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="x">                if ((int)$t[&#39;nonce&#39;] === $nonce) return $t;</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="x">            }</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="x">        }</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="x">        sleep(2);</span>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="x">    }</span>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="x">    return null; // Timed out — could still land later.</span>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="x">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="x">function waitForConfirmation(</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="x">    SolenClient $client,</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="x">    string $sender,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="x">    int $nonce,</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="x">    int $timeoutSeconds = 30,</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="x">): ?array {</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="x">    $deadline = time() + $timeoutSeconds;</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="x">    while (time() &lt; $deadline) {</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="x">        $account = $client-&gt;rpc(&#39;solen_getAccount&#39;, [$sender]);</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="x">        // If on-chain nonce moved past our nonce, our tx (or one with the same</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="x">        // nonce slot) is included. Look it up via the account tx history.</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="x">        if ((int)$account[&#39;nonce&#39;] &gt; $nonce) {</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="x">            $txs = $client-&gt;explorer(&quot;/api/accounts/$sender/txs?limit=20&quot;);</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="x">            foreach ($txs as $t) {</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="x">                if ((int)$t[&#39;nonce&#39;] === $nonce) return $t;</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="x">            }</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="x">        }</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="x">        sleep(2);</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="x">    }</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="x">    return null; // Timed out — could still land later.</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="x">}</span>
 </code></pre></div>
 <p>Solen has <strong>deterministic finality</strong> — once a tx is in a block, it is irreversible. One confirmation is enough. There are no reorgs.</p>
 <hr />
 <h2 id="5-transaction-history-polling">5. Transaction History (Polling)<a class="headerlink" href="#5-transaction-history-polling" title="Permanent link">&para;</a></h2>
 <p>For exchanges that can't subscribe to events (or want a backstop against missed websockets), the canonical pattern is to scan finalized blocks for transfer events matching your deposit-address set. This scales to millions of addresses because the per-event lookup is <code>O(1)</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="cp">&lt;?php</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">require_once</span> <span class="s1">&#39;Solen.php&#39;</span><span class="p">;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">class</span> <span class="nc">DepositScanner</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p">{</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="sd">/** @var array&lt;string, true&gt;  Set of Base58 addresses you watch. */</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="k">private</span> <span class="k">array</span> <span class="nv">$depositAddresses</span><span class="p">;</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="sd">/** Last height already processed — persist this to your DB. */</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="k">private</span> <span class="nx">int</span> <span class="nv">$lastProcessedHeight</span><span class="p">;</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>        <span class="k">private</span> <span class="nx">SolenClient</span> <span class="nv">$client</span><span class="p">,</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>        <span class="k">array</span> <span class="nv">$depositAddresses</span><span class="p">,</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>        <span class="nx">int</span> <span class="nv">$startHeight</span><span class="p">,</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>    <span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">depositAddresses</span>    <span class="o">=</span> <span class="nb">array_fill_keys</span><span class="p">(</span><span class="nv">$depositAddresses</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lastProcessedHeight</span> <span class="o">=</span> <span class="nv">$startHeight</span><span class="p">;</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>    <span class="p">}</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>    <span class="sd">/** Call once per block-time interval (~6s). Returns deposits found. */</span>
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>    <span class="k">public</span> <span class="k">function</span> <span class="nf">scan</span><span class="p">()</span><span class="o">:</span> <span class="k">array</span>
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>    <span class="p">{</span>
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>        <span class="nv">$current</span> <span class="o">=</span> <span class="p">(</span><span class="nx">int</span><span class="p">)</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">client</span><span class="o">-&gt;</span><span class="na">rpc</span><span class="p">(</span><span class="s1">&#39;solen_chainStatus&#39;</span><span class="p">)[</span><span class="s1">&#39;height&#39;</span><span class="p">];</span>
-<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>        <span class="nv">$deposits</span> <span class="o">=</span> <span class="p">[];</span>
-<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>
-<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>        <span class="k">for</span> <span class="p">(</span><span class="nv">$h</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lastProcessedHeight</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="nv">$h</span> <span class="o">&lt;=</span> <span class="nv">$current</span><span class="p">;</span> <span class="nv">$h</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>            <span class="nv">$txs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">client</span><span class="o">-&gt;</span><span class="na">explorer</span><span class="p">(</span><span class="s2">&quot;/api/blocks/</span><span class="si">$h</span><span class="s2">/txs&quot;</span><span class="p">)</span> <span class="o">??</span> <span class="p">[];</span>
-<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>            <span class="k">foreach</span> <span class="p">(</span><span class="nv">$txs</span> <span class="k">as</span> <span class="nv">$tx</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$tx</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">])</span> <span class="k">continue</span><span class="p">;</span>
-<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>                <span class="k">foreach</span> <span class="p">((</span><span class="nv">$tx</span><span class="p">[</span><span class="s1">&#39;events&#39;</span><span class="p">]</span> <span class="o">??</span> <span class="p">[])</span> <span class="k">as</span> <span class="nv">$ev</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>                    <span class="k">if</span> <span class="p">((</span><span class="nv">$ev</span><span class="p">[</span><span class="s1">&#39;topic&#39;</span><span class="p">]</span> <span class="o">??</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">!==</span> <span class="s1">&#39;transfer&#39;</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
-<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a>                    <span class="nv">$data</span> <span class="o">=</span> <span class="nv">$ev</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">??</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>                    <span class="k">if</span> <span class="p">(</span><span class="nb">strlen</span><span class="p">(</span><span class="nv">$data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">96</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
-<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a>
-<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a>                    <span class="c1">// Event data layout: recipient[32] ‖ amount[16, LE u128]</span>
-<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a>                    <span class="nv">$recipientHex</span> <span class="o">=</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">);</span>
-<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a>                    <span class="nv">$amountHex</span>    <span class="o">=</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">32</span><span class="p">);</span>
-<a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a>
-<a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a>                    <span class="nv">$recipientB58</span> <span class="o">=</span> <span class="nx">base58_encode</span><span class="p">(</span><span class="nb">hex2bin</span><span class="p">(</span><span class="nv">$recipientHex</span><span class="p">));</span>
-<a id="__codelineno-8-41" name="__codelineno-8-41" href="#__codelineno-8-41"></a>                    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">depositAddresses</span><span class="p">[</span><span class="nv">$recipientB58</span><span class="p">]))</span> <span class="k">continue</span><span class="p">;</span>
-<a id="__codelineno-8-42" name="__codelineno-8-42" href="#__codelineno-8-42"></a>
-<a id="__codelineno-8-43" name="__codelineno-8-43" href="#__codelineno-8-43"></a>                    <span class="nv">$deposits</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-8-44" name="__codelineno-8-44" href="#__codelineno-8-44"></a>                        <span class="s1">&#39;block_height&#39;</span> <span class="o">=&gt;</span> <span class="nv">$h</span><span class="p">,</span>
-<a id="__codelineno-8-45" name="__codelineno-8-45" href="#__codelineno-8-45"></a>                        <span class="s1">&#39;tx_index&#39;</span>     <span class="o">=&gt;</span> <span class="p">(</span><span class="nx">int</span><span class="p">)</span><span class="nv">$tx</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">],</span>
-<a id="__codelineno-8-46" name="__codelineno-8-46" href="#__codelineno-8-46"></a>                        <span class="s1">&#39;sender&#39;</span>       <span class="o">=&gt;</span> <span class="nv">$tx</span><span class="p">[</span><span class="s1">&#39;sender&#39;</span><span class="p">],</span>
-<a id="__codelineno-8-47" name="__codelineno-8-47" href="#__codelineno-8-47"></a>                        <span class="s1">&#39;recipient&#39;</span>    <span class="o">=&gt;</span> <span class="nv">$recipientB58</span><span class="p">,</span>
-<a id="__codelineno-8-48" name="__codelineno-8-48" href="#__codelineno-8-48"></a>                        <span class="s1">&#39;amount&#39;</span>       <span class="o">=&gt;</span> <span class="nx">self</span><span class="o">::</span><span class="na">parseLeU128</span><span class="p">(</span><span class="nv">$amountHex</span><span class="p">),</span>
-<a id="__codelineno-8-49" name="__codelineno-8-49" href="#__codelineno-8-49"></a>                    <span class="p">];</span>
-<a id="__codelineno-8-50" name="__codelineno-8-50" href="#__codelineno-8-50"></a>                <span class="p">}</span>
-<a id="__codelineno-8-51" name="__codelineno-8-51" href="#__codelineno-8-51"></a>            <span class="p">}</span>
-<a id="__codelineno-8-52" name="__codelineno-8-52" href="#__codelineno-8-52"></a>            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lastProcessedHeight</span> <span class="o">=</span> <span class="nv">$h</span><span class="p">;</span>
-<a id="__codelineno-8-53" name="__codelineno-8-53" href="#__codelineno-8-53"></a>            <span class="c1">// PERSIST $this-&gt;lastProcessedHeight to your DB here so a crash</span>
-<a id="__codelineno-8-54" name="__codelineno-8-54" href="#__codelineno-8-54"></a>            <span class="c1">// doesn&#39;t replay or skip blocks on restart.</span>
-<a id="__codelineno-8-55" name="__codelineno-8-55" href="#__codelineno-8-55"></a>        <span class="p">}</span>
-<a id="__codelineno-8-56" name="__codelineno-8-56" href="#__codelineno-8-56"></a>        <span class="k">return</span> <span class="nv">$deposits</span><span class="p">;</span>
-<a id="__codelineno-8-57" name="__codelineno-8-57" href="#__codelineno-8-57"></a>    <span class="p">}</span>
-<a id="__codelineno-8-58" name="__codelineno-8-58" href="#__codelineno-8-58"></a>
-<a id="__codelineno-8-59" name="__codelineno-8-59" href="#__codelineno-8-59"></a>    <span class="sd">/** Parse a 32-char hex string as little-endian u128, returning a decimal string. */</span>
-<a id="__codelineno-8-60" name="__codelineno-8-60" href="#__codelineno-8-60"></a>    <span class="k">private</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">parseLeU128</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$hex</span><span class="p">)</span><span class="o">:</span> <span class="nx">string</span>
-<a id="__codelineno-8-61" name="__codelineno-8-61" href="#__codelineno-8-61"></a>    <span class="p">{</span>
-<a id="__codelineno-8-62" name="__codelineno-8-62" href="#__codelineno-8-62"></a>        <span class="c1">// Reverse byte order to get big-endian, then parse as GMP big int.</span>
-<a id="__codelineno-8-63" name="__codelineno-8-63" href="#__codelineno-8-63"></a>        <span class="nv">$beHex</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-<a id="__codelineno-8-64" name="__codelineno-8-64" href="#__codelineno-8-64"></a>        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$hex</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">-=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-8-65" name="__codelineno-8-65" href="#__codelineno-8-65"></a>            <span class="nv">$beHex</span> <span class="o">.=</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$hex</span><span class="p">,</span> <span class="nv">$i</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-<a id="__codelineno-8-66" name="__codelineno-8-66" href="#__codelineno-8-66"></a>        <span class="p">}</span>
-<a id="__codelineno-8-67" name="__codelineno-8-67" href="#__codelineno-8-67"></a>        <span class="k">return</span> <span class="nb">gmp_strval</span><span class="p">(</span><span class="nb">gmp_init</span><span class="p">(</span><span class="nv">$beHex</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="mi">10</span><span class="p">);</span>
-<a id="__codelineno-8-68" name="__codelineno-8-68" href="#__codelineno-8-68"></a>    <span class="p">}</span>
-<a id="__codelineno-8-69" name="__codelineno-8-69" href="#__codelineno-8-69"></a><span class="p">}</span>
-<a id="__codelineno-8-70" name="__codelineno-8-70" href="#__codelineno-8-70"></a>
-<a id="__codelineno-8-71" name="__codelineno-8-71" href="#__codelineno-8-71"></a><span class="c1">// Usage</span>
-<a id="__codelineno-8-72" name="__codelineno-8-72" href="#__codelineno-8-72"></a><span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SolenClient</span><span class="p">();</span>
-<a id="__codelineno-8-73" name="__codelineno-8-73" href="#__codelineno-8-73"></a><span class="nv">$scanner</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DepositScanner</span><span class="p">(</span>
-<a id="__codelineno-8-74" name="__codelineno-8-74" href="#__codelineno-8-74"></a>    <span class="nv">$client</span><span class="p">,</span>
-<a id="__codelineno-8-75" name="__codelineno-8-75" href="#__codelineno-8-75"></a>    <span class="nx">depositAddresses</span><span class="o">:</span> <span class="p">[</span>
-<a id="__codelineno-8-76" name="__codelineno-8-76" href="#__codelineno-8-76"></a>        <span class="s1">&#39;dJNVRKH1Jh2TYBrjJUfNwQrB5b1S8xiCW926yEKWiur&#39;</span><span class="p">,</span>
-<a id="__codelineno-8-77" name="__codelineno-8-77" href="#__codelineno-8-77"></a>        <span class="s1">&#39;H9we5VhjE42uCXXgy1YTcFV5bZReBcqxznMNkryHz8KY&#39;</span><span class="p">,</span>
-<a id="__codelineno-8-78" name="__codelineno-8-78" href="#__codelineno-8-78"></a>        <span class="c1">// ...load from DB</span>
-<a id="__codelineno-8-79" name="__codelineno-8-79" href="#__codelineno-8-79"></a>    <span class="p">],</span>
-<a id="__codelineno-8-80" name="__codelineno-8-80" href="#__codelineno-8-80"></a>    <span class="nx">startHeight</span><span class="o">:</span> <span class="nx">getLastProcessedFromDb</span><span class="p">()</span> <span class="o">??</span> <span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-8-81" name="__codelineno-8-81" href="#__codelineno-8-81"></a><span class="p">);</span>
-<a id="__codelineno-8-82" name="__codelineno-8-82" href="#__codelineno-8-82"></a>
-<a id="__codelineno-8-83" name="__codelineno-8-83" href="#__codelineno-8-83"></a><span class="k">while</span> <span class="p">(</span><span class="k">true</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-8-84" name="__codelineno-8-84" href="#__codelineno-8-84"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$scanner</span><span class="o">-&gt;</span><span class="na">scan</span><span class="p">()</span> <span class="k">as</span> <span class="nv">$deposit</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-8-85" name="__codelineno-8-85" href="#__codelineno-8-85"></a>        <span class="c1">// credit the user, write to DB, etc.</span>
-<a id="__codelineno-8-86" name="__codelineno-8-86" href="#__codelineno-8-86"></a>        <span class="k">echo</span> <span class="s2">&quot;Deposit </span><span class="si">{</span><span class="nv">$deposit</span><span class="p">[</span><span class="s1">&#39;amount&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="nv">$deposit</span><span class="p">[</span><span class="s1">&#39;recipient&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> at block </span><span class="si">{</span><span class="nv">$deposit</span><span class="p">[</span><span class="s1">&#39;block_height&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
-<a id="__codelineno-8-87" name="__codelineno-8-87" href="#__codelineno-8-87"></a>    <span class="p">}</span>
-<a id="__codelineno-8-88" name="__codelineno-8-88" href="#__codelineno-8-88"></a>    <span class="nb">sleep</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span> <span class="c1">// one block interval</span>
-<a id="__codelineno-8-89" name="__codelineno-8-89" href="#__codelineno-8-89"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="cp">&lt;?php</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">require_once</span> <span class="s1">&#39;Solen.php&#39;</span><span class="p">;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">class</span> <span class="nc">DepositScanner</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="p">{</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="sd">/** @var array&lt;string, true&gt;  Set of Base58 addresses you watch. */</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="k">private</span> <span class="k">array</span> <span class="nv">$depositAddresses</span><span class="p">;</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    <span class="sd">/** Last height already processed — persist this to your DB. */</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="k">private</span> <span class="nx">int</span> <span class="nv">$lastProcessedHeight</span><span class="p">;</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>        <span class="k">private</span> <span class="nx">SolenClient</span> <span class="nv">$client</span><span class="p">,</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>        <span class="k">array</span> <span class="nv">$depositAddresses</span><span class="p">,</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>        <span class="nx">int</span> <span class="nv">$startHeight</span><span class="p">,</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>    <span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">depositAddresses</span>    <span class="o">=</span> <span class="nb">array_fill_keys</span><span class="p">(</span><span class="nv">$depositAddresses</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lastProcessedHeight</span> <span class="o">=</span> <span class="nv">$startHeight</span><span class="p">;</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>    <span class="p">}</span>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>    <span class="sd">/** Call once per block-time interval (~6s). Returns deposits found. */</span>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>    <span class="k">public</span> <span class="k">function</span> <span class="nf">scan</span><span class="p">()</span><span class="o">:</span> <span class="k">array</span>
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>    <span class="p">{</span>
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>        <span class="nv">$current</span> <span class="o">=</span> <span class="p">(</span><span class="nx">int</span><span class="p">)</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">client</span><span class="o">-&gt;</span><span class="na">rpc</span><span class="p">(</span><span class="s1">&#39;solen_chainStatus&#39;</span><span class="p">)[</span><span class="s1">&#39;height&#39;</span><span class="p">];</span>
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>        <span class="nv">$deposits</span> <span class="o">=</span> <span class="p">[];</span>
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>        <span class="k">for</span> <span class="p">(</span><span class="nv">$h</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lastProcessedHeight</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="nv">$h</span> <span class="o">&lt;=</span> <span class="nv">$current</span><span class="p">;</span> <span class="nv">$h</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>            <span class="nv">$txs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">client</span><span class="o">-&gt;</span><span class="na">explorer</span><span class="p">(</span><span class="s2">&quot;/api/blocks/</span><span class="si">$h</span><span class="s2">/txs&quot;</span><span class="p">)</span> <span class="o">??</span> <span class="p">[];</span>
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>            <span class="k">foreach</span> <span class="p">(</span><span class="nv">$txs</span> <span class="k">as</span> <span class="nv">$tx</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$tx</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">])</span> <span class="k">continue</span><span class="p">;</span>
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>                <span class="k">foreach</span> <span class="p">((</span><span class="nv">$tx</span><span class="p">[</span><span class="s1">&#39;events&#39;</span><span class="p">]</span> <span class="o">??</span> <span class="p">[])</span> <span class="k">as</span> <span class="nv">$ev</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a>                    <span class="k">if</span> <span class="p">((</span><span class="nv">$ev</span><span class="p">[</span><span class="s1">&#39;topic&#39;</span><span class="p">]</span> <span class="o">??</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">!==</span> <span class="s1">&#39;transfer&#39;</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>                    <span class="nv">$data</span> <span class="o">=</span> <span class="nv">$ev</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">??</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a>                    <span class="k">if</span> <span class="p">(</span><span class="nb">strlen</span><span class="p">(</span><span class="nv">$data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">96</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+<a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a>
+<a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a>                    <span class="c1">// Event data layout: recipient[32] ‖ amount[16, LE u128]</span>
+<a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a>                    <span class="nv">$recipientHex</span> <span class="o">=</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">);</span>
+<a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a>                    <span class="nv">$amountHex</span>    <span class="o">=</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">32</span><span class="p">);</span>
+<a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a>
+<a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a>                    <span class="nv">$recipientB58</span> <span class="o">=</span> <span class="nx">base58_encode</span><span class="p">(</span><span class="nb">hex2bin</span><span class="p">(</span><span class="nv">$recipientHex</span><span class="p">));</span>
+<a id="__codelineno-13-41" name="__codelineno-13-41" href="#__codelineno-13-41"></a>                    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">depositAddresses</span><span class="p">[</span><span class="nv">$recipientB58</span><span class="p">]))</span> <span class="k">continue</span><span class="p">;</span>
+<a id="__codelineno-13-42" name="__codelineno-13-42" href="#__codelineno-13-42"></a>
+<a id="__codelineno-13-43" name="__codelineno-13-43" href="#__codelineno-13-43"></a>                    <span class="nv">$deposits</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-13-44" name="__codelineno-13-44" href="#__codelineno-13-44"></a>                        <span class="s1">&#39;block_height&#39;</span> <span class="o">=&gt;</span> <span class="nv">$h</span><span class="p">,</span>
+<a id="__codelineno-13-45" name="__codelineno-13-45" href="#__codelineno-13-45"></a>                        <span class="s1">&#39;tx_index&#39;</span>     <span class="o">=&gt;</span> <span class="p">(</span><span class="nx">int</span><span class="p">)</span><span class="nv">$tx</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">],</span>
+<a id="__codelineno-13-46" name="__codelineno-13-46" href="#__codelineno-13-46"></a>                        <span class="s1">&#39;sender&#39;</span>       <span class="o">=&gt;</span> <span class="nv">$tx</span><span class="p">[</span><span class="s1">&#39;sender&#39;</span><span class="p">],</span>
+<a id="__codelineno-13-47" name="__codelineno-13-47" href="#__codelineno-13-47"></a>                        <span class="s1">&#39;recipient&#39;</span>    <span class="o">=&gt;</span> <span class="nv">$recipientB58</span><span class="p">,</span>
+<a id="__codelineno-13-48" name="__codelineno-13-48" href="#__codelineno-13-48"></a>                        <span class="s1">&#39;amount&#39;</span>       <span class="o">=&gt;</span> <span class="nx">self</span><span class="o">::</span><span class="na">parseLeU128</span><span class="p">(</span><span class="nv">$amountHex</span><span class="p">),</span>
+<a id="__codelineno-13-49" name="__codelineno-13-49" href="#__codelineno-13-49"></a>                    <span class="p">];</span>
+<a id="__codelineno-13-50" name="__codelineno-13-50" href="#__codelineno-13-50"></a>                <span class="p">}</span>
+<a id="__codelineno-13-51" name="__codelineno-13-51" href="#__codelineno-13-51"></a>            <span class="p">}</span>
+<a id="__codelineno-13-52" name="__codelineno-13-52" href="#__codelineno-13-52"></a>            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lastProcessedHeight</span> <span class="o">=</span> <span class="nv">$h</span><span class="p">;</span>
+<a id="__codelineno-13-53" name="__codelineno-13-53" href="#__codelineno-13-53"></a>            <span class="c1">// PERSIST $this-&gt;lastProcessedHeight to your DB here so a crash</span>
+<a id="__codelineno-13-54" name="__codelineno-13-54" href="#__codelineno-13-54"></a>            <span class="c1">// doesn&#39;t replay or skip blocks on restart.</span>
+<a id="__codelineno-13-55" name="__codelineno-13-55" href="#__codelineno-13-55"></a>        <span class="p">}</span>
+<a id="__codelineno-13-56" name="__codelineno-13-56" href="#__codelineno-13-56"></a>        <span class="k">return</span> <span class="nv">$deposits</span><span class="p">;</span>
+<a id="__codelineno-13-57" name="__codelineno-13-57" href="#__codelineno-13-57"></a>    <span class="p">}</span>
+<a id="__codelineno-13-58" name="__codelineno-13-58" href="#__codelineno-13-58"></a>
+<a id="__codelineno-13-59" name="__codelineno-13-59" href="#__codelineno-13-59"></a>    <span class="sd">/** Parse a 32-char hex string as little-endian u128, returning a decimal string. */</span>
+<a id="__codelineno-13-60" name="__codelineno-13-60" href="#__codelineno-13-60"></a>    <span class="k">private</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">parseLeU128</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$hex</span><span class="p">)</span><span class="o">:</span> <span class="nx">string</span>
+<a id="__codelineno-13-61" name="__codelineno-13-61" href="#__codelineno-13-61"></a>    <span class="p">{</span>
+<a id="__codelineno-13-62" name="__codelineno-13-62" href="#__codelineno-13-62"></a>        <span class="c1">// Reverse byte order to get big-endian, then parse as GMP big int.</span>
+<a id="__codelineno-13-63" name="__codelineno-13-63" href="#__codelineno-13-63"></a>        <span class="nv">$beHex</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+<a id="__codelineno-13-64" name="__codelineno-13-64" href="#__codelineno-13-64"></a>        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$hex</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">-=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-13-65" name="__codelineno-13-65" href="#__codelineno-13-65"></a>            <span class="nv">$beHex</span> <span class="o">.=</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$hex</span><span class="p">,</span> <span class="nv">$i</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+<a id="__codelineno-13-66" name="__codelineno-13-66" href="#__codelineno-13-66"></a>        <span class="p">}</span>
+<a id="__codelineno-13-67" name="__codelineno-13-67" href="#__codelineno-13-67"></a>        <span class="k">return</span> <span class="nb">gmp_strval</span><span class="p">(</span><span class="nb">gmp_init</span><span class="p">(</span><span class="nv">$beHex</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="mi">10</span><span class="p">);</span>
+<a id="__codelineno-13-68" name="__codelineno-13-68" href="#__codelineno-13-68"></a>    <span class="p">}</span>
+<a id="__codelineno-13-69" name="__codelineno-13-69" href="#__codelineno-13-69"></a><span class="p">}</span>
+<a id="__codelineno-13-70" name="__codelineno-13-70" href="#__codelineno-13-70"></a>
+<a id="__codelineno-13-71" name="__codelineno-13-71" href="#__codelineno-13-71"></a><span class="c1">// Usage</span>
+<a id="__codelineno-13-72" name="__codelineno-13-72" href="#__codelineno-13-72"></a><span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SolenClient</span><span class="p">();</span>
+<a id="__codelineno-13-73" name="__codelineno-13-73" href="#__codelineno-13-73"></a><span class="nv">$scanner</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DepositScanner</span><span class="p">(</span>
+<a id="__codelineno-13-74" name="__codelineno-13-74" href="#__codelineno-13-74"></a>    <span class="nv">$client</span><span class="p">,</span>
+<a id="__codelineno-13-75" name="__codelineno-13-75" href="#__codelineno-13-75"></a>    <span class="nx">depositAddresses</span><span class="o">:</span> <span class="p">[</span>
+<a id="__codelineno-13-76" name="__codelineno-13-76" href="#__codelineno-13-76"></a>        <span class="s1">&#39;dJNVRKH1Jh2TYBrjJUfNwQrB5b1S8xiCW926yEKWiur&#39;</span><span class="p">,</span>
+<a id="__codelineno-13-77" name="__codelineno-13-77" href="#__codelineno-13-77"></a>        <span class="s1">&#39;H9we5VhjE42uCXXgy1YTcFV5bZReBcqxznMNkryHz8KY&#39;</span><span class="p">,</span>
+<a id="__codelineno-13-78" name="__codelineno-13-78" href="#__codelineno-13-78"></a>        <span class="c1">// ...load from DB</span>
+<a id="__codelineno-13-79" name="__codelineno-13-79" href="#__codelineno-13-79"></a>    <span class="p">],</span>
+<a id="__codelineno-13-80" name="__codelineno-13-80" href="#__codelineno-13-80"></a>    <span class="nx">startHeight</span><span class="o">:</span> <span class="nx">getLastProcessedFromDb</span><span class="p">()</span> <span class="o">??</span> <span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-13-81" name="__codelineno-13-81" href="#__codelineno-13-81"></a><span class="p">);</span>
+<a id="__codelineno-13-82" name="__codelineno-13-82" href="#__codelineno-13-82"></a>
+<a id="__codelineno-13-83" name="__codelineno-13-83" href="#__codelineno-13-83"></a><span class="k">while</span> <span class="p">(</span><span class="k">true</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-13-84" name="__codelineno-13-84" href="#__codelineno-13-84"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$scanner</span><span class="o">-&gt;</span><span class="na">scan</span><span class="p">()</span> <span class="k">as</span> <span class="nv">$deposit</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-13-85" name="__codelineno-13-85" href="#__codelineno-13-85"></a>        <span class="c1">// credit the user, write to DB, etc.</span>
+<a id="__codelineno-13-86" name="__codelineno-13-86" href="#__codelineno-13-86"></a>        <span class="k">echo</span> <span class="s2">&quot;Deposit </span><span class="si">{</span><span class="nv">$deposit</span><span class="p">[</span><span class="s1">&#39;amount&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="nv">$deposit</span><span class="p">[</span><span class="s1">&#39;recipient&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> at block </span><span class="si">{</span><span class="nv">$deposit</span><span class="p">[</span><span class="s1">&#39;block_height&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+<a id="__codelineno-13-87" name="__codelineno-13-87" href="#__codelineno-13-87"></a>    <span class="p">}</span>
+<a id="__codelineno-13-88" name="__codelineno-13-88" href="#__codelineno-13-88"></a>    <span class="nb">sleep</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span> <span class="c1">// one block interval</span>
+<a id="__codelineno-13-89" name="__codelineno-13-89" href="#__codelineno-13-89"></a><span class="p">}</span>
 </code></pre></div>
 <p><strong>Per-address polling</strong> (acceptable only for small address sets, e.g. &lt;100):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="x">function getAccountHistory(SolenClient $client, string $address, int $limit = 50): array</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="x">{</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="x">    return $client-&gt;explorer(&quot;/api/accounts/$address/txs?limit=$limit&quot;);</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="x">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="x">function getAccountHistory(SolenClient $client, string $address, int $limit = 50): array</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="x">{</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="x">    return $client-&gt;explorer(&quot;/api/accounts/$address/txs?limit=$limit&quot;);</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="x">}</span>
 </code></pre></div>
 <hr />
 <h2 id="6-generate-a-keypair">6. Generate a Keypair<a class="headerlink" href="#6-generate-a-keypair" title="Permanent link">&para;</a></h2>
 <p>Solen uses Ed25519 keypairs. The <strong>account address IS the public key</strong>, Base58-encoded. libsodium is already a prerequisite of this guide, so no extra extension is needed.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="cp">&lt;?php</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">require_once</span> <span class="s1">&#39;Solen.php&#39;</span><span class="p">;</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1">// Generate a cryptographically secure 32-byte seed (the private key).</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nv">$seed</span> <span class="o">=</span> <span class="nb">random_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1">// Derive the Ed25519 keypair from the seed. The public key IS the address.</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nv">$kp</span>        <span class="o">=</span> <span class="nb">sodium_crypto_sign_seed_keypair</span><span class="p">(</span><span class="nv">$seed</span><span class="p">);</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="nv">$publicKey</span> <span class="o">=</span> <span class="nb">sodium_crypto_sign_publickey</span><span class="p">(</span><span class="nv">$kp</span><span class="p">);</span> <span class="c1">// 32 bytes</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="nv">$address</span>      <span class="o">=</span> <span class="nx">base58_encode</span><span class="p">(</span><span class="nv">$publicKey</span><span class="p">);</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="nv">$privateKey</span>   <span class="o">=</span> <span class="nb">bin2hex</span><span class="p">(</span><span class="nv">$seed</span><span class="p">);</span>       <span class="c1">// 64-char hex — feed this to sendTransfer()</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="nv">$publicKeyHex</span> <span class="o">=</span> <span class="nb">bin2hex</span><span class="p">(</span><span class="nv">$publicKey</span><span class="p">);</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="k">echo</span> <span class="s2">&quot;Address:     </span><span class="si">$address</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="k">echo</span> <span class="s2">&quot;Private Key: </span><span class="si">$privateKey</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="k">echo</span> <span class="s2">&quot;Public Key:  </span><span class="si">$publicKeyHex</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="cp">&lt;?php</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">require_once</span> <span class="s1">&#39;Solen.php&#39;</span><span class="p">;</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1">// Generate a cryptographically secure 32-byte seed (the private key).</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="nv">$seed</span> <span class="o">=</span> <span class="nb">random_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1">// Derive the Ed25519 keypair from the seed. The public key IS the address.</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="nv">$kp</span>        <span class="o">=</span> <span class="nb">sodium_crypto_sign_seed_keypair</span><span class="p">(</span><span class="nv">$seed</span><span class="p">);</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="nv">$publicKey</span> <span class="o">=</span> <span class="nb">sodium_crypto_sign_publickey</span><span class="p">(</span><span class="nv">$kp</span><span class="p">);</span> <span class="c1">// 32 bytes</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="nv">$address</span>      <span class="o">=</span> <span class="nx">base58_encode</span><span class="p">(</span><span class="nv">$publicKey</span><span class="p">);</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="nv">$privateKey</span>   <span class="o">=</span> <span class="nb">bin2hex</span><span class="p">(</span><span class="nv">$seed</span><span class="p">);</span>       <span class="c1">// 64-char hex — feed this to sendTransfer()</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="nv">$publicKeyHex</span> <span class="o">=</span> <span class="nb">bin2hex</span><span class="p">(</span><span class="nv">$publicKey</span><span class="p">);</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="k">echo</span> <span class="s2">&quot;Address:     </span><span class="si">$address</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="k">echo</span> <span class="s2">&quot;Private Key: </span><span class="si">$privateKey</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="k">echo</span> <span class="s2">&quot;Public Key:  </span><span class="si">$publicKeyHex</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
 </code></pre></div>
 <p>The <code>$privateKey</code> hex string is exactly what <code>sendTransfer()</code> in <a href="#1-send-solen">§1</a> expects as <code>senderSeedHex</code>.</p>
 <div class="admonition warning">
@@ -2776,56 +2908,56 @@
 <div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">PECL extension</label><label for="__tabbed_1_2">Composer (cyphrme/blake3)</label><label for="__tabbed_1_3">Shell out to b3sum (prototyping only)</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="x">function blake3(string $data): string {</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="x">    // The pecl/blake3 extension exposes blake3() globally; the second arg</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="x">    // selects raw binary output.</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="x">    return blake3_hash($data, true);</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="x">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="x">function blake3(string $data): string {</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="x">    // The pecl/blake3 extension exposes blake3() globally; the second arg</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="x">    // selects raw binary output.</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="x">    return blake3_hash($data, true);</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="x">}</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="x">use Cyphrme\Blake3\Blake3;</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="x">function blake3(string $data): string {</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="x">    return Blake3::hash($data); // returns 32 raw bytes</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="x">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="x">use Cyphrme\Blake3\Blake3;</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="x">function blake3(string $data): string {</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="x">    return Blake3::hash($data); // returns 32 raw bytes</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="x">}</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="x">function blake3(string $data): string {</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="x">    $proc = proc_open([&#39;b3sum&#39;, &#39;--raw&#39;],</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="x">        [0 =&gt; [&#39;pipe&#39;,&#39;r&#39;], 1 =&gt; [&#39;pipe&#39;,&#39;w&#39;]], $pipes);</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="x">    fwrite($pipes[0], $data);</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="x">    fclose($pipes[0]);</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="x">    $hash = stream_get_contents($pipes[1]);</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="x">    fclose($pipes[1]);</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="x">    proc_close($proc);</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="x">    return $hash;</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="x">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="x">function blake3(string $data): string {</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="x">    $proc = proc_open([&#39;b3sum&#39;, &#39;--raw&#39;],</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="x">        [0 =&gt; [&#39;pipe&#39;,&#39;r&#39;], 1 =&gt; [&#39;pipe&#39;,&#39;w&#39;]], $pipes);</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="x">    fwrite($pipes[0], $data);</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="x">    fclose($pipes[0]);</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="x">    $hash = stream_get_contents($pipes[1]);</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="x">    fclose($pipes[1]);</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="x">    proc_close($proc);</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="x">    return $hash;</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="x">}</span>
 </code></pre></div>
 </div>
 </div>
 </div>
 <h3 id="verifying-your-signer-against-the-official-test-vectors">Verifying your signer against the official test vectors<a class="headerlink" href="#verifying-your-signer-against-the-official-test-vectors" title="Permanent link">&para;</a></h3>
 <p>Before sending real funds, prove your PHP signer matches the Rust reference by reproducing one entry from <a href="https://github.com/Solen-Blockchain/solen/blob/main/tools/vectors/vectors.json"><code>tools/vectors/vectors.json</code></a>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="x">$seed = hex2bin(&#39;1111111111111111111111111111111111111111111111111111111111111111&#39;);</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="x">$kp   = sodium_crypto_sign_seed_keypair($seed);</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="x">$pub  = sodium_crypto_sign_publickey($kp);</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="x">$sec  = sodium_crypto_sign_secretkey($kp);</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="x">// Take the canonical actions JSON straight from the vectors file:</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="x">$actionsJson = &#39;[{&quot;Transfer&quot;:{&quot;to&quot;:[23,203,121,251,43,65,32,242,177,236,101,228,25,141,110,8,178,142,129,63,235,1,228,164,0,131,155,133,225,128,128,206],&quot;amount&quot;:1500000000}}]&#39;;</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="x">$msg  = pack(&#39;P&#39;, 1);                                    // chain_id = 1</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="x">$msg .= $pub;</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="x">$msg .= pack(&#39;P&#39;, 0);                                    // nonce = 0</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="x">$msg .= pack(&#39;P&#39;, 100000) . str_repeat(&quot;\x00&quot;, 8);       // max_fee = 100_000 (low u64 + zero high)</span>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="x">$msg .= blake3($actionsJson);</span>
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="x">$sig = sodium_crypto_sign_detached($msg, $sec);</span>
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="x">echo bin2hex($sig) . &quot;\n&quot;;</span>
-<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="x">// Expected:</span>
-<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="x">//   a09196808274e828ff4a24ed551147d28ba211057bfe2af7b616e90ab989ab93</span>
-<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="x">//   66fb990228b648ca1e9a67de600c15012d628bf7d86d85b787cc4f65f7ccb20e</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="x">$seed = hex2bin(&#39;1111111111111111111111111111111111111111111111111111111111111111&#39;);</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="x">$kp   = sodium_crypto_sign_seed_keypair($seed);</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="x">$pub  = sodium_crypto_sign_publickey($kp);</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="x">$sec  = sodium_crypto_sign_secretkey($kp);</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="x">// Take the canonical actions JSON straight from the vectors file:</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="x">$actionsJson = &#39;[{&quot;Transfer&quot;:{&quot;to&quot;:[23,203,121,251,43,65,32,242,177,236,101,228,25,141,110,8,178,142,129,63,235,1,228,164,0,131,155,133,225,128,128,206],&quot;amount&quot;:1500000000}}]&#39;;</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="x">$msg  = pack(&#39;P&#39;, 1);                                    // chain_id = 1</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="x">$msg .= $pub;</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="x">$msg .= pack(&#39;P&#39;, 0);                                    // nonce = 0</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="x">$msg .= pack(&#39;P&#39;, 100000) . str_repeat(&quot;\x00&quot;, 8);       // max_fee = 100_000 (low u64 + zero high)</span>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="x">$msg .= blake3($actionsJson);</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a><span class="x">$sig = sodium_crypto_sign_detached($msg, $sec);</span>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a><span class="x">echo bin2hex($sig) . &quot;\n&quot;;</span>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a><span class="x">// Expected:</span>
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a><span class="x">//   a09196808274e828ff4a24ed551147d28ba211057bfe2af7b616e90ab989ab93</span>
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a><span class="x">//   66fb990228b648ca1e9a67de600c15012d628bf7d86d85b787cc4f65f7ccb20e</span>
 </code></pre></div>
 <p>If the signature matches the vectors-file <code>signature_hex</code>, your signer is correctly wired. If not, the most common culprits are:</p>
 <ol>

@@ -330,7 +330,100 @@ echo "Nonce:   {$tx['nonce']}\n";
 echo "Success: " . ($tx['success'] ? 'true' : 'false') . "\n";
 echo "Gas:     {$tx['gas_used']}\n";
 if (!$tx['success']) echo "Error:   {$tx['error']}\n";
+
+foreach (decodeTransfers($tx) as $t) {
+    echo "→ {$t['recipient']}  {$t['amount']} base units\n";
+}
 ```
+
+### Decoding amount and recipient
+
+Indexed txs (from `/api/tx/...` and `/api/accounts/.../txs`) do **not** expose `amount` or `recipient` as top-level fields — a single Solen tx can carry multiple actions, so transfer details live in the tx's `events` array. Each `transfer` event's `data` is 48 raw bytes (96 hex chars):
+
+```
+recipient[32]  ‖  amount[16, little-endian u128]
+```
+
+A small helper handles both that and the `fee` event (a bare 16-byte LE u128 of the fee debited):
+
+```php
+/** Returns [['recipient' => base58, 'amount' => decimal-string], ...] */
+function decodeTransfers(array $tx): array {
+    $out = [];
+    foreach (($tx['events'] ?? []) as $ev) {
+        if (($ev['topic'] ?? '') !== 'transfer') continue;
+        $data = $ev['data'] ?? '';
+        if (strlen($data) < 96) continue;
+        $out[] = [
+            'recipient' => base58_encode(hex2bin(substr($data, 0, 64))),
+            'amount'    => parseLeU128(substr($data, 64, 32)),
+        ];
+    }
+    return $out;
+}
+
+/** Returns the fee paid (decimal string), or '0' if no fee event. */
+function decodeFee(array $tx): string {
+    foreach (($tx['events'] ?? []) as $ev) {
+        if (($ev['topic'] ?? '') === 'fee' && strlen($ev['data'] ?? '') >= 32) {
+            return parseLeU128(substr($ev['data'], 0, 32));
+        }
+    }
+    return '0';
+}
+
+/** Parse a 32-char hex string as little-endian u128, returning a decimal string. */
+function parseLeU128(string $hex): string {
+    $be = '';
+    for ($i = strlen($hex) - 2; $i >= 0; $i -= 2) $be .= substr($hex, $i, 2);
+    return gmp_strval(gmp_init($be, 16), 10);
+}
+```
+
+A tx can emit multiple `transfer` events (e.g. a contract call that fans out), so always iterate. For deposit detection at scale, prefer the block scanner in [§5](#5-transaction-history-polling) over polling per-account history.
+
+### Easy mode: pre-decoded transfer feed
+
+If you only care about transfers (not raw txs), the explorer also exposes a pre-decoded view that does this projection server-side:
+
+```
+GET /api/accounts/<addr>/transfers?limit=50&offset=0&direction=in|out|all
+```
+
+```php
+$transfers = $client->explorer("/api/accounts/$address/transfers?limit=50&direction=in");
+foreach ($transfers as $t) {
+    echo "{$t['txid']}  {$t['sender']} → {$t['recipient']}  {$t['amount_solen']} SOLEN\n";
+}
+```
+
+Each row:
+
+```json
+{
+  "txid": "116718-0-0",
+  "block_height": 116718,
+  "tx_index": 0,
+  "event_index": 0,
+  "emitter": "dJNV…iur",
+  "sender": "dJNV…iur",
+  "recipient": "2odK…1w72",
+  "amount": "1000000000",
+  "amount_solen": "10.00000000",
+  "fee": "25100",
+  "fee_solen": "0.00025100",
+  "success": true,
+  "timestamp_ms": 1745678901000
+}
+```
+
+Notes:
+
+- `txid` is `{block_height}-{tx_index}-{event_index}` — unique per transfer event, so a fan-out tx produces multiple rows.
+- `amount` is base units as a decimal string (preserves u128); `amount_solen` is the same value with 8 decimals applied for display.
+- `fee` is attributed once per tx, to the row representing the fee-payer's primary outgoing transfer (`emitter == sender`). Other rows report `"0"` so summing fees across rows doesn't double-count.
+- `direction=in` returns only rows where you're the recipient (deposits); `direction=out` returns only sends. Default `all` returns both.
+- `emitter` distinguishes native SOLEN transfers (`emitter == sender`) from token contract transfers (`emitter == contract address`). Filter on this if you only want native deposits.
 
 **Wait-for-confirmation pattern** (when you only know the sender + nonce — e.g. you just submitted and want to block until it lands):
 
