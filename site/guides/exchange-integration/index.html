@@ -3525,7 +3525,7 @@
 <h3 id="idempotency-and-retries">Idempotency and retries<a class="headerlink" href="#idempotency-and-retries" title="Permanent link">&para;</a></h3>
 <p>If your withdrawal worker crashes between calls, retrying with the same <code>(sender, nonce, actions, signature)</code> is safe:</p>
 <ul>
-<li>If the original op already landed, <code>solen_submitOperationConfirm</code> detects this via the on-chain backfill check and returns <code>accepted: true, confirmed: true, success: true</code> with <code>block_height: 0</code> and a deterministic <code>tx_hash = blake3(sender ‖ nonce_le)</code>. The hash matches what the engine emitted for the original confirmation — so you can de-dupe by hash.</li>
+<li>If the original op already landed, <code>solen_submitOperationConfirm</code> detects this via the on-chain backfill check and returns <code>accepted: true, confirmed: true, success: true</code> with <code>block_height: 0</code> and an empty <code>tx_hash</code> (the backfill path can't reconstruct the hash without the receipt's block placement). De-dupe by <code>(sender, nonce)</code> instead, or query <code>solen_getAccount</code> + scan recent blocks if you need the exact placement.</li>
 <li>If the original was never submitted, the retry submits and waits normally.</li>
 <li>If a different op with the same nonce landed (e.g. an operator submitted from two workers), <code>validate_and_submit</code> rejects with <code>nonce too low</code> and <code>accepted: false</code>. Treat this as "nonce already used" and check <code>solen_getAccount</code> to see what actually happened.</li>
 </ul>

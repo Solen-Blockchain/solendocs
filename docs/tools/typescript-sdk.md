@@ -99,7 +99,7 @@ Submit a signed user operation **and wait** for it to land in a finalized block.
 
 - `timeoutSecs` defaults to 60 and is capped server-side at 180.
 - A reverted on-chain tx returns `confirmed: true, success: false` — **do not credit funds when `success: false`**.
-- If the tx already landed when the call arrives, the response uses a deterministic `tx_hash = blake3(sender ‖ nonce_le)` and `block_height: 0`.
+- If the tx already landed when the call arrives, the response returns `confirmed: true, success: true` with `block_height: 0` and an empty `tx_hash` — backfill paths can't reconstruct the hash without the receipt's block placement. Re-query state if you need the exact block (see Backfill case in [json-rpc](../api/json-rpc.md)).
 
 ```typescript
 const r = await client.submitOperationConfirm(signedOp, 60);

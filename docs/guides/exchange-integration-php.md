@@ -260,7 +260,7 @@ if (!$result['confirmed']) {
 ```
 
 !!! tip "Why prefer `solen_submitOperationConfirm` for withdrawals"
-    Solen has deterministic single-slot BFT finality — no reorgs, no confirmation count needed. One round-trip on this endpoint replaces the typical "submit → poll for inclusion → poll for confirmations" pattern. If your worker crashes mid-call, retrying the same signed op is safe: the server detects already-landed txs via an on-chain backfill check and returns `confirmed: true, success: true` with a deterministic `tx_hash = blake3(sender ‖ nonce_le)` so you can de-dupe by hash.
+    Solen has deterministic single-slot BFT finality — no reorgs, no confirmation count needed. One round-trip on this endpoint replaces the typical "submit → poll for inclusion → poll for confirmations" pattern. If your worker crashes mid-call, retrying the same signed op is safe: the server detects already-landed txs via an on-chain backfill check and returns `confirmed: true, success: true`. De-dupe by `(sender, nonce)` — `tx_hash` is empty on backfill responses since the receipt's block placement isn't known.
 
 !!! warning "Amount above 2^63"
     PHP's `int` is signed 64-bit. SOLEN's total supply (2 × 10^17 base units) fits comfortably, but if you ever need to sign for `amount` ≥ 2^63 you'll need a custom JSON serializer that emits the value as an unquoted decimal literal — `json_encode` cannot serialize a string-as-number without quotes. Use GMP for the math and `str_replace` the placeholder string into the encoded JSON.

@@ -485,7 +485,7 @@ You have two endpoints. **For exchange withdrawals, use `solen_submitOperationCo
 
 If your withdrawal worker crashes between calls, retrying with the same `(sender, nonce, actions, signature)` is safe:
 
-- If the original op already landed, `solen_submitOperationConfirm` detects this via the on-chain backfill check and returns `accepted: true, confirmed: true, success: true` with `block_height: 0` and a deterministic `tx_hash = blake3(sender ‖ nonce_le)`. The hash matches what the engine emitted for the original confirmation — so you can de-dupe by hash.
+- If the original op already landed, `solen_submitOperationConfirm` detects this via the on-chain backfill check and returns `accepted: true, confirmed: true, success: true` with `block_height: 0` and an empty `tx_hash` (the backfill path can't reconstruct the hash without the receipt's block placement). De-dupe by `(sender, nonce)` instead, or query `solen_getAccount` + scan recent blocks if you need the exact placement.
 - If the original was never submitted, the retry submits and waits normally.
 - If a different op with the same nonce landed (e.g. an operator submitted from two workers), `validate_and_submit` rejects with `nonce too low` and `accepted: false`. Treat this as "nonce already used" and check `solen_getAccount` to see what actually happened.
 

@@ -291,10 +291,10 @@ Submit a signed user operation **and wait** for it to be included in a finalized
     A reverted on-chain tx returns `confirmed: true, success: false`. The user paid gas and the nonce was consumed, but no funds moved. Exchanges **must not credit deposits or mark withdrawals as paid** when `success: false`.
 
 !!! note "Backfill case"
-    If the tx is already on-chain when the call arrives (e.g. you're retrying with the same nonce after a network hiccup), the response returns `confirmed: true, success: true` with `block_height: 0` and a deterministic `tx_hash = blake3(sender ‖ nonce_le)`. The hash format matches what the engine emits for fresh confirmations. If you need the exact block, query `solen_getAccount` to confirm nonce advancement, then scan recent blocks via `solen_getBlock`.
+    If the tx is already on-chain when the call arrives (e.g. you're retrying with the same nonce after a network hiccup), the response returns `confirmed: true, success: true` with `block_height: 0` and an empty `tx_hash`. The hash depends on the receipt's block placement, which the backfill check doesn't have — query `solen_getAccount` to confirm nonce advancement, then scan recent blocks via `solen_getBlock` if you need the exact placement and hash.
 
 !!! note "tx_hash semantics"
-    `tx_hash` is `blake3(sender ‖ nonce_le)` — a deterministic 32-byte ID derived from the sender and nonce, **not** a hash of the operation contents. This is consistent across `solen_submitOperationConfirm`, `solen_subscribeTxConfirmation`, and the explorer.
+    `tx_hash` is `blake3(block_height_le ‖ tx_index_le ‖ sender ‖ nonce_le)` — a deterministic 32-byte ID identifying the receipt's exact placement on chain, **not** a hash of the operation contents. The format includes block_height + tx_index so system-emitted receipts (e.g. epoch rewards, where `(sender, nonce)` is constant) hash to distinct values. Consistent across `solen_submitOperationConfirm`, `solen_subscribeTxConfirmation`, and the explorer.
 
 **Concurrency limit:** The server caps simultaneous confirm-waiters at 200. Excess calls return immediately with `accepted: false` and `error: "too many concurrent submitOperationConfirm waiters — retry shortly"`. Run your own RPC node for high-throughput integrations.
 

@@ -3438,11 +3438,11 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">Backfill case</p>
-<p>If the tx is already on-chain when the call arrives (e.g. you're retrying with the same nonce after a network hiccup), the response returns <code>confirmed: true, success: true</code> with <code>block_height: 0</code> and a deterministic <code>tx_hash = blake3(sender ‖ nonce_le)</code>. The hash format matches what the engine emits for fresh confirmations. If you need the exact block, query <code>solen_getAccount</code> to confirm nonce advancement, then scan recent blocks via <code>solen_getBlock</code>.</p>
+<p>If the tx is already on-chain when the call arrives (e.g. you're retrying with the same nonce after a network hiccup), the response returns <code>confirmed: true, success: true</code> with <code>block_height: 0</code> and an empty <code>tx_hash</code>. The hash depends on the receipt's block placement, which the backfill check doesn't have — query <code>solen_getAccount</code> to confirm nonce advancement, then scan recent blocks via <code>solen_getBlock</code> if you need the exact placement and hash.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">tx_hash semantics</p>
-<p><code>tx_hash</code> is <code>blake3(sender ‖ nonce_le)</code> — a deterministic 32-byte ID derived from the sender and nonce, <strong>not</strong> a hash of the operation contents. This is consistent across <code>solen_submitOperationConfirm</code>, <code>solen_subscribeTxConfirmation</code>, and the explorer.</p>
+<p><code>tx_hash</code> is <code>blake3(block_height_le ‖ tx_index_le ‖ sender ‖ nonce_le)</code> — a deterministic 32-byte ID identifying the receipt's exact placement on chain, <strong>not</strong> a hash of the operation contents. The format includes block_height + tx_index so system-emitted receipts (e.g. epoch rewards, where <code>(sender, nonce)</code> is constant) hash to distinct values. Consistent across <code>solen_submitOperationConfirm</code>, <code>solen_subscribeTxConfirmation</code>, and the explorer.</p>
 </div>
 <p><strong>Concurrency limit:</strong> The server caps simultaneous confirm-waiters at 200. Excess calls return immediately with <code>accepted: false</code> and <code>error: "too many concurrent submitOperationConfirm waiters — retry shortly"</code>. Run your own RPC node for high-throughput integrations.</p>
 <hr />

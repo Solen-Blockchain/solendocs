@@ -2623,7 +2623,7 @@
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Why prefer <code>solen_submitOperationConfirm</code> for withdrawals</p>
-<p>Solen has deterministic single-slot BFT finality — no reorgs, no confirmation count needed. One round-trip on this endpoint replaces the typical "submit → poll for inclusion → poll for confirmations" pattern. If your worker crashes mid-call, retrying the same signed op is safe: the server detects already-landed txs via an on-chain backfill check and returns <code>confirmed: true, success: true</code> with a deterministic <code>tx_hash = blake3(sender ‖ nonce_le)</code> so you can de-dupe by hash.</p>
+<p>Solen has deterministic single-slot BFT finality — no reorgs, no confirmation count needed. One round-trip on this endpoint replaces the typical "submit → poll for inclusion → poll for confirmations" pattern. If your worker crashes mid-call, retrying the same signed op is safe: the server detects already-landed txs via an on-chain backfill check and returns <code>confirmed: true, success: true</code>. De-dupe by <code>(sender, nonce)</code> — <code>tx_hash</code> is empty on backfill responses since the receipt's block placement isn't known.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Amount above 2^63</p>

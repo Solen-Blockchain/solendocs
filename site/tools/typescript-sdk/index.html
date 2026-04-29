@@ -2755,7 +2755,7 @@
 <ul>
 <li><code>timeoutSecs</code> defaults to 60 and is capped server-side at 180.</li>
 <li>A reverted on-chain tx returns <code>confirmed: true, success: false</code> — <strong>do not credit funds when <code>success: false</code></strong>.</li>
-<li>If the tx already landed when the call arrives, the response uses a deterministic <code>tx_hash = blake3(sender ‖ nonce_le)</code> and <code>block_height: 0</code>.</li>
+<li>If the tx already landed when the call arrives, the response returns <code>confirmed: true, success: true</code> with <code>block_height: 0</code> and an empty <code>tx_hash</code> — backfill paths can't reconstruct the hash without the receipt's block placement. Re-query state if you need the exact block (see Backfill case in <a href="../../api/json-rpc/">json-rpc</a>).</li>
 </ul>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">submitOperationConfirm</span><span class="p">(</span><span class="nx">signedOp</span><span class="p">,</span><span class="w"> </span><span class="mf">60</span><span class="p">);</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
