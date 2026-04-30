@@ -121,6 +121,28 @@ Get a specific transaction by block height and index within the block.
 
 ---
 
+### `GET /api/tx/hash/{tx_hash}`
+
+Look up a transaction by its canonical hash. Same response shape as `/api/tx/{height}/{index}`.
+
+**Path Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `tx_hash` | `string` | 64 hex chars, with or without `0x` prefix; case-insensitive |
+
+The hash format is deterministic and identifies the receipt's exact placement on chain:
+
+```
+tx_hash = blake3(block_height_le ‖ tx_index_le ‖ sender ‖ nonce_le)
+```
+
+It is **not** a hash of the operation contents — including `block_height` and `tx_index` ensures system-emitted receipts (e.g. epoch rewards, where `(sender, nonce)` is constant) hash to distinct values. This is the same `tx_hash` returned by `solen_submitOperationConfirm`, `solen_subscribeTxConfirmation`, and the `tx_hash` field on transfer rows below.
+
+**Returns** `null` if no transaction with that hash has been indexed.
+
+---
+
 ### `GET /api/txs`
 
 Get recent transactions across all blocks.
@@ -178,6 +200,57 @@ Get transaction history for an account.
   }
 ]
 ```
+
+---
+
+### `GET /api/accounts/{id}/transfers`
+
+Pre-decoded transfer feed for an account. Projects each `transfer` event from the account's tx history into one row per transfer, with the recipient and amount already extracted — so callers don't have to walk `tx.events[]` and parse hex payloads themselves. Particularly useful for exchange deposit/withdrawal tracking.
+
+**Path Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `id` | `string` | Base58 (or hex) encoded account ID |
+
+**Query Parameters:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `limit` | `usize` | 50 | Maximum rows to return |
+| `offset` | `usize` | 0 | Rows to skip (pagination) |
+| `direction` | `string` | `all` | `in` (this account is recipient), `out` (this account is sender), or `all` |
+
+**Response:** Array of `TransferRow` objects, newest-first:
+
+```json
+[
+  {
+    "txid": "116718-0-0",
+    "tx_hash": "ef56...",
+    "block_height": 116718,
+    "tx_index": 0,
+    "event_index": 0,
+    "emitter": "dJNVRKH1Jh2TYBrjJUfNwQrB5b1S8xiCW926yEKWiur",
+    "sender": "dJNVRKH1Jh2TYBrjJUfNwQrB5b1S8xiCW926yEKWiur",
+    "recipient": "2odK4mB8KqBZBwM7vvWkzL5JxhGnK8KqBZBwMv1w72",
+    "amount": "1000000000",
+    "amount_solen": "10.00000000",
+    "fee": "25100",
+    "fee_solen": "0.00025100",
+    "success": true,
+    "timestamp_ms": 1745678901000
+  }
+]
+```
+
+**Field notes:**
+
+- `txid` is `"{block_height}-{tx_index}-{event_index}"` — unique per transfer event. A single tx that fans out (e.g. a contract call emitting multiple `transfer` events) produces multiple rows.
+- `tx_hash` is the same canonical hash exposed by `/api/tx/hash/{tx_hash}` and `solen_submitOperationConfirm`. Empty on rows whose underlying tx was indexed before the hash field was recorded.
+- `emitter` distinguishes native SOLEN transfers (`emitter == sender`) from token contract transfers (`emitter == contract address`). Filter on this if you only want native deposits.
+- `amount` is base units as a decimal string (preserves u128 precision); `amount_solen` is the same value with 8 decimals applied for display.
+- `fee` is attributed once per tx, to the row representing the fee-payer's primary outgoing transfer (`emitter == sender`). Other rows return `"0"` so summing fees across rows doesn't double-count.
 
 ---
 
@@ -386,7 +459,7 @@ Get recently fulfilled intents.
 
 ## Pagination
 
-All list endpoints (`/api/blocks`, `/api/txs`, `/api/events`, `/api/accounts/:id/txs`) support pagination:
+All list endpoints (`/api/blocks`, `/api/txs`, `/api/events`, `/api/accounts/:id/txs`, `/api/accounts/:id/transfers`) support pagination:
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|

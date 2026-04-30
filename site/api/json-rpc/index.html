@@ -3442,7 +3442,7 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">tx_hash semantics</p>
-<p><code>tx_hash</code> is <code>blake3(block_height_le ‖ tx_index_le ‖ sender ‖ nonce_le)</code> — a deterministic 32-byte ID identifying the receipt's exact placement on chain, <strong>not</strong> a hash of the operation contents. The format includes block_height + tx_index so system-emitted receipts (e.g. epoch rewards, where <code>(sender, nonce)</code> is constant) hash to distinct values. Consistent across <code>solen_submitOperationConfirm</code>, <code>solen_subscribeTxConfirmation</code>, and the explorer.</p>
+<p><code>tx_hash</code> is <code>blake3(block_height_le ‖ tx_index_le ‖ sender ‖ nonce_le)</code> — a deterministic 32-byte ID identifying the receipt's exact placement on chain, <strong>not</strong> a hash of the operation contents. The format includes block_height + tx_index so system-emitted receipts (e.g. epoch rewards, where <code>(sender, nonce)</code> is constant) hash to distinct values. The same hash is consumed by <a href="../explorer/#get-apitxhashtx_hash"><code>GET /api/tx/hash/{tx_hash}</code></a> and surfaced in the <code>tx_hash</code> field of <a href="../explorer/#get-apiaccountsidtransfers"><code>/api/accounts/{id}/transfers</code></a> rows, so values are interchangeable across <code>solen_submitOperationConfirm</code>, <code>solen_subscribeTxConfirmation</code>, and the explorer.</p>
 </div>
 <p><strong>Concurrency limit:</strong> The server caps simultaneous confirm-waiters at 200. Excess calls return immediately with <code>accepted: false</code> and <code>error: "too many concurrent submitOperationConfirm waiters — retry shortly"</code>. Run your own RPC node for high-throughput integrations.</p>
 <hr />

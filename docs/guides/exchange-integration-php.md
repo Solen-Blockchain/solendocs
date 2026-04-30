@@ -337,7 +337,7 @@ function isNodeHealthy(SolenClient $client, int &$lastHeight, int &$lastChange):
 
 ## 4. Transaction Status
 
-Solen identifies a transaction by `(block_height, tx_index)`. The explorer REST API is the simplest way to look one up:
+Solen identifies a transaction by `(block_height, tx_index)`. Look one up via the explorer REST API:
 
 ```php
 <?php
@@ -346,6 +346,14 @@ require_once 'Solen.php';
 function getTransaction(SolenClient $client, int $blockHeight, int $txIndex): array
 {
     return $client->explorer("/api/tx/$blockHeight/$txIndex");
+}
+
+// Or by canonical tx_hash, if you already have one (e.g. from
+// solen_submitOperationConfirm or a transfer row).
+function getTransactionByHash(SolenClient $client, string $txHash): ?array
+{
+    $hash = ltrim($txHash, '0x');
+    return $client->explorer("/api/tx/hash/$hash");
 }
 
 $client = new SolenClient();

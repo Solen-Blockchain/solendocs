@@ -147,6 +147,27 @@ curl -s https://api.solenchain.io/api/blocks/5000/txs
 curl -s https://api.solenchain.io/api/accounts/dJNVRKH1Jh2TYBrjJUfNwQrB5b1S8xiCW926yEKWiur/txs
 ```
 
+### Lookup by Transaction Hash
+
+For an exchange that already holds a `tx_hash` (e.g. from `solen_submitOperationConfirm` or a `transfer` row), look the transaction up directly without knowing its block placement:
+
+```bash
+curl -s https://api.solenchain.io/api/tx/hash/ef56a1...
+```
+
+Same response shape as `/api/tx/{height}/{index}`. The hash is `blake3(block_height_le ‖ tx_index_le ‖ sender ‖ nonce_le)` — see [Explorer REST API](../api/explorer.md#get-apitxhashtx_hash) for the canonical definition.
+
+### Pre-decoded Transfer Feed
+
+For deposit/withdrawal tracking, prefer `/api/accounts/{id}/transfers` over `/api/accounts/{id}/txs`. It does the event walking and hex decoding server-side and returns one row per `transfer` event with `recipient`, `amount` (and `amount_solen`), `fee`, and the canonical `tx_hash` already extracted:
+
+```bash
+# All deposits to this address (most recent first):
+curl -s "https://api.solenchain.io/api/accounts/dJNVRKH1Jh2TYBrjJUfNwQrB5b1S8xiCW926yEKWiur/transfers?direction=in&limit=50"
+```
+
+Full field reference and response shape: [Explorer REST API → `/api/accounts/{id}/transfers`](../api/explorer.md#get-apiaccountsidtransfers).
+
 ---
 
 ## 4. Get Account Balance
@@ -687,12 +708,20 @@ setInterval(scanForDeposits, 6000);
 
 ### Alternative: Poll Individual Accounts
 
-For a small number of addresses, you can poll each account directly:
+For a small number of addresses, you can poll each account directly. The pre-decoded transfer feed is the simplest fit — one row per incoming transfer with `tx_hash`, `amount_solen`, and `fee` already extracted:
 
 ```bash
-# Get recent transactions for a deposit address
-curl -s https://api.solenchain.io/api/accounts/YOUR_DEPOSIT_ADDRESS/txs?limit=20
+# Recent deposits to a single address, newest first:
+curl -s "https://api.solenchain.io/api/accounts/YOUR_DEPOSIT_ADDRESS/transfers?direction=in&limit=20"
 ```
+
+If you need full tx context (multi-action ops, raw events), use `/txs` instead and walk the events yourself:
+
+```bash
+curl -s "https://api.solenchain.io/api/accounts/YOUR_DEPOSIT_ADDRESS/txs?limit=20"
+```
+
+The block-scanner pattern above is still preferred when watching many addresses, since it touches the API once per block instead of once per address.
 
 ### Alternative: WebSocket Subscription
 
