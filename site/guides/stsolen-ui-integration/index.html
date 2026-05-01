@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://docs.solenchain.io/tokenomics/staking/">
+        <link rel="canonical" href="https://docs.solenchain.io/guides/stsolen-ui-integration/">
       
       
-        <link rel="prev" href="../overview/">
+        <link rel="prev" href="../exchange-integration-php/">
       
       
-        <link rel="next" href="../governance/">
+        <link rel="next" href="../testing-contracts/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Staking - Solen Documentation</title>
+        <title>stSOLEN UI Integration - Solen Documentation</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#staking" class="md-skip">
+        <a href="#stsolen-ui-integration-plan" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Staking
+              stSOLEN UI Integration
             
           </span>
         </div>
@@ -303,11 +303,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../guides/exchange-integration/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../exchange-integration/" class="md-tabs__link">
           
   
   
@@ -363,13 +365,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../overview/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../tokenomics/overview/" class="md-tabs__link">
           
   
   
@@ -1043,28 +1043,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -1082,7 +1085,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1100,7 +1103,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/exchange-integration/" class="md-nav__link">
+      <a href="../exchange-integration/" class="md-nav__link">
         
   
   
@@ -1128,7 +1131,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/exchange-integration-php/" class="md-nav__link">
+      <a href="../exchange-integration-php/" class="md-nav__link">
         
   
   
@@ -1153,10 +1156,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../guides/stsolen-ui-integration/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    stSOLEN UI Integration
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1172,6 +1202,336 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#three-integration-surfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three integration surfaces
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-solenstake-dapp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1 — solenstake/ dapp
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1 — solenstake/ dapp">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stake-tab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stake tab
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unstake-tab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unstake tab
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#claims-tab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claims tab
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apy-computation-off-chain-indexed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        APY computation (off-chain, indexed)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-stakestsolencard-in-solenwallet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2 — StakeStsolenCard in solenwallet
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2 — StakeStsolenCard in solenwallet">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wiring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-reuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual reuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-solenbrowser-popup-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3 — solenbrowser popup integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3 — solenbrowser popup integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#files_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-cutting-concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-cutting concerns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cross-cutting concerns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reads-that-need-adding-to-the-contract-before-launch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reads that need adding to the contract before launch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-aware-contract-address" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network-aware contract address
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pause-state-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pause-state handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auto-crank-on-claim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-crank on claim
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solenswap-pair-seeding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solenswap pair seeding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#slashing-alert-surface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slashing alert surface
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cranker-bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cranker bot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wallet-hd-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wallet HD migration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sequencing-recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequencing recommendation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#locked-design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Locked design decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1184,7 +1544,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/testing-contracts/" class="md-nav__link">
+      <a href="../testing-contracts/" class="md-nav__link">
         
   
   
@@ -1212,7 +1572,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/troubleshooting/" class="md-nav__link">
+      <a href="../troubleshooting/" class="md-nav__link">
         
   
   
@@ -1506,31 +1866,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -1548,7 +1905,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1566,7 +1923,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../overview/" class="md-nav__link">
+      <a href="../../tokenomics/overview/" class="md-nav__link">
         
   
   
@@ -1591,37 +1948,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Staking
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../tokenomics/staking/" class="md-nav__link">
         
   
   
@@ -1637,187 +1967,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#validators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Validators
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Validators">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#becoming-a-validator" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Becoming a Validator
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#validator-rewards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Validator Rewards
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#reward-calculation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reward Calculation
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#delegators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Delegators
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Delegators">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#delegator-rewards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Delegator Rewards
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#choosing-a-validator" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Choosing a Validator
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#slashing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Slashing
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Slashing">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#double-signing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Double Signing
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#downtime" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Downtime
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#unjailing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Unjailing
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#unbonding" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Unbonding
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#target-staking-ratio" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Target Staking Ratio
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1830,7 +1979,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../governance/" class="md-nav__link">
+      <a href="../../tokenomics/governance/" class="md-nav__link">
         
   
   
@@ -1858,7 +2007,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../fee-model/" class="md-nav__link">
+      <a href="../../tokenomics/fee-model/" class="md-nav__link">
         
   
   
@@ -2231,22 +2380,33 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#validators" class="md-nav__link">
+  <a href="#three-integration-surfaces" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validators
+        Three integration surfaces
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Validators">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-solenstake-dapp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1 — solenstake/ dapp
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1 — solenstake/ dapp">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#becoming-a-validator" class="md-nav__link">
+  <a href="#stake-tab" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Becoming a Validator
+        Stake tab
       
     </span>
   </a>
@@ -2254,10 +2414,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#validator-rewards" class="md-nav__link">
+  <a href="#unstake-tab" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validator Rewards
+        Unstake tab
       
     </span>
   </a>
@@ -2265,10 +2425,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#reward-calculation" class="md-nav__link">
+  <a href="#claims-tab" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reward Calculation
+        Claims tab
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apy-computation-off-chain-indexed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        APY computation (off-chain, indexed)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File layout
       
     </span>
   </a>
@@ -2281,22 +2463,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#delegators" class="md-nav__link">
+  <a href="#2-stakestsolencard-in-solenwallet" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Delegators
+        2 — StakeStsolenCard in solenwallet
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Delegators">
+    <nav class="md-nav" aria-label="2 — StakeStsolenCard in solenwallet">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#delegator-rewards" class="md-nav__link">
+  <a href="#files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Delegator Rewards
+        Files
       
     </span>
   </a>
@@ -2304,10 +2486,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#choosing-a-validator" class="md-nav__link">
+  <a href="#ui-layout" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Choosing a Validator
+        UI layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wiring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-reuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual reuse
       
     </span>
   </a>
@@ -2320,22 +2524,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#slashing" class="md-nav__link">
+  <a href="#3-solenbrowser-popup-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Slashing
+        3 — solenbrowser popup integration
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Slashing">
+    <nav class="md-nav" aria-label="3 — solenbrowser popup integration">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#double-signing" class="md-nav__link">
+  <a href="#changes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Double Signing
+        Changes
       
     </span>
   </a>
@@ -2343,21 +2547,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#downtime" class="md-nav__link">
+  <a href="#files_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Downtime
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#unjailing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Unjailing
+        Files
       
     </span>
   </a>
@@ -2370,10 +2563,115 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#unbonding" class="md-nav__link">
+  <a href="#cross-cutting-concerns" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Unbonding
+        Cross-cutting concerns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cross-cutting concerns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reads-that-need-adding-to-the-contract-before-launch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reads that need adding to the contract before launch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-aware-contract-address" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network-aware contract address
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pause-state-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pause-state handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auto-crank-on-claim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-crank on claim
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solenswap-pair-seeding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solenswap pair seeding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#slashing-alert-surface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slashing alert surface
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cranker-bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cranker bot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wallet-hd-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wallet HD migration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sequencing-recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequencing recommendation
       
     </span>
   </a>
@@ -2381,10 +2679,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#target-staking-ratio" class="md-nav__link">
+  <a href="#locked-design-decisions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Target Staking Ratio
+        Locked design decisions
       
     </span>
   </a>
@@ -2411,145 +2709,231 @@
   
 
 
-<h1 id="staking">Staking<a class="headerlink" href="#staking" title="Permanent link">&para;</a></h1>
-<p>Solen uses proof-of-stake consensus where validators and delegators stake SOLEN tokens to secure the network and earn rewards.</p>
-<h2 id="validators">Validators<a class="headerlink" href="#validators" title="Permanent link">&para;</a></h2>
-<p>Validators run nodes, propose blocks, and participate in consensus.</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Governance</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Minimum self-stake</td>
-<td>500,000 SOLEN</td>
-<td>Configurable via <code>propose_set_min_validator_stake</code></td>
-</tr>
-<tr>
-<td>Unbonding period</td>
-<td>7 epochs</td>
-<td>Configurable via <code>propose_set_unbonding_period</code></td>
-</tr>
-<tr>
-<td>Slashing (double sign)</td>
-<td>10% of stake + jailing</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Slashing (downtime)</td>
-<td>1% after 50 missed blocks</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Slashing destination</td>
-<td>Foundation Treasury</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Default commission</td>
-<td>10% (1000 bps)</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Genesis validator lock</td>
-<td>~1 year (157,680 epochs)</td>
-<td>—</td>
-</tr>
-</tbody>
-</table>
-<p>Current on-chain values are displayed on the <a href="https://solenscan.io">explorer homepage</a>.</p>
-<h3 id="becoming-a-validator">Becoming a Validator<a class="headerlink" href="#becoming-a-validator" title="Permanent link">&para;</a></h3>
-<p>Register as a validator via the staking system contract:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>solen<span class="w"> </span>--chain-id<span class="w"> </span><span class="m">9000</span><span class="w"> </span>register-validator<span class="w"> </span>&lt;keyname&gt;<span class="w"> </span><span class="m">500000</span>
-</code></pre></div>
-<p>This stakes 500,000 SOLEN as self-stake and registers your account as a validator. The validator joins the active consensus set at the next epoch boundary (every 100 blocks) and begins earning rewards one epoch after that.</p>
-<p>See <a href="../../tools/running-a-node/#becoming-a-validator">Running a Node — Becoming a Validator</a> for the full setup guide.</p>
-<h3 id="validator-rewards">Validator Rewards<a class="headerlink" href="#validator-rewards" title="Permanent link">&para;</a></h3>
-<p>Validators earn from two sources:</p>
+<h1 id="stsolen-ui-integration-plan">stSOLEN UI Integration Plan<a class="headerlink" href="#stsolen-ui-integration-plan" title="Permanent link">&para;</a></h1>
+<p>This is the build plan for surfacing the stSOLEN liquid-staking contract through Solen's user-facing wallets and a dedicated dapp. It is written to be picked up <em>after</em> the v1 contract deploys on mainnet — nothing here is meant to ship before then.</p>
+<p>stSOLEN itself is a liquid-staking derivative: users deposit SOLEN, receive <code>stSOLEN</code> (an SRC-20 receipt token), and the contract round-robins delegations across an operator allowlist. Rewards auto-credit each epoch and raise the exchange rate against <code>stSOLEN</code>. Withdrawals run through a queue that respects the staking system contract's 7-epoch unbonding period.</p>
+<h2 id="three-integration-surfaces">Three integration surfaces<a class="headerlink" href="#three-integration-surfaces" title="Permanent link">&para;</a></h2>
+<p>Ranked by leverage:</p>
 <ol>
-<li><strong>Epoch rewards</strong> — Distributed from the staking allocation at each epoch boundary, proportional to total stake (self-stake + delegations)</li>
-<li><strong>Transaction fees</strong> — The treasury share of fees (50%) is governed by on-chain governance and can be directed to validators</li>
+<li><strong>Standalone dapp at <code>stake.solenchain.io</code></strong> — primary entry point. Uses <code>window.solen.signAndSubmit</code> from solenbrowser. Builds independently; doesn't touch the wallet repos.</li>
+<li><strong><code>StakeStsolenCard</code> in solenwallet</strong> — desktop power users. Mirrors the existing <code>StakingCard.tsx</code> pattern (which handles native validator delegation, not stSOLEN).</li>
+<li><strong>stSOLEN balance row + APY pill in solenbrowser popup</strong> — passive surfacing only. No actions; deep-links to the dapp.</li>
 </ol>
-<h3 id="reward-calculation">Reward Calculation<a class="headerlink" href="#reward-calculation" title="Permanent link">&para;</a></h3>
-<p>Each epoch, a fixed reward pool is distributed across all active validators:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>validator_reward = epoch_reward_pool × (validator_total_stake / network_total_stake)
+<p>Ship in that order. The dapp covers most users without touching wallet code; the wallet additions are convenience.</p>
+<hr />
+<h2 id="1-solenstake-dapp">1 — <code>solenstake/</code> dapp<a class="headerlink" href="#1-solenstake-dapp" title="Permanent link">&para;</a></h2>
+<p><strong>Stack:</strong> Vite + React, matching the rest of the dapp lineup. Hosted at <code>stake.solenchain.io</code>. Mainnet-only (single network) for v1.</p>
+<p><strong>Pages:</strong></p>
+<ul>
+<li><code>/</code> — main stake/unstake. Tabs for <strong>Stake</strong>, <strong>Unstake</strong>, <strong>Claims</strong>.</li>
+<li><code>/claims/[seq]</code> — direct deep-link for a queue entry (used in email/notif flows).</li>
+<li><code>/admin</code> — owner-only: operator allowlist editor, fee config, slash oracle key. Gated by reading <code>owner()</code> via <code>solen_callView</code>.</li>
+</ul>
+<h3 id="stake-tab">Stake tab<a class="headerlink" href="#stake-tab" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Inputs: <code>amount</code> (SOLEN). Reads the user's available balance from <code>window.solen.getBalance()</code>.</li>
+<li>Reads <code>exchange_rate()</code> via <code>solen_callView</code> → returns <code>(total_pooled[16] || total_supply[16])</code>. Compute <code>mint_preview = amount * total_supply / total_pooled</code> client-side at full precision (use <code>BigInt</code> throughout — never coerce to <code>Number</code> for u128 math).</li>
+<li>Show the current APY (described below) and a "you'll receive" stSOLEN amount.</li>
+<li>Button → builds <code>[Transfer(stSOLEN, amount), Call(stSOLEN, "deposit", &amp;[])]</code> and sends via <code>window.solen.signAndSubmit</code>.</li>
+</ul>
+<h3 id="unstake-tab">Unstake tab<a class="headerlink" href="#unstake-tab" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Input: stSOLEN to burn.</li>
+<li>Preview: <code>solen_owed = stsolen_burn * total_pooled / total_supply</code> and the <strong>eligible epoch</strong> (<code>current_epoch + UNBONDING_EPOCHS + 1</code> ≈ 8 epochs ≈ ~27 minutes at 100-block × 2-s × 8). Show the absolute time, not just "8 epochs."</li>
+<li>Button → <code>Call(stSOLEN, "request_withdrawal", stsolen_burn[16])</code>.</li>
+</ul>
+<h3 id="claims-tab">Claims tab<a class="headerlink" href="#claims-tab" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Lists the user's pending withdrawals from <code>wq/{seq}</code> storage.</li>
+<li>Per claim: status badge (Unbonding / Ready / Claimed), countdown to eligible epoch, "Claim" button when ready.</li>
+<li>"Claim" button auto-handles the buffer state: if <code>withdrawal_buffer &lt; solen_owed</code>, the dapp first sends a <code>Call(stSOLEN, "crank_undelegations", &amp;[])</code>, then <code>Call(stSOLEN, "claim_withdrawal", seq[8])</code>. Bundle into a single <code>signAndSubmit</code> if both fit; otherwise two ops with quiet status feedback. <strong>The user never sees "crank required" — this is auto.</strong></li>
+<li>"How can I exit faster?" footer linking to the solenswap stSOLEN/SOLEN pair.</li>
+</ul>
+<h3 id="apy-computation-off-chain-indexed">APY computation (off-chain, indexed)<a class="headerlink" href="#apy-computation-off-chain-indexed" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Subscribe to <code>recompounded</code> events emitted by the stSOLEN contract via the explorer.</li>
+<li>For each: parse <code>amount[16] || operator[32]</code>. Sum amounts over the rolling window.</li>
+<li>APY ≈ <code>sum(amount) / avg(total_pooled_solen) × (epochs_per_year / N)</code>.</li>
+<li><strong>Lead with 7-day</strong> as the headline number; render a smaller "30-day: X%" beneath it for context.</li>
+<li>During the first 7 days post-deploy, fall back to <strong>"since launch"</strong> so we don't extrapolate from a thin sample. Avoid "annualized" projections off a single epoch.</li>
+<li>This is purely cosmetic; never use the displayed APY in transaction-build math.</li>
+</ul>
+<h3 id="file-layout">File layout<a class="headerlink" href="#file-layout" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>solenstake/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── src/
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── lib/
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │   ├── rate.ts          # exchange_rate, BigInt-safe mint/burn previews
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │   ├── stsolen.ts       # contract address, ABI-ish helpers
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │   ├── claims.ts        # parses wq/{seq} blobs from solen_callView
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │   └── apy.ts           # event-derived APY
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ├── components/
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │   ├── StakeForm.tsx
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │   ├── UnstakeForm.tsx
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │   ├── ClaimsList.tsx
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │   └── ConnectButton.tsx
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   └── pages/
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│       ├── index.tsx
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│       └── admin.tsx
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>└── package.json
 </code></pre></div>
-<h2 id="delegators">Delegators<a class="headerlink" href="#delegators" title="Permanent link">&para;</a></h2>
-<p>Any token holder can delegate to a validator without running infrastructure.</p>
+<p><strong>Effort:</strong> ~5 days of focused work. The hard part is making the BigInt math airtight; the UI is small.</p>
+<hr />
+<h2 id="2-stakestsolencard-in-solenwallet">2 — <code>StakeStsolenCard</code> in solenwallet<a class="headerlink" href="#2-stakestsolencard-in-solenwallet" title="Permanent link">&para;</a></h2>
+<p>Drops next to the existing <code>StakingCard.tsx</code> (which is for native validator delegation, not stSOLEN). New file, shares no code with the existing card.</p>
+<h3 id="files">Files<a class="headerlink" href="#files" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>~/solenwallet/src/components/StakeStsolenCard.tsx</code> — UI component, ~250 lines.</li>
+<li><code>~/solenwallet/src/lib/stsolen.ts</code> — pure helpers (no React):<ul>
+<li><code>STSOLEN_ADDRESS_BY_NETWORK: Record&lt;NetworkName, string&gt;</code> (mainnet only for v1)</li>
+<li><code>readExchangeRate(rpc): Promise&lt;{ pool: bigint; supply: bigint }&gt;</code></li>
+<li><code>previewMint(amount, pool, supply): bigint</code></li>
+<li><code>previewOwed(burn, pool, supply): bigint</code></li>
+<li><code>buildDepositOp(sender, nonce, contract, amount): UserOperation</code></li>
+<li><code>buildRequestWithdrawalOp(sender, nonce, contract, burn): UserOperation</code></li>
+<li><code>buildClaimOp(sender, nonce, contract, seq): UserOperation</code></li>
+<li><code>buildCrankOp(sender, nonce, contract): UserOperation</code></li>
+<li><code>readWithdrawalQueue(rpc, contract, account): Promise&lt;ClaimRow[]&gt;</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="ui-layout">UI layout<a class="headerlink" href="#ui-layout" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Top: stSOLEN balance + current backing in SOLEN ("You hold 12.34 stSOLEN ≈ 13.50 SOLEN"). Backing = <code>bal × total_pooled / total_supply</code>.</li>
+<li>Tabs: <strong>Stake</strong> / <strong>Unstake</strong> / <strong>Claims</strong>, identical UX to the dapp.</li>
+<li>Submit path: build the same UserOps but sign locally with the wallet's keystore — no <code>window.solen</code> indirection since solenwallet has direct key access.</li>
+</ul>
+<h3 id="wiring">Wiring<a class="headerlink" href="#wiring" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add <code>StakeStsolenCard</code> to <code>App.tsx</code> as a new card alongside <code>StakingCard</code>. Hide on testnet/devnet (gate by <code>STSOLEN_ADDRESS_BY_NETWORK[currentNetwork]</code>).</li>
+<li>Reuse <code>lib/rpc.ts</code> for <code>solen_callView</code>, <code>solen_getNextNonce</code>, <code>solen_submitOperationConfirm</code>.</li>
+<li>Reuse <code>lib/wallet.ts</code> for op-signing — same Ed25519/BLAKE3 path the existing <code>StakingCard</code> uses.</li>
+</ul>
+<h3 id="visual-reuse">Visual reuse<a class="headerlink" href="#visual-reuse" title="Permanent link">&para;</a></h3>
+<p>Match the design language already established in <code>StakingCard.tsx</code> (left-aligned numeric labels, validator chips, action buttons in the bottom row). Don't reinvent.</p>
+<p><strong>Effort:</strong> ~2 days. Most of the substance is already in the dapp's <code>lib/</code>; this is a port + sign-locally adaptation.</p>
+<hr />
+<h2 id="3-solenbrowser-popup-integration">3 — solenbrowser popup integration<a class="headerlink" href="#3-solenbrowser-popup-integration" title="Permanent link">&para;</a></h2>
+<p>Minimal — popup is space-constrained. Goal: make stSOLEN visible to the user without forcing them through the dapp to check.</p>
+<h3 id="changes">Changes<a class="headerlink" href="#changes" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong><code>token-registry.ts</code></strong> — register stSOLEN with a logo:
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="s2">&quot;&lt;stSOLEN_contract_hex_lowercase_no_0x&gt;&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;stsolen-logo.svg&quot;</span><span class="p">,</span>
+</code></pre></div>
+    Add the SVG under <code>~/solenbrowser/public/</code>.</p>
+</li>
+<li>
+<p><strong>Backing-aware balance pill on <code>TokensList</code></strong> — when a token row is stSOLEN (matched by contract address), show a second line: "≈ N.NN SOLEN" computed from the same exchange-rate read the dapp does. Cache the rate for 30 s in <code>chrome.storage.local</code>.</p>
+</li>
+<li>
+<p><strong>APY badge on the same row</strong> — small "APY 5.2%" pill. Reads from a public oracle endpoint (<code>api.solenchain.io/api/stsolen/apy</code> — needs to be added to the indexer; trivial endpoint).</p>
+</li>
+<li>
+<p><strong>"Stake →" deep link</strong> in the row's overflow menu, opening <code>https://stake.solenchain.io?account=&lt;base58&gt;</code> in a new tab.</p>
+</li>
+</ol>
+<p><strong>No transaction-build paths in solenbrowser.</strong> Keep it a passive viewer; let the dapp drive activity through <code>window.solen.signAndSubmit</code>. This matches how solenswap/launchpad already work.</p>
+<h3 id="files_1">Files<a class="headerlink" href="#files_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>~/solenbrowser/src/lib/token-registry.ts</code> — one entry</li>
+<li><code>~/solenbrowser/src/popup/App.tsx</code> — extend the <code>TokensList</code> row renderer (~30 lines)</li>
+<li><code>~/solenbrowser/src/lib/rate-cache.ts</code> — new ~40 lines</li>
+<li><code>~/solenbrowser/public/stsolen-logo.svg</code> — design asset</li>
+</ul>
+<p><strong>Effort:</strong> ~1 day.</p>
+<hr />
+<h2 id="cross-cutting-concerns">Cross-cutting concerns<a class="headerlink" href="#cross-cutting-concerns" title="Permanent link">&para;</a></h2>
+<h3 id="reads-that-need-adding-to-the-contract-before-launch">Reads that need adding to the contract before launch<a class="headerlink" href="#reads-that-need-adding-to-the-contract-before-launch" title="Permanent link">&para;</a></h3>
+<p>The contract today exposes <code>exchange_rate</code>, <code>op_stake_of</code>, <code>pending_undelegate_op_of</code>, <code>owner</code>, <code>treasury</code>, <code>slash_oracle</code>, <code>paused</code>. Missing for the UI:</p>
+<ul>
+<li><strong><code>withdrawal_at(seq[8])</code></strong> — return the raw 56-byte queue entry (<code>account[32] || solen_owed[16] || requested_epoch[8]</code>). The dispatcher accepts the method name but the body is currently a stub. Wire it to call <code>read_wq(seq)</code> and return the encoded bytes.</li>
+<li><strong><code>pending_withdrawals_of(account[32]) -&gt; u64</code></strong> — count of unclaimed entries belonging to an account. Iterate <code>wq_head..wq_tail</code>. Acceptable gas cost since it's only called by the Claims tab.</li>
+</ul>
+<p>These are small contract additions; flag them now so they're not forgotten in the final pre-deploy pass.</p>
+<h3 id="network-aware-contract-address">Network-aware contract address<a class="headerlink" href="#network-aware-contract-address" title="Permanent link">&para;</a></h3>
+<p>Each surface needs to know the stSOLEN address per network. Centralize once:</p>
+<ul>
+<li>Add to <code>~/solenwallet/src/lib/networks.ts</code> as a <code>stsolen_address</code> field per network entry.</li>
+<li>Same in <code>~/solenbrowser/src/lib/networks.ts</code>.</li>
+<li>Dapp reads it from a config file or env.</li>
+</ul>
+<p>Mainnet-only at v1; testnet/devnet entries can stay null, hiding the UI on those networks until a separate test deploy exists.</p>
+<h3 id="pause-state-handling">Pause-state handling<a class="headerlink" href="#pause-state-handling" title="Permanent link">&para;</a></h3>
+<p>Every action UI must check <code>paused()</code> first. Render a banner ("Deposits and withdrawals are paused. SRC-20 transfers and existing claims are unaffected.") and disable submit buttons. SRC-20 <code>transfer</code> remains available even when paused — this is intentional per the spec and shouldn't be hidden.</p>
+<h3 id="auto-crank-on-claim">Auto-crank on claim<a class="headerlink" href="#auto-crank-on-claim" title="Permanent link">&para;</a></h3>
+<p>Per the build decision: when a user clicks Claim and the <code>withdrawal_buffer</code> is too small, the dapp <strong>automatically</strong> calls <code>crank_undelegations</code> first, then <code>claim_withdrawal</code>. The user sees a single "Claim" button and a brief progress state. Log the auto-crank in the dapp's console for transparency, but don't surface it as a separate UX step.</p>
+<h3 id="solenswap-pair-seeding">Solenswap pair seeding<a class="headerlink" href="#solenswap-pair-seeding" title="Permanent link">&para;</a></h3>
+<p>Initial liquidity for the stSOLEN/SOLEN pair on solenswap is provided directly from the protocol/founder allocation. Build the dapp's "exit faster via solenswap" footer to link to the existing solenswap UI — no special seeding flow needed in the stSOLEN UI itself.</p>
+<h3 id="slashing-alert-surface">Slashing alert surface<a class="headerlink" href="#slashing-alert-surface" title="Permanent link">&para;</a></h3>
+<p>When the slash-oracle bot (<code>~/solen-stsolen-oracle/</code>) detects a slashed allowlisted operator, the operational team needs to act. Add a low-effort surface:</p>
+<ul>
+<li>Slash events publish to a Discord webhook (configurable in the bot's <code>.env</code>).</li>
+<li>Optional: a small <code>ops.solenchain.io</code> page that lists recent <code>slash_reported</code> events from stSOLEN.</li>
+</ul>
+<p>Out of scope for stSOLEN UI proper; flagged here so it's not forgotten.</p>
+<h3 id="cranker-bot">Cranker bot<a class="headerlink" href="#cranker-bot" title="Permanent link">&para;</a></h3>
+<p>The Claims tab depends on <code>crank_undelegations</code> running with reasonable cadence (the auto-crank inside the dapp covers individual user payouts, but a background cranker also helps fill the buffer ahead of demand). Ship a tiny cranker bot alongside the dapp:</p>
+<ul>
+<li>Polls every minute.</li>
+<li>If any operator has <code>pending_undelegate_op &gt; 0</code> OR <code>un_log_head</code> has matured entries, calls <code>crank_undelegations</code>.</li>
+<li>Run by the protocol team; permissionless so anyone can take over if it stalls.</li>
+<li>Sized similarly to the slashing-oracle bot (~150 lines TS).</li>
+</ul>
+<h3 id="wallet-hd-migration">Wallet HD migration<a class="headerlink" href="#wallet-hd-migration" title="Permanent link">&para;</a></h3>
+<p>The stSOLEN UI doesn't depend on HD-derived keys — single-key accounts work fine. HD migration (blocked on SLIP-0044 PR #2010) touches keystore code, not UI surfaces. They're orthogonal; build the UI now.</p>
+<hr />
+<h2 id="sequencing-recommendation">Sequencing recommendation<a class="headerlink" href="#sequencing-recommendation" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Parameter</th>
-<th>Value</th>
+<th>Order</th>
+<th>Item</th>
+<th>Effort</th>
+<th>Gate</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Minimum delegation</td>
-<td>No minimum</td>
+<td>0</td>
+<td>Add <code>withdrawal_at</code> + <code>pending_withdrawals_of</code> to the contract</td>
+<td>1 hr</td>
+<td>Pre-deploy</td>
 </tr>
 <tr>
-<td>Reward share</td>
-<td>Proportional to stake relative to validator's total</td>
+<td>1</td>
+<td>Mainnet deploy of stSOLEN + cranker bot running</td>
+<td>(out of scope here)</td>
+<td>Mainnet</td>
 </tr>
 <tr>
-<td>Unbonding period</td>
-<td>7 epochs (same as validators)</td>
+<td>2</td>
+<td><code>solenstake/</code> dapp (read-only paths first, then write)</td>
+<td>5 days</td>
+<td>Step 1</td>
 </tr>
 <tr>
-<td>Slashing risk</td>
-<td>Shared with chosen validator</td>
+<td>3</td>
+<td>solenbrowser popup balance row + APY pill</td>
+<td>1 day</td>
+<td>Step 2 (logo, APY endpoint exist)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>solenwallet <code>StakeStsolenCard</code></td>
+<td>2 days</td>
+<td>Step 2 (lib helpers) — copy them in</td>
 </tr>
 </tbody>
 </table>
-<h3 id="delegator-rewards">Delegator Rewards<a class="headerlink" href="#delegator-rewards" title="Permanent link">&para;</a></h3>
-<p>Within a validator, rewards are split proportionally:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>delegator_reward = validator_reward × (delegator_stake / validator_total_stake)
-</code></pre></div>
-<h3 id="choosing-a-validator">Choosing a Validator<a class="headerlink" href="#choosing-a-validator" title="Permanent link">&para;</a></h3>
-<p>Delegators should consider:</p>
+<p>Total: ~8–9 days of focused UI work after deployment. The dapp is the single biggest user-facing payoff.</p>
+<hr />
+<h2 id="locked-design-decisions">Locked design decisions<a class="headerlink" href="#locked-design-decisions" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Uptime</strong> — Validators with downtime get slashed, affecting delegators</li>
-<li><strong>Commission</strong> — Validators may charge a percentage of delegator rewards</li>
-<li><strong>Stake concentration</strong> — Distributing delegation improves decentralization</li>
-</ul>
-<h2 id="slashing">Slashing<a class="headerlink" href="#slashing" title="Permanent link">&para;</a></h2>
-<h3 id="double-signing">Double Signing<a class="headerlink" href="#double-signing" title="Permanent link">&para;</a></h3>
-<p>Signing two different blocks at the same height:</p>
-<ul>
-<li><strong>10% stake penalty</strong> — Applied to validator and all delegators proportionally</li>
-<li><strong>Jailing</strong> — Validator removed from the active set</li>
-</ul>
-<h3 id="downtime">Downtime<a class="headerlink" href="#downtime" title="Permanent link">&para;</a></h3>
-<p>Missing 50 consecutive blocks:</p>
-<ul>
-<li><strong>1% stake penalty</strong> — Applied to validator and delegators</li>
-<li><strong>Jailing</strong> — Validator removed from the active set</li>
-</ul>
-<h3 id="unjailing">Unjailing<a class="headerlink" href="#unjailing" title="Permanent link">&para;</a></h3>
-<p>A jailed validator (whether from downtime or double signing) can be reactivated by submitting an <code>unjail</code> transaction:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>solen<span class="w"> </span>unjail<span class="w"> </span>&lt;keyname&gt;
-</code></pre></div>
-<p>The validator rejoins the active consensus set at the next epoch boundary. Slashed funds are sent to the <strong>Foundation Treasury</strong> and can be restored via a <a href="../governance/">governance proposal</a> if the community votes to do so.</p>
-<blockquote>
-<p><strong>Note:</strong> Slashing is deterministic and on-chain — penalties are executed as system transactions within blocks, not applied out-of-band.</p>
-</blockquote>
-<h2 id="unbonding">Unbonding<a class="headerlink" href="#unbonding" title="Permanent link">&para;</a></h2>
-<p>When undelegating, tokens enter a 7-epoch unbonding period before they can be transferred. During unbonding:</p>
-<ul>
-<li>Tokens do not earn rewards</li>
-<li>Tokens are still subject to slashing</li>
-<li>The unbonding period provides security against long-range attacks</li>
-</ul>
-<h2 id="target-staking-ratio">Target Staking Ratio<a class="headerlink" href="#target-staking-ratio" title="Permanent link">&para;</a></h2>
-<p>The network targets <strong>40-60%</strong> of circulating supply staked:</p>
-<ul>
-<li>Below 40%: Governance may increase epoch rewards</li>
-<li>Above 60%: Governance may decrease rewards</li>
+<li><strong>Branding:</strong> "Staked SOLEN" / <code>stSOLEN</code>. No rebrand.</li>
+<li><strong>APY display:</strong> 7-day headline, 30-day subtext, "since launch" fallback during the first 7 days.</li>
+<li><strong>Solenswap liquidity:</strong> seeded directly from the protocol/founder allocation.</li>
+<li><strong>Auto-crank on claim:</strong> user sees a single button; dapp transparently sends a crank op when needed.</li>
+<li><strong>Deployment scope:</strong> mainnet only at v1. Testnet/devnet UI surfaces gated off until/unless a test deployment exists.</li>
 </ul>
 
 
@@ -2588,7 +2972,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../overview/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Token Overview">
+          <a href="../exchange-integration-php/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Exchange Integration (PHP)">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2598,20 +2982,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Token Overview
+                Exchange Integration (PHP)
               </div>
             </div>
           </a>
         
         
           
-          <a href="../governance/" class="md-footer__link md-footer__link--next" aria-label="Next: Governance">
+          <a href="../testing-contracts/" class="md-footer__link md-footer__link--next" aria-label="Next: Testing Contracts">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Governance
+                Testing Contracts
               </div>
             </div>
             <div class="md-footer__button md-icon">

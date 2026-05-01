@@ -85,6 +85,7 @@ nav:
   - Guides:
     - Exchange Integration: guides/exchange-integration.md
     - Exchange Integration (PHP): guides/exchange-integration-php.md
+    - stSOLEN UI Integration: guides/stsolen-ui-integration.md
     - Testing Contracts: guides/testing-contracts.md
     - Troubleshooting: guides/troubleshooting.md
   - API Reference:
