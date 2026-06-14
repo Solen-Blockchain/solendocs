@@ -82,6 +82,8 @@ Get full account information.
 | `balance` | `string` | Native token balance |
 | `nonce` | `u64` | Current operation nonce |
 | `code_hash` | `string?` | Contract code hash (if deployed) |
+| `staked` | `string` | Amount staked (if a validator); `"0"` otherwise |
+| `auth_methods` | `array` | The account's auth methods (externally tagged, e.g. `{"Ed25519":{…}}` / `{"Session":{…}}`). Use to list [agents](../agents/overview.md) or compose a `SetAuth` without clobbering existing methods. |
 
 ---
 

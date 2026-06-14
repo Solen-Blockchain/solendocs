@@ -82,6 +82,10 @@ nav:
     - Contract SDK: smart-contracts/contract-sdk.md
     - Host Functions: smart-contracts/host-functions.md
     - Example Contracts: smart-contracts/examples.md
+  - AI Agents:
+    - Overview: agents/overview.md
+    - Agent SDK: agents/agent-sdk.md
+    - Granting & Revoking: agents/granting.md
   - Guides:
     - Exchange Integration: guides/exchange-integration.md
     - Exchange Integration (PHP): guides/exchange-integration-php.md

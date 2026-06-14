@@ -184,15 +184,19 @@ Useful for dApp sessions where users grant limited permissions without exposing 
         "session_key": "temp-ed25519-key",
         "expires_at": 100000,
         "spending_limit": 1000000000000,
+        "budget_total": 10000000000000,
         "allowed_targets": ["contract-id"],
-        "allowed_methods": ["transfer", "swap"]
+        "allowed_methods": ["transfer", "swap"],
+        "restrict_subcalls": false
       }
     }
   ]
 }
 ```
 
-Session keys use standard Ed25519 signatures. The executor validates restrictions at execution time — expired sessions are rejected, spending over the limit fails, and calls to unauthorized targets/methods are blocked.
+Session keys use standard Ed25519 signatures. The executor validates restrictions at execution time — expired sessions are rejected, spending over the per-operation cap (`spending_limit`) or the cumulative lifetime budget (`budget_total`, tracked on-chain and charged only on success) fails, and calls to unauthorized targets/methods are blocked. With `restrict_subcalls: true`, the target/method allowlist is enforced on contract→contract sub-calls too, not just the top-level operation.
+
+> **AI agents:** Session keys are the foundation for [AI agents](../agents/overview.md) — scoped, budgeted keys an agent can transact with autonomously, granted and revoked from your wallet.
 
 > **Security restriction:** Session keys are blocked from performing privileged operations: `SetAuth` (changing account authentication), `Deploy` (deploying contracts), guardian recovery actions (`initiate_recovery`, `confirm_recovery`, `cancel_recovery`, `execute_recovery`), and governance proposal actions (`propose`, `finalize`, `execute`). These operations always require the primary account key.
 
