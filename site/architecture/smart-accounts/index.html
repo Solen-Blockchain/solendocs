@@ -16,7 +16,7 @@
         <link rel="prev" href="../execution/">
       
       
-        <link rel="next" href="../rollups/">
+        <link rel="next" href="../post-quantum/">
       
       
         
@@ -1003,6 +1003,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#post-quantum-hybrid-ml-dsa-65" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Quantum &amp; Hybrid (ML-DSA-65)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1034,6 +1045,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../post-quantum/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Post-Quantum Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2539,6 +2578,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#post-quantum-hybrid-ml-dsa-65" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Quantum &amp; Hybrid (ML-DSA-65)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2741,6 +2791,19 @@
 <p><strong>AI agents:</strong> Session keys are the foundation for <a href="../../agents/overview/">AI agents</a> — scoped, budgeted keys an agent can transact with autonomously, granted and revoked from your wallet.</p>
 <p><strong>Security restriction:</strong> Session keys are blocked from performing privileged operations: <code>SetAuth</code> (changing account authentication), <code>Deploy</code> (deploying contracts), guardian recovery actions (<code>initiate_recovery</code>, <code>confirm_recovery</code>, <code>cancel_recovery</code>, <code>execute_recovery</code>), and governance proposal actions (<code>propose</code>, <code>finalize</code>, <code>execute</code>). These operations always require the primary account key.</p>
 </blockquote>
+<h3 id="post-quantum-hybrid-ml-dsa-65">Post-Quantum &amp; Hybrid (ML-DSA-65)<a class="headerlink" href="#post-quantum-hybrid-ml-dsa-65" title="Permanent link">&para;</a></h3>
+<p>Accounts can opt in to <strong>quantum-resistant</strong> authentication. A large-scale quantum computer would break Ed25519 and passkey (P-256) keys; <strong>ML-DSA-65</strong> (NIST FIPS 204) is not known to be quantum-breakable.</p>
+<ul>
+<li><strong><code>MlDsa</code></strong> — pure post-quantum: a valid ML-DSA-65 signature authorizes.</li>
+<li><strong><code>Hybrid</code></strong> — AND-hybrid: a signature must carry <strong>both</strong> a valid Ed25519 <em>and</em> a valid ML-DSA-65 signature. Secure unless both schemes break.</li>
+</ul>
+<p>Both are opt-in and added with <code>SetAuth</code>. The fastest path is one CLI command — the account address is unchanged, with no fund migration:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>solen<span class="w"> </span>--chain-id<span class="w"> </span><span class="m">1</span><span class="w"> </span>key<span class="w"> </span>quantum-upgrade<span class="w"> </span>mykey<span class="w">            </span><span class="c1"># pure ML-DSA-65</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>solen<span class="w"> </span>--chain-id<span class="w"> </span><span class="m">1</span><span class="w"> </span>key<span class="w"> </span>quantum-upgrade<span class="w"> </span>mykey<span class="w"> </span>--hybrid<span class="w">   </span><span class="c1"># Ed25519 + ML-DSA-65</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span><span class="w"> </span><span class="nt">&quot;auth_methods&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;MlDsa&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;public_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="cm">/* 1952 bytes */</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p>Post-quantum auth is <strong>network-gated</strong> (consensus-affecting) — enable it only on a chain where it has been activated. See <strong><a href="../post-quantum/">Post-Quantum Security</a></strong> for the full design, sizes, signing, and SDK support.</p>
 <h2 id="programmable-policies">Programmable Policies<a class="headerlink" href="#programmable-policies" title="Permanent link">&para;</a></h2>
 <p>Accounts can define custom authorization logic:</p>
 <ul>
@@ -2812,13 +2875,13 @@
         
         
           
-          <a href="../rollups/" class="md-footer__link md-footer__link--next" aria-label="Next: Rollups">
+          <a href="../post-quantum/" class="md-footer__link md-footer__link--next" aria-label="Next: Post-Quantum Security">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Rollups
+                Post-Quantum Security
               </div>
             </div>
             <div class="md-footer__button md-icon">

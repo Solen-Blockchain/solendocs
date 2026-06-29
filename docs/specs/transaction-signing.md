@@ -131,8 +131,10 @@ The 32-byte `sender` field selects the account; the account's on-chain `auth_met
 | `Passkey` (WebAuthn / P-256) | `authenticatorData ‖ clientDataJSON ‖ r[32] ‖ s[32]`. The `clientDataJSON` challenge field MUST equal `base64url(signing_message)` |
 | `Session` | 64-byte Ed25519 signature, verified against the session's ephemeral key. Subject to expiry, spending, target, and method restrictions |
 | `Guardian` | Not used for `signature`; guardians authorize via the Guardian system contract |
+| `MlDsa` (post-quantum) | 3309-byte ML-DSA-65 signature (FIPS 204, empty context) over the 96-byte signing message. Public key is 1952 bytes. Honored only where post-quantum auth is network-activated |
+| `Hybrid` | `ed25519[64] ‖ ml_dsa[3309]` = 3373 bytes — **both** halves must verify over the same signing message. Network-activated, like `MlDsa` |
 
-For first-party wallets and most third-party integrations the relevant case is **Ed25519 → 64 bytes**.
+For first-party wallets and most third-party integrations the relevant case is **Ed25519 → 64 bytes**. Post-quantum (`MlDsa` / `Hybrid`) signers are documented in [Post-Quantum Security](../architecture/post-quantum.md); both the Rust (`fips204`) and TypeScript (`@noble/post-quantum`) implementations are cross-verified against committed test vectors.
 
 ## HD Derivation
 

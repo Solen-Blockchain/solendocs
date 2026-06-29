@@ -200,6 +200,26 @@ Session keys use standard Ed25519 signatures. The executor validates restriction
 
 > **Security restriction:** Session keys are blocked from performing privileged operations: `SetAuth` (changing account authentication), `Deploy` (deploying contracts), guardian recovery actions (`initiate_recovery`, `confirm_recovery`, `cancel_recovery`, `execute_recovery`), and governance proposal actions (`propose`, `finalize`, `execute`). These operations always require the primary account key.
 
+### Post-Quantum & Hybrid (ML-DSA-65)
+
+Accounts can opt in to **quantum-resistant** authentication. A large-scale quantum computer would break Ed25519 and passkey (P-256) keys; **ML-DSA-65** (NIST FIPS 204) is not known to be quantum-breakable.
+
+- **`MlDsa`** — pure post-quantum: a valid ML-DSA-65 signature authorizes.
+- **`Hybrid`** — AND-hybrid: a signature must carry **both** a valid Ed25519 *and* a valid ML-DSA-65 signature. Secure unless both schemes break.
+
+Both are opt-in and added with `SetAuth`. The fastest path is one CLI command — the account address is unchanged, with no fund migration:
+
+```bash
+solen --chain-id 1 key quantum-upgrade mykey            # pure ML-DSA-65
+solen --chain-id 1 key quantum-upgrade mykey --hybrid   # Ed25519 + ML-DSA-65
+```
+
+```json
+{ "auth_methods": [ { "MlDsa": { "public_key": [/* 1952 bytes */] } } ] }
+```
+
+Post-quantum auth is **network-gated** (consensus-affecting) — enable it only on a chain where it has been activated. See **[Post-Quantum Security](post-quantum.md)** for the full design, sizes, signing, and SDK support.
+
 ## Programmable Policies
 
 Accounts can define custom authorization logic:

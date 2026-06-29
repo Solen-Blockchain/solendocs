@@ -828,6 +828,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../architecture/post-quantum/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Post-Quantum Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../architecture/rollups/" class="md-nav__link">
         
   
@@ -2697,9 +2725,17 @@
 <td><code>Guardian</code></td>
 <td>Not used for <code>signature</code>; guardians authorize via the Guardian system contract</td>
 </tr>
+<tr>
+<td><code>MlDsa</code> (post-quantum)</td>
+<td>3309-byte ML-DSA-65 signature (FIPS 204, empty context) over the 96-byte signing message. Public key is 1952 bytes. Honored only where post-quantum auth is network-activated</td>
+</tr>
+<tr>
+<td><code>Hybrid</code></td>
+<td><code>ed25519[64] ‖ ml_dsa[3309]</code> = 3373 bytes — <strong>both</strong> halves must verify over the same signing message. Network-activated, like <code>MlDsa</code></td>
+</tr>
 </tbody>
 </table>
-<p>For first-party wallets and most third-party integrations the relevant case is <strong>Ed25519 → 64 bytes</strong>.</p>
+<p>For first-party wallets and most third-party integrations the relevant case is <strong>Ed25519 → 64 bytes</strong>. Post-quantum (<code>MlDsa</code> / <code>Hybrid</code>) signers are documented in <a href="../../architecture/post-quantum/">Post-Quantum Security</a>; both the Rust (<code>fips204</code>) and TypeScript (<code>@noble/post-quantum</code>) implementations are cross-verified against committed test vectors.</p>
 <h2 id="hd-derivation">HD Derivation<a class="headerlink" href="#hd-derivation" title="Permanent link">&para;</a></h2>
 <p><strong>Today:</strong> Solen's first-party wallets generate accounts from a 32-byte random seed; that seed <em>is</em> the Ed25519 secret key. No BIP-39, no derivation path. Address = Ed25519 public key.</p>
 <p><strong>Planned:</strong> BIP-39 mnemonic + SLIP-0010 Ed25519 derivation, registered SLIP-0044 coin type <strong><code>20260424</code></strong> (<a href="https://github.com/satoshilabs/slips/pull/2010">SLIP PR #2010</a>, pending merge). Path:</p>

@@ -151,17 +151,41 @@ Helper class for building and submitting operations.
 ```typescript
 const alice = new SmartAccount("8a88e3dd7409...", client);
 
-// Build a transfer operation
-const op = await alice.buildTransfer("626f6200...", 500);
+// Build a transfer operation (amounts are bigint)
+const op = await alice.buildTransfer("626f6200...", 500n);
 
-// Sign (with your Ed25519 key)
-// msg = chain_id[8 LE] + sender[32] + nonce[8 LE] + max_fee[16 LE] + blake3(actions)[32]
-// op.signature = ed25519_sign(privateKey, msg);
-// Full byte-level spec: ../specs/transaction-signing.md
+// Sign with your Ed25519 key
+signOperationEd25519(op, edSecretSeed, chainId);
 
 // Submit
 const result = await alice.submit(op);
 ```
+
+## Signing
+
+The SDK signs operations for all schemes; the digest is byte-identical to the node (and cross-implementation verified against the Rust signer).
+
+```typescript
+import {
+  signingMessage,         // the 96-byte digest (chain_id ‖ sender ‖ nonce ‖ max_fee ‖ blake3(actions))
+  signOperationEd25519,   // classical
+  signOperationMlDsa,     // post-quantum (ML-DSA-65)
+  signOperationHybrid,    // Ed25519 + ML-DSA-65 (both required)
+  mlDsaKeygenFromSeed,    // derive an ML-DSA-65 keypair from a 32-byte seed
+} from "@solen/wallet-sdk";
+
+// Classical
+signOperationEd25519(op, edSeed, chainId);
+
+// Post-quantum (account must use MlDsa auth; network PQ-activated)
+const { secretKey } = mlDsaKeygenFromSeed(seed);
+signOperationMlDsa(op, secretKey, chainId);
+
+// Hybrid (account must use Hybrid auth) — ed25519[64] ‖ ml_dsa[3309]
+signOperationHybrid(op, edSeed, mlSecretKey, chainId);
+```
+
+See [Post-Quantum Security](../architecture/post-quantum.md) and the [Transaction Signing spec](../specs/transaction-signing.md).
 
 ## PasskeyAuth
 

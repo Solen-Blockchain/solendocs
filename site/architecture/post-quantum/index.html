@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://docs.solenchain.io/architecture/rollups/">
+        <link rel="canonical" href="https://docs.solenchain.io/architecture/post-quantum/">
       
       
-        <link rel="prev" href="../post-quantum/">
+        <link rel="prev" href="../smart-accounts/">
       
       
-        <link rel="next" href="../intents/">
+        <link rel="next" href="../rollups/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Rollups - Solen Documentation</title>
+        <title>Post-Quantum Security - Solen Documentation</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#native-rollups" class="md-skip">
+        <a href="#post-quantum-security" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Rollups
+              Post-Quantum Security
             
           </span>
         </div>
@@ -830,34 +830,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../post-quantum/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Post-Quantum Security
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -877,7 +849,7 @@
   <span class="md-ellipsis">
     
   
-    Rollups
+    Post-Quantum Security
   
 
     
@@ -895,7 +867,7 @@
   <span class="md-ellipsis">
     
   
-    Rollups
+    Post-Quantum Security
   
 
     
@@ -921,71 +893,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
+  <a href="#what-is-and-isnt-at-risk" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Components
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Components">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sequencer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sequencer
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#batch-publisher" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Batch Publisher
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#prover-adapter" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prover Adapter
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cross-domain-messenger" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cross-Domain Messenger
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bridge-vaults" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bridge Vaults
+        What is — and isn't — at risk
       
     </span>
   </a>
@@ -993,10 +904,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rollup-registration" class="md-nav__link">
+  <a href="#the-scheme-ml-dsa-65-fips-204" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rollup Registration
+        The scheme: ML-DSA-65 (FIPS 204)
       
     </span>
   </a>
@@ -1004,10 +915,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#economics" class="md-nav__link">
+  <a href="#two-opt-in-modes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Economics
+        Two opt-in modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrading-an-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrading an account
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#availability-activation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Availability &amp; activation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#signing-interoperability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signing &amp; interoperability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sdk-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SDK support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
       
     </span>
   </a>
@@ -1018,6 +984,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rollups/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rollups
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2357,71 +2351,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
+  <a href="#what-is-and-isnt-at-risk" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Components
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Components">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sequencer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sequencer
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#batch-publisher" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Batch Publisher
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#prover-adapter" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prover Adapter
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cross-domain-messenger" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cross-Domain Messenger
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bridge-vaults" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bridge Vaults
+        What is — and isn't — at risk
       
     </span>
   </a>
@@ -2429,10 +2362,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rollup-registration" class="md-nav__link">
+  <a href="#the-scheme-ml-dsa-65-fips-204" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rollup Registration
+        The scheme: ML-DSA-65 (FIPS 204)
       
     </span>
   </a>
@@ -2440,10 +2373,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#economics" class="md-nav__link">
+  <a href="#two-opt-in-modes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Economics
+        Two opt-in modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrading-an-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrading an account
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#availability-activation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Availability &amp; activation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#signing-interoperability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signing &amp; interoperability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sdk-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SDK support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
       
     </span>
   </a>
@@ -2470,77 +2458,143 @@
   
 
 
-<h1 id="native-rollups">Native Rollups<a class="headerlink" href="#native-rollups" title="Permanent link">&para;</a></h1>
-<p>Rollups are first-class protocol components in Solen, not external add-ons. The <code>solen-rollup-kit</code> crate provides a complete framework for building and operating rollups that settle to Solen L1.</p>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<h3 id="sequencer">Sequencer<a class="headerlink" href="#sequencer" title="Permanent link">&para;</a></h3>
-<p>Collects L2 transactions, orders them, and produces L2 blocks. The sequencer is responsible for:</p>
-<ul>
-<li>Transaction ordering and inclusion</li>
-<li>L2 block production</li>
-<li>State transition computation</li>
-</ul>
-<h3 id="batch-publisher">Batch Publisher<a class="headerlink" href="#batch-publisher" title="Permanent link">&para;</a></h3>
-<p>Periodically submits <strong>batch commitments</strong> to L1:</p>
-<ul>
-<li>State root after executing the batch</li>
-<li>Transaction data or data availability proof</li>
-<li>Proof of correct execution (if applicable)</li>
-</ul>
-<h3 id="prover-adapter">Prover Adapter<a class="headerlink" href="#prover-adapter" title="Permanent link">&para;</a></h3>
-<p>Interfaces with proof systems to generate validity proofs for L2 state transitions. Supports pluggable proof backends.</p>
-<h3 id="cross-domain-messenger">Cross-Domain Messenger<a class="headerlink" href="#cross-domain-messenger" title="Permanent link">&para;</a></h3>
-<p>Enables messaging between:</p>
-<ul>
-<li>L2 → L1 (withdrawal messages)</li>
-<li>L1 → L2 (deposit messages)</li>
-<li>L2 → L2 (cross-rollup messages, relayed through L1)</li>
-</ul>
-<h2 id="bridge-vaults">Bridge Vaults<a class="headerlink" href="#bridge-vaults" title="Permanent link">&para;</a></h2>
-<p>Each rollup has an associated <strong>bridge vault</strong> on L1 that manages asset transfers:</p>
+<h1 id="post-quantum-security">Post-Quantum Security<a class="headerlink" href="#post-quantum-security" title="Permanent link">&para;</a></h1>
+<p>Solen accounts can opt in to <strong>quantum-resistant signatures</strong> — built in, today, made practical by the <a href="../smart-accounts/">smart-account</a> model. A large-scale quantum computer would break the elliptic-curve cryptography behind Ed25519 and WebAuthn (P-256); ML-DSA does not rely on any assumption a quantum computer is known to defeat.</p>
+<h2 id="what-is-and-isnt-at-risk">What is — and isn't — at risk<a class="headerlink" href="#what-is-and-isnt-at-risk" title="Permanent link">&para;</a></h2>
+<p>Only <strong>signatures</strong> are vulnerable to quantum attack. The rest of the stack already survives:</p>
 <table>
 <thead>
 <tr>
-<th>Operation</th>
-<th>Mechanism</th>
+<th>Primitive</th>
+<th>Used for</th>
+<th>Quantum status</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Deposit</strong> (L1 → L2)</td>
-<td>Instant — tokens locked in vault, minted on L2</td>
+<td>Ed25519 / P-256 ECDSA</td>
+<td>account signatures</td>
+<td><strong>Broken by Shor's algorithm</strong> — a quantum computer recovers the private key from the public key</td>
 </tr>
 <tr>
-<td><strong>Withdrawal</strong> (L2 → L1)</td>
-<td>Challenge window (100 blocks) + withdrawal delay (50 blocks)</td>
+<td>BLAKE3, SHA-256</td>
+<td>hashing, state root, Merkle</td>
+<td>Safe — Grover only halves security (256→128 bit)</td>
 </tr>
 <tr>
-<td><strong>Dispute</strong></td>
-<td>Disputed withdrawals are blocked pending resolution</td>
+<td>AES-256-GCM, Argon2id</td>
+<td>keystore encryption</td>
+<td>Safe — Grover only halves security (still 128-bit)</td>
 </tr>
 </tbody>
 </table>
-<h2 id="rollup-registration">Rollup Registration<a class="headerlink" href="#rollup-registration" title="Permanent link">&para;</a></h2>
-<p>Rollups are registered on L1 through governance proposals. Each rollup record includes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Rollup {
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    rollup_id: Hash,
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    vm_type: VmType,           // WASM, EVM, custom
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    proof_type: ProofType,     // Validity, fraud, none
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    da_mode: DaMode,           // On-chain, external DA
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    bridge_config: BridgeConfig,
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    sequencer_set: Vec&lt;AccountId&gt;,
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    governance_params: GovernanceParams,
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>}
+<p>So "quantum-proofing" Solen is precisely "post-quantum <strong>signatures</strong>" — which is exactly what an account can opt into.</p>
+<div class="admonition info">
+<p class="admonition-title">Why now — harvest-now, decrypt-later</p>
+<p>A public key visible on-chain today can be attacked once a cryptographically-relevant quantum computer exists. Rotating high-value accounts to a post-quantum key <strong>before</strong> that day is the defensive move. Solen makes that a single command, with no change of address.</p>
+</div>
+<h2 id="the-scheme-ml-dsa-65-fips-204">The scheme: ML-DSA-65 (FIPS 204)<a class="headerlink" href="#the-scheme-ml-dsa-65-fips-204" title="Permanent link">&para;</a></h2>
+<p>Solen uses <strong>ML-DSA-65</strong> — the NIST-standardized, module-lattice signature scheme (FIPS 204, formerly CRYSTALS-Dilithium), at NIST <strong>security category 3</strong>.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Ed25519 (classical)</th>
+<th>ML-DSA-65 (post-quantum)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Public key</td>
+<td>32 bytes</td>
+<td>1952 bytes</td>
+</tr>
+<tr>
+<td>Signature</td>
+<td>64 bytes</td>
+<td>3309 bytes</td>
+</tr>
+<tr>
+<td>Verification</td>
+<td>deterministic</td>
+<td>deterministic (consensus-safe)</td>
+</tr>
+</tbody>
+</table>
+<p>The larger key and signature are the cost of quantum resistance — fine for high-assurance, opt-in accounts. Verification is a deterministic pure function, so every validator reaches the same verdict.</p>
+<h2 id="two-opt-in-modes">Two opt-in modes<a class="headerlink" href="#two-opt-in-modes" title="Permanent link">&para;</a></h2>
+<p>Both are added with a <a href="../smart-accounts/#authentication-methods"><code>SetAuth</code></a> operation, exactly like any other auth method.</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Auth method</th>
+<th>A signature must carry…</th>
+<th>Use when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pure post-quantum</strong></td>
+<td><code>MlDsa</code></td>
+<td>a valid ML-DSA-65 signature</td>
+<td>you want full quantum resistance</td>
+</tr>
+<tr>
+<td><strong>AND-hybrid</strong></td>
+<td><code>Hybrid</code></td>
+<td><strong>both</strong> a valid Ed25519 <strong>and</strong> a valid ML-DSA-65 signature</td>
+<td>transition-period defense-in-depth — secure unless <em>both</em> schemes break</td>
+</tr>
+</tbody>
+</table>
+<p>Hybrid is the conservative choice: an attacker must break <em>both</em> the classical and the post-quantum scheme to forge a signature. Conveniently, a single 32-byte seed derives both keys (breaking Ed25519 reveals its scalar, not the seed, so the ML-DSA key stays safe).</p>
+<h2 id="upgrading-an-account">Upgrading an account<a class="headerlink" href="#upgrading-an-account" title="Permanent link">&para;</a></h2>
+<p>One command rotates an existing account to post-quantum auth. <strong>The address never changes</strong> — there is no fund migration, unlike chains where the address is a hash of the public key.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Pure ML-DSA</label><label for="__tabbed_1_2">Hybrid (Ed25519 + ML-DSA)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>solen<span class="w"> </span>--chain-id<span class="w"> </span><span class="m">1</span><span class="w"> </span>key<span class="w"> </span>quantum-upgrade<span class="w"> </span>mykey
 </code></pre></div>
-<h2 id="economics">Economics<a class="headerlink" href="#economics" title="Permanent link">&para;</a></h2>
-<p>Rollups pay L1 fees for:</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>solen<span class="w"> </span>--chain-id<span class="w"> </span><span class="m">1</span><span class="w"> </span>key<span class="w"> </span>quantum-upgrade<span class="w"> </span>mykey<span class="w"> </span>--hybrid
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>This generates a fresh post-quantum key, submits a <code>SetAuth</code> <strong>signed by your current key</strong>, and — only after the network accepts it — rewrites the local key so the same name now signs with the new scheme.</p>
+<p>Equivalent <code>SetAuth</code> actions:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span><span class="w"> </span><span class="nt">&quot;SetAuth&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;auth_methods&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;MlDsa&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;public_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="cm">/* 1952 bytes */</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span><span class="w"> </span><span class="nt">&quot;SetAuth&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;auth_methods&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;Hybrid&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nt">&quot;ed25519_public_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="cm">/* 32 bytes */</span><span class="p">],</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">&quot;ml_dsa_public_key&quot;</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="cm">/* 1952 bytes */</span><span class="p">]</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<h2 id="availability-activation">Availability &amp; activation<a class="headerlink" href="#availability-activation" title="Permanent link">&para;</a></h2>
+<p>Post-quantum authentication is <strong>opt-in and network-gated</strong>. It is a consensus-affecting capability, so it ships dormant and is enabled fleet-wide at a coordinated activation height (<code>pq_auth_height</code>).</p>
+<div class="admonition warning">
+<p class="admonition-title">Activate before you rotate</p>
+<p>On a network where post-quantum auth is <strong>not yet active</strong>, an account rotated to ML-DSA-only (or Hybrid) cannot transact until activation. Upgrade accounts only on a chain that has post-quantum auth enabled. The CLI prints this warning.</p>
+</div>
+<h2 id="signing-interoperability">Signing &amp; interoperability<a class="headerlink" href="#signing-interoperability" title="Permanent link">&para;</a></h2>
+<p>The signed message is the <strong>same 96-byte <a href="../../specs/transaction-signing/#signing-message">signing message</a></strong> as Ed25519 — only the signature scheme over it changes. Signature encodings:</p>
 <ul>
-<li>Batch publication transactions</li>
-<li>Proof verification transactions</li>
-<li>Bridge operations</li>
+<li><code>MlDsa</code> — 3309-byte ML-DSA-65 signature (empty FIPS 204 context).</li>
+<li><code>Hybrid</code> — <code>ed25519[64] ‖ ml_dsa[3309]</code> = 3373 bytes; both halves must verify.</li>
 </ul>
-<p>These fees follow the same <a href="../../tokenomics/fee-model/">burn/treasury split</a> as regular L1 transactions.</p>
-<p>Rollup sequencers may charge additional L2 fees which are independent of L1 tokenomics.</p>
+<p>The signers are <strong>cross-implementation verified</strong>: the Rust node (<code>fips204</code>) and the TypeScript SDK (<code>@noble/post-quantum</code>) produce keys and signatures that validate against each other, pinned by committed test vectors. See the <a href="../../specs/transaction-signing/#signature-encoding">Transaction Signing spec</a>.</p>
+<h2 id="sdk-support">SDK support<a class="headerlink" href="#sdk-support" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Rust</strong> (<a href="../../tools/rust-sdk/">SDK</a>): <code>sign_operation_ml_dsa</code>, <code>sign_operation_hybrid</code>, <code>build_quantum_upgrade</code>, <code>build_hybrid_upgrade</code>.</li>
+<li><strong>TypeScript</strong> (<a href="../../tools/typescript-sdk/">SDK</a>): <code>signOperationMlDsa</code>, <code>signOperationHybrid</code>, <code>mlDsaKeygenFromSeed</code>, <code>signingMessage</code>, <code>verifyMlDsa</code>, <code>verifyHybrid</code>.</li>
+</ul>
+<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../smart-accounts/">Smart Accounts</a> — the pluggable auth model post-quantum builds on</li>
+<li><a href="../../specs/transaction-signing/">Transaction Signing</a> — authoritative signature spec</li>
+</ul>
 
 
 
@@ -2578,7 +2632,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../post-quantum/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Post-Quantum Security">
+          <a href="../smart-accounts/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Smart Accounts">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2588,20 +2642,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Post-Quantum Security
+                Smart Accounts
               </div>
             </div>
           </a>
         
         
           
-          <a href="../intents/" class="md-footer__link md-footer__link--next" aria-label="Next: Intents">
+          <a href="../rollups/" class="md-footer__link md-footer__link--next" aria-label="Next: Rollups">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Intents
+                Rollups
               </div>
             </div>
             <div class="md-footer__button md-icon">

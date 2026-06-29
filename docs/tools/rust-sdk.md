@@ -63,3 +63,24 @@ let keypair = Keypair::from_seed(&seed_bytes);
 // Sign an operation
 let signature = keypair.sign(&operation_bytes);
 ```
+
+## Post-Quantum Signing
+
+Opt-in [post-quantum](../architecture/post-quantum.md) (ML-DSA-65) and hybrid signing:
+
+```rust
+use solen_wallet_sdk::tx::{sign_operation_ml_dsa, sign_operation_hybrid,
+                           build_quantum_upgrade, build_hybrid_upgrade};
+use solen_crypto::MlDsaKeypair;
+
+// Pure post-quantum
+let pq = MlDsaKeypair::from_seed(&seed);
+sign_operation_ml_dsa(&mut op, &pq, chain_id);
+
+// Hybrid (Ed25519 + ML-DSA-65, both required) — both keys from one seed
+sign_operation_hybrid(&mut op, &ed_keypair, &pq, chain_id);
+
+// Build the SetAuth that rotates an account to PQ (sign it with the CURRENT key)
+let upgrade = build_quantum_upgrade(sender, nonce, pq.public_key());
+let hybrid  = build_hybrid_upgrade(sender, nonce, ed_keypair.public_key(), pq.public_key());
+```

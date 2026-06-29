@@ -75,6 +75,7 @@ nav:
     - Consensus: architecture/consensus.md
     - Execution Engine: architecture/execution.md
     - Smart Accounts: architecture/smart-accounts.md
+    - Post-Quantum Security: architecture/post-quantum.md
     - Rollups: architecture/rollups.md
     - Intents: architecture/intents.md
   - Smart Contracts:

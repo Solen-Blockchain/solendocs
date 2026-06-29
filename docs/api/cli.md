@@ -131,6 +131,18 @@ alice        139c31e8543b1962...  139c31e8543b1962...
 faucet       197f6b23e16c8532...  197f6b23e16c8532...
 ```
 
+#### `solen key quantum-upgrade <name>`
+
+Rotate an account from Ed25519 to **post-quantum** authentication (ML-DSA-65). Generates a fresh post-quantum key, submits a `SetAuth` signed by the current key, and — after the network accepts it — rewrites the local key. **The account address is unchanged**, with no fund migration.
+
+```bash
+solen --chain-id 1 key quantum-upgrade alice            # pure ML-DSA-65
+solen --chain-id 1 key quantum-upgrade alice --hybrid   # Ed25519 + ML-DSA-65 (both required)
+```
+
+!!! warning
+    Post-quantum auth must be **active** on the network (`pq_auth_height`). On a chain where it is still dormant, the upgraded account cannot transact until activation. See [Post-Quantum Security](../architecture/post-quantum.md).
+
 ---
 
 ### `solen validators`
